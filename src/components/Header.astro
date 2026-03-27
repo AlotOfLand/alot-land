@@ -1,0 +1,111 @@
+---
+import { siteConfig } from '../config/site.js';
+const { phone, phoneRaw } = siteConfig;
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { label: 'Listings', href: '/listings' },
+  { label: 'Find Land', href: '/find-land' },
+  { label: 'Invest', href: '/invest' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+
+<header class="bg-bg-dark border-b border-border-dark sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-3 flex-shrink-0">
+        <img
+          src="/images/alotdotland_sqLogo.png"
+          alt="A Lot of Land LLC"
+          class="h-10 w-10 rounded-lg"
+        />
+        <span class="font-display font-bold text-white text-lg hidden sm:block">alot.land</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6">
+        {navLinks.map(link => (
+          <a
+            href={link.href}
+            class={`text-sm font-medium transition-colors ${
+              currentPath.startsWith(link.href)
+                ? 'text-gold'
+                : 'text-gray-300 hover:text-white'
+            }`}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Right side -->
+      <div class="hidden md:flex items-center gap-4">
+        <a
+          href={`tel:${phoneRaw}`}
+          class="text-sm text-gray-300 hover:text-white transition-colors font-medium"
+        >
+          {phone}
+        </a>
+        <a
+          href="/listings"
+          class="bg-gold text-bg-dark text-sm font-bold px-4 py-2 rounded-xl hover:bg-yellow-400 transition-colors"
+        >
+          Browse Land
+        </a>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button
+        id="menu-toggle"
+        class="md:hidden text-gray-300 hover:text-white p-2"
+        aria-label="Toggle menu"
+      >
+        <svg id="icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden hidden border-t border-border-dark bg-bg-dark">
+    <div class="px-4 py-4 space-y-3">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class="block text-gray-300 hover:text-white py-2 text-sm font-medium"
+        >
+          {link.label}
+        </a>
+      ))}
+      <div class="pt-3 border-t border-border-dark space-y-3">
+        <a href={`tel:${phoneRaw}`} class="block text-gray-300 text-sm font-medium">{phone}</a>
+        <a
+          href="/listings"
+          class="block bg-gold text-bg-dark text-sm font-bold px-4 py-2 rounded-xl text-center"
+        >
+          Browse Land
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('icon-open');
+  const iconClose = document.getElementById('icon-close');
+
+  toggle?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+    iconOpen?.classList.toggle('hidden');
+    iconClose?.classList.toggle('hidden');
+  });
+</script>

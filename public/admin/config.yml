@@ -1,0 +1,41 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "listings"
+    label: "Listings"
+    folder: "src/content/listings"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Status", name: "status", widget: "select", options: ["available", "sold"] }
+      - { label: "Featured on Homepage", name: "featured", widget: "boolean", default: false }
+      - { label: "State", name: "state", widget: "select", options: ["Arizona", "Tennessee", "Northwest Arkansas"] }
+      - { label: "County", name: "county", widget: "string" }
+      - { label: "Acreage", name: "acreage", widget: "string" }
+      - { label: "Price", name: "price", widget: "string", required: false, hint: "e.g. $45,000 or leave blank for 'Contact for Price'" }
+      - { label: "Zoning", name: "zoning", widget: "string", required: false }
+      - { label: "Road Access", name: "roadAccess", widget: "string", required: false }
+      - { label: "Water", name: "water", widget: "string", required: false }
+      - { label: "Power/Utilities", name: "power", widget: "string", required: false }
+      - { label: "GPS Coordinates", name: "gps", widget: "string", required: false }
+      - { label: "Video URL (YouTube or Vimeo)", name: "videoUrl", widget: "string", required: false }
+      - { label: "Photos", name: "photos", widget: "list", field: { label: "Photo", name: "photo", widget: "image" } }
+      - { label: "Description", name: "body", widget: "markdown" }
+      - { label: "Date Listed", name: "date", widget: "datetime" }
+
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - label: "Contact Info"
+        name: "contact"
+        file: "src/content/settings/contact.json"
+        fields:
+          - { label: "Phone Number (display)", name: "phone", widget: "string" }
+          - { label: "Phone Number (digits only)", name: "phoneRaw", widget: "string" }
+          - { label: "Email", name: "email", widget: "string" }

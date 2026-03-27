@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="A Lot of Land LLC — off-market land acquisitions in Arizona, Tennessee, and Northwest Arkansas. Founded by David with a mission to find undervalued land."
+>
+  <!-- Hero -->
+  <div class="bg-bg-dark text-white py-20 text-center">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-black text-5xl sm:text-6xl mb-5">We're Land People.</h1>
+      <p class="text-gray-300 text-xl leading-relaxed">
+        Simple mission. Real land. Straight dealing.
+      </p>
+    </div>
+  </div>
+
+  <!-- Story -->
+  <section class="py-20 bg-bg-light">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <!-- Replace with photo of David -->
+          <img
+            src="/images/david-placeholder.jpg"
+            alt="David — Founder of A Lot of Land LLC"
+            class="w-full rounded-2xl aspect-[4/5] object-cover shadow-lg"
+          />
+          <!-- Replace with photo of David -->
+        </div>
+
+        <div>
+          <h2 class="font-display font-bold text-3xl text-bg-dark mb-5">The Story</h2>
+          <div class="prose prose-gray text-gray-600 leading-relaxed space-y-4">
+            <p>
+              A Lot of Land LLC was founded by David with a simple mission: find undervalued land, and get it into the hands of people who will love it.
+            </p>
+            <p>
+              We specialize in off-market acquisitions — reaching out directly to landowners through direct mail, negotiating fair deals, and listing properties with the best land realtors in each market.
+            </p>
+            <p>
+              We currently operate in Arizona, Tennessee, and Northwest Arkansas, with new markets on the horizon. Every property we sell has been sourced off-market — directly from the owner, before it ever hits MLS.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How We Find Deals -->
+  <section class="py-20 bg-bg-dark text-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-12">
+        <div>
+          <h2 class="font-display font-bold text-2xl mb-6 text-gold">How We Find Deals</h2>
+          <ul class="space-y-4">
+            {[
+              { icon: '📬', title: 'Direct mail outreach', desc: 'We contact landowners directly — before they list anywhere.' },
+              { icon: '🤝', title: 'Off-market negotiations', desc: 'We negotiate face-to-face and over the phone — no intermediaries.' },
+              { icon: '🚫', title: 'Never on MLS to buy', desc: 'We only list on MLS to sell. We find our deals ourselves.' },
+            ].map(item => (
+              <li class="flex gap-4">
+                <span class="text-2xl">{item.icon}</span>
+                <div>
+                  <p class="font-semibold text-white">{item.title}</p>
+                  <p class="text-gray-400 text-sm mt-0.5">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-display font-bold text-2xl mb-6 text-gold">How We Sell</h2>
+          <ul class="space-y-4">
+            {[
+              { icon: '🏆', title: 'Top land-specialist realtors', desc: 'We partner with the best land agents in each market — not generalists.' },
+              { icon: '📡', title: 'Full MLS + digital marketing', desc: 'Every property is listed on MLS and marketed online to maximize exposure.' },
+              { icon: '💬', title: 'Direct communication', desc: 'David is personally involved in every deal from start to close.' },
+            ].map(item => (
+              <li class="flex gap-4">
+                <span class="text-2xl">{item.icon}</span>
+                <div>
+                  <p class="font-semibold text-white">{item.title}</p>
+                  <p class="text-gray-400 text-sm mt-0.5">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Operating States -->
+  <section class="py-20 bg-bg-light">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display font-bold text-3xl text-bg-dark mb-10">Where We Operate</h2>
+      <div class="grid sm:grid-cols-3 gap-6 mb-8">
+        {[
+          { state: 'Arizona', emoji: '🌵', desc: 'Desert land, rural homesteads, off-grid parcels' },
+          { state: 'Tennessee', emoji: '🏞️', desc: 'Wooded tracts, hunting land, recreational property' },
+          { state: 'Northwest Arkansas', emoji: '🌲', desc: 'Ozark foothills, investment & recreational land' },
+        ].map(item => (
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <div class="text-5xl mb-4">{item.emoji}</div>
+            <h3 class="font-display font-bold text-xl text-bg-dark mb-2">{item.state}</h3>
+            <p class="text-gray-500 text-sm">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+      <p class="text-text-muted text-sm">Entering new markets — check back often.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 bg-gold text-bg-dark text-center">
+    <div class="max-w-2xl mx-auto px-4">
+      <h2 class="font-display font-bold text-3xl mb-4">Browse Current Listings</h2>
+      <p class="text-gray-800 mb-8">See what we've got available right now — all off-market finds.</p>
+      <a href="/listings" class="bg-bg-dark text-white font-bold px-8 py-4 rounded-2xl hover:bg-gray-800 transition-colors inline-block">
+        View All Listings
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  status: 'available' | 'sold';
+  acreage: string;
+  county: string;
+  state: string;
+  price?: string;
+  photos: string[];
+  description: string;
+}
+
+const { slug, title, status, acreage, county, state, price, photos, description } = Astro.props;
+const firstPhoto = photos[0] || '/images/hero-land.jpg';
+const excerpt = description.slice(0, 120) + (description.length > 120 ? '…' : '');
+---
+
+<article class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col">
+  <div class="relative">
+    <img
+      src={firstPhoto}
+      alt={`${acreage} acres for sale in ${county}, ${state}`}
+      class="w-full h-48 object-cover"
+    />
+    <span class={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full ${
+      status === 'available'
+        ? 'bg-green-brand text-white'
+        : 'bg-gray-400 text-white'
+    }`}>
+      {status === 'available' ? 'Available' : 'Sold'}
+    </span>
+  </div>
+
+  <div class="p-5 flex flex-col flex-1">
+    <h3 class="font-display font-bold text-bg-dark text-lg leading-snug mb-1">{title}</h3>
+    <p class="text-text-muted text-sm mb-3">{county} County, {state}</p>
+
+    <div class="flex items-center justify-between mb-3">
+      <span class="text-sm font-medium text-gray-700">{acreage} acres</span>
+      <span class="text-gold font-bold text-lg">{price || 'Contact for Price'}</span>
+    </div>
+
+    <p class="text-sm text-gray-600 leading-relaxed flex-1 mb-4">{excerpt}</p>
+
+    <a
+      href={`/listings/${slug}`}
+      class="block text-center bg-bg-dark text-white text-sm font-bold py-2.5 rounded-xl hover:bg-gray-800 transition-colors"
+    >
+      View Details
+    </a>
+  </div>
+</article>

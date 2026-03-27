@@ -1,0 +1,63 @@
+---
+import { siteConfig } from '../config/site.js';
+const { phone, phoneRaw, email, name } = siteConfig;
+
+const navLinks = [
+  { label: 'Listings', href: '/listings' },
+  { label: 'Find Land', href: '/find-land' },
+  { label: 'Invest', href: '/invest' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+
+<footer class="bg-bg-dark border-t border-border-dark text-gray-400">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      <!-- Brand -->
+      <div>
+        <a href="/" class="flex items-center gap-3 mb-4">
+          <img src="/images/alotdotland_sqLogo.png" alt="A Lot of Land LLC" class="h-10 w-10 rounded-lg" />
+          <span class="font-display font-bold text-white text-lg">alot.land</span>
+        </a>
+        <p class="text-sm leading-relaxed">
+          Off-market land deals in Arizona, Tennessee &amp; Northwest Arkansas.
+        </p>
+      </div>
+
+      <!-- Nav -->
+      <div>
+        <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Navigation</h4>
+        <ul class="space-y-2">
+          {navLinks.map(link => (
+            <li>
+              <a href={link.href} class="text-sm hover:text-white transition-colors">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-4">Contact</h4>
+        <ul class="space-y-3">
+          <li>
+            <a href={`tel:${phoneRaw}`} class="text-sm hover:text-white transition-colors flex items-center gap-2">
+              <span>📞</span> {phone}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${email}`} class="text-sm hover:text-white transition-colors flex items-center gap-2">
+              <span>✉️</span> {email}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-10 pt-6 border-t border-border-dark flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <p>© {new Date().getFullYear()} {name}. All rights reserved.</p>
+      <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
+    </div>
+  </div>
+</footer>

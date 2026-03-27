@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site.js';
+const { phone, phoneRaw, email } = siteConfig;
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch with A Lot of Land LLC. Call, email, or fill out our contact form. We work in Arizona, Tennessee, and Northwest Arkansas."
+>
+  <div class="bg-bg-dark text-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Get In Touch</h1>
+      <p class="text-gray-400 text-lg">We'd love to hear from you — whether you're buying, investing, or just curious.</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid lg:grid-cols-2 gap-12">
+      <!-- Left: Direct contact -->
+      <div>
+        <h2 class="font-display font-bold text-2xl text-bg-dark mb-8">Reach Us Directly</h2>
+
+        <div class="space-y-6 mb-10">
+          <a
+            href={`tel:${phoneRaw}`}
+            class="flex items-center gap-4 bg-gold text-bg-dark font-bold text-lg px-6 py-5 rounded-2xl hover:bg-yellow-400 transition-colors"
+          >
+            <span class="text-3xl">📞</span>
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-wider opacity-70 mb-0.5">Call or Text</div>
+              <div>{phone}</div>
+            </div>
+          </a>
+
+          <a
+            href={`mailto:${email}`}
+            class="flex items-center gap-4 bg-white border border-gray-100 shadow-sm text-bg-dark font-bold text-lg px-6 py-5 rounded-2xl hover:shadow-md transition-shadow"
+          >
+            <span class="text-3xl">✉️</span>
+            <div>
+              <div class="text-xs font-semibold uppercase tracking-wider text-text-muted mb-0.5">Email</div>
+              <div>{email}</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="bg-bg-light rounded-2xl p-6 border border-gray-100">
+          <h3 class="font-semibold text-bg-dark mb-3">Active Markets</h3>
+          <div class="flex flex-wrap gap-2">
+            {['🌵 Arizona', '🏞️ Tennessee', '🌲 Northwest Arkansas'].map(s => (
+              <span class="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm font-medium">{s}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: General form -->
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+        <h2 class="font-display font-bold text-2xl text-bg-dark mb-6">Send a Message</h2>
+
+        <form
+          name="general-contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          id="contact-form"
+          class="space-y-5"
+        >
+          <input type="hidden" name="form-name" value="general-contact" />
+          <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+          <div>
+            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Name *</label>
+            <input type="text" name="name" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-bg-dark mb-1.5">Phone</label>
+              <input type="tel" name="phone" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-bg-dark mb-1.5">Email *</label>
+              <input type="email" name="email" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-bg-dark mb-2">I am a...</label>
+            <div class="flex flex-wrap gap-4">
+              {['Buyer', 'Investor', 'Realtor', 'Other'].map(role => (
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="role" value={role} class="w-4 h-4 accent-gold" />
+                  <span class="text-sm text-gray-700">{role}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Message *</label>
+            <textarea name="message" rows="4" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold resize-none"></textarea>
+          </div>
+
+          <button type="submit" class="w-full bg-bg-dark text-white font-bold py-4 rounded-2xl hover:bg-gray-800 transition-colors">
+            Send Message
+          </button>
+        </form>
+
+        <div id="contact-thanks" class="hidden text-center py-8">
+          <div class="text-4xl mb-4">✅</div>
+          <h3 class="font-display font-bold text-xl text-bg-dark mb-2">Message received!</h3>
+          <p class="text-gray-500">We'll get back to you as soon as possible.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const thanks = document.getElementById('contact-thanks');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data as any).toString() });
+    form.classList.add('hidden');
+    thanks?.classList.remove('hidden');
+  });
+</script>
