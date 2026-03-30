@@ -21,15 +21,19 @@ const excerpt = description.slice(0, 120) + (description.length > 120 ? '…' : 
     <img
       src={firstPhoto}
       alt={`${acreage} acres for sale in ${county}, ${state}`}
-      class="w-full h-48 object-cover"
+      class={`w-full h-48 object-cover ${status === 'sold' ? 'brightness-50' : ''}`}
     />
-    <span class={`absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full ${
-      status === 'available'
-        ? 'bg-green-brand text-white'
-        : 'bg-gray-400 text-white'
-    }`}>
-      {status === 'available' ? 'Available' : 'Sold'}
-    </span>
+    {status === 'available' ? (
+      <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-green-brand text-white">
+        Available
+      </span>
+    ) : (
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-red-600 font-black text-5xl tracking-widest rotate-[-15deg] border-[6px] border-red-600 px-4 py-1 rounded-lg select-none" style="text-shadow: 2px 2px 0 rgba(0,0,0,0.4);">
+          SOLD
+        </span>
+      </div>
+    )}
   </div>
 
   <div class="p-5 flex flex-col flex-1">
