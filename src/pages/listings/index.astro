@@ -4,19 +4,7 @@ import ListingCard from '../../components/ListingCard.astro';
 import { getCollection } from 'astro:content';
 
 const allListings = await getCollection('listings');
-
-// URL param-based filtering
-const stateFilter = Astro.url.searchParams.get('state') || 'all';
-const statusFilter = Astro.url.searchParams.get('status') || 'all';
-
-const filtered = allListings
-  .filter(l => {
-    const stateOk = stateFilter === 'all' || l.data.state === stateFilter;
-    const statusOk = statusFilter === 'all' || l.data.status === statusFilter;
-    return stateOk && statusOk;
-  })
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
+const sorted = allListings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
 ---
 
@@ -31,47 +19,47 @@ const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
   <!-- Filter Bar -->
   <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap gap-4 items-center">
-      <form method="get" class="flex flex-wrap gap-3 items-center w-full sm:w-auto">
-        <!-- State filter -->
-        <select
-          name="state"
-          onchange="this.form.submit()"
-          class="border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-gold"
-        >
-          <option value="all" selected={stateFilter === 'all'}>All States</option>
-          {states.map(s => (
-            <option value={s} selected={stateFilter === s}>{s}</option>
-          ))}
-        </select>
 
-        <!-- Status filter -->
-        <div class="flex rounded-xl border border-gray-200 overflow-hidden text-sm font-medium">
-          {[
-            { value: 'all', label: 'All' },
-            { value: 'available', label: 'Available' },
-            { value: 'sold', label: 'Sold' },
-          ].map(opt => (
-            <a
-              href={`/listings?state=${stateFilter}&status=${opt.value}`}
-              class={`px-4 py-2 ${statusFilter === opt.value ? 'bg-bg-dark text-white' : 'text-gray-600 hover:bg-gray-50'}`}
-            >
-              {opt.label}
-            </a>
-          ))}
-        </div>
+      <!-- State filter -->
+      <select
+        id="filter-state"
+        class="border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-gold"
+      >
+        <option value="all">All States</option>
+        {states.map(s => (
+          <option value={s}>{s}</option>
+        ))}
+      </select>
 
-        <!-- Hidden status input so form submit carries it -->
-        <input type="hidden" name="status" value={statusFilter} />
-      </form>
+      <!-- Status filter -->
+      <div class="flex rounded-xl border border-gray-200 overflow-hidden text-sm font-medium">
+        {[
+          { value: 'all', label: 'All' },
+          { value: 'available', label: 'Available' },
+          { value: 'sold', label: 'Sold' },
+        ].map(opt => (
+          <button
+            class="status-btn px-4 py-2 transition-colors"
+            data-status={opt.value}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
 
-      <span class="text-sm text-text-muted ml-auto">{filtered.length} listing{filtered.length !== 1 ? 's' : ''}</span>
+      <span id="listing-count" class="text-sm text-text-muted ml-auto"></span>
     </div>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    {filtered.length > 0 ? (
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map(listing => (
+    <!-- All listings rendered, filtered via JS -->
+    <div id="listings-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sorted.map(listing => (
+        <div
+          class="listing-item"
+          data-state={listing.data.state}
+          data-status={listing.data.status}
+        >
           <ListingCard
             slug={listing.slug}
             title={listing.data.title}
@@ -83,17 +71,94 @@ const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
             photos={listing.data.photos}
             description={listing.body}
           />
-        ))}
-      </div>
-    ) : (
-      <div class="text-center py-20 bg-white rounded-2xl border border-gray-100">
-        <p class="text-2xl mb-3">🗺️</p>
-        <h3 class="font-display font-bold text-xl text-bg-dark mb-2">No listings in this area yet</h3>
-        <p class="text-gray-500 mb-6">Check back soon or tell us exactly what you're looking for.</p>
-        <a href="/find-land" class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
-          Request a Custom Search
-        </a>
-      </div>
-    )}
+        </div>
+      ))}
+    </div>
+
+    <!-- Empty state -->
+    <div id="no-results" class="hidden text-center py-20 bg-white rounded-2xl border border-gray-100">
+      <p class="text-2xl mb-3">🗺️</p>
+      <h3 class="font-display font-bold text-xl text-bg-dark mb-2">No listings match this filter</h3>
+      <p class="text-gray-500 mb-6">Try a different state or check back soon for new properties.</p>
+      <a href="/find-land" class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+        Request a Custom Search
+      </a>
+    </div>
   </div>
 </BaseLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    var stateSelect = document.getElementById('filter-state');
+    var statusBtns = document.querySelectorAll('.status-btn');
+    var items = document.querySelectorAll('.listing-item');
+    var noResults = document.getElementById('no-results');
+    var countEl = document.getElementById('listing-count');
+
+    var activeState = 'all';
+    var activeStatus = 'all';
+
+    // Read URL params on load
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('state')) activeState = params.get('state');
+    if (params.get('status')) activeStatus = params.get('status');
+
+    // Set initial select value
+    if (stateSelect) stateSelect.value = activeState;
+
+    function applyFilters() {
+      var visible = 0;
+
+      items.forEach(function (item) {
+        var itemState = item.getAttribute('data-state');
+        var itemStatus = item.getAttribute('data-status');
+        var stateOk = activeState === 'all' || itemState === activeState;
+        var statusOk = activeStatus === 'all' || itemStatus === activeStatus;
+
+        if (stateOk && statusOk) {
+          item.style.display = '';
+          visible++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      // Count
+      if (countEl) countEl.textContent = visible + ' listing' + (visible !== 1 ? 's' : '');
+
+      // Empty state
+      if (noResults) noResults.classList.toggle('hidden', visible > 0);
+
+      // Update status button styles
+      statusBtns.forEach(function (btn) {
+        var isActive = btn.getAttribute('data-status') === activeStatus;
+        btn.className = 'status-btn px-4 py-2 transition-colors ' + (isActive ? 'bg-bg-dark text-white' : 'text-gray-600 hover:bg-gray-50');
+      });
+
+      // Update URL without reload
+      var url = new URL(window.location.href);
+      if (activeState !== 'all') { url.searchParams.set('state', activeState); } else { url.searchParams.delete('state'); }
+      if (activeStatus !== 'all') { url.searchParams.set('status', activeStatus); } else { url.searchParams.delete('status'); }
+      window.history.replaceState({}, '', url);
+    }
+
+    // State filter
+    if (stateSelect) {
+      stateSelect.addEventListener('change', function () {
+        activeState = stateSelect.value;
+        applyFilters();
+      });
+    }
+
+    // Status filter
+    statusBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activeStatus = btn.getAttribute('data-status');
+        applyFilters();
+      });
+    });
+
+    // Run on load
+    applyFilters();
+  });
+</script>
