@@ -28,6 +28,22 @@ collections:
       - { label: "Photos", name: "photos", widget: "list", field: { label: "Photo", name: "photo", widget: "image" } }
       - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Date Listed", name: "date", widget: "datetime" }
+      - { label: "Buyer Testimonial", name: "buyerTestimonial", widget: "text", required: false, hint: "Add when sold — appears as a quote on the listing page" }
+      - { label: "Buyer Name", name: "buyerName", widget: "string", required: false, hint: "e.g. John D. or Allan R. Koepsell" }
+
+  - name: "testimonials"
+    label: "Testimonials"
+    folder: "src/content/testimonials"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string", hint: "e.g. Allan R. Koepsell" }
+      - { label: "Location", name: "location", widget: "string", required: false, hint: "e.g. Knoxville, TN" }
+      - { label: "Role / Title", name: "role", widget: "string", required: false, hint: "e.g. Former Real Estate Broker, Land Investor" }
+      - { label: "Show on Site", name: "featured", widget: "boolean", default: true }
+      - { label: "Display Order", name: "order", widget: "number", default: 99, hint: "Lower number = shows first" }
+      - { label: "Testimonial", name: "body", widget: "text", hint: "Write the full testimonial quote here — no quotation marks needed, they are added automatically" }
+      - { label: "Date", name: "date", widget: "datetime" }
 
   - name: "settings"
     label: "Site Settings"

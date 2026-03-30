@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TestimonialSection from '../components/TestimonialSection.astro';
 import { siteConfig } from '../config/site.js';
 const { phone, phoneRaw, email } = siteConfig;
 ---
@@ -14,6 +15,9 @@ const { phone, phoneRaw, email } = siteConfig;
       <p class="text-gray-400 text-lg">We'd love to hear from you — whether you're buying, investing, or just curious.</p>
     </div>
   </div>
+
+  <!-- Testimonial above form -->
+  <TestimonialSection variant="light" max={1} />
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="grid lg:grid-cols-2 gap-12">

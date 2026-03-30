@@ -17,8 +17,22 @@ const listings = defineCollection({
     gps: z.string().optional(),
     videoUrl: z.string().optional(),
     photos: z.array(z.string()).default([]),
+    buyerTestimonial: z.string().optional(),
+    buyerName: z.string().optional(),
     date: z.coerce.date(),
   }),
 });
 
-export const collections = { listings };
+const testimonials = defineCollection({
+  type: 'content',
+  schema: z.object({
+    name: z.string(),
+    location: z.string().optional(),
+    role: z.string().optional(),
+    featured: z.boolean().default(true),
+    order: z.number().default(99),
+    date: z.coerce.date(),
+  }),
+});
+
+export const collections = { listings, testimonials };

@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 
 const { listing } = Astro.props;
 const { Content } = await render(listing);
-const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, photos } = listing.data;
+const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, photos, buyerTestimonial, buyerName } = listing.data;
 
 const pageTitle = `${acreage} Acres for Sale — ${county}, ${state}`;
 const pageDescription = listing.body.slice(0, 155);
@@ -184,6 +184,20 @@ if (gps) {
             </div>
           </div>
         </div>
+
+        <!-- Buyer Testimonial (sold listings) -->
+        {buyerTestimonial && (
+          <div class="bg-bg-dark text-white rounded-2xl p-6">
+            <div class="text-gold text-4xl font-serif leading-none mb-3 select-none">&ldquo;</div>
+            <p class="text-gray-300 text-sm leading-relaxed mb-4">{buyerTestimonial}</p>
+            <div class="flex items-center gap-3 pt-3 border-t border-white/10">
+              <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center font-display font-black text-bg-dark text-sm flex-shrink-0">
+                {buyerName ? buyerName.charAt(0) : '★'}
+              </div>
+              <p class="text-white font-semibold text-sm">{buyerName || 'Verified Buyer'}</p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   </div>
