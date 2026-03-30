@@ -135,13 +135,35 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div>
           <label class="block text-sm font-semibold text-bg-dark mb-2">Intended Use</label>
           <div class="grid grid-cols-2 gap-2">
-            {['Recreational', 'Homestead', 'Investment', 'Hunting', 'Other'].map(use => (
+            {['Recreational', 'Homestead', 'Investment', 'Hunting', 'Residential', 'Ranch', 'Farm', 'Creekside', 'Waterfront', 'Other'].map(use => (
               <label class="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" name="intended-use" value={use} class="w-4 h-4 accent-gold" />
                 <span class="text-sm text-gray-700">{use}</span>
               </label>
             ))}
           </div>
+        </div>
+
+        <!-- Preferred Region/Area -->
+        <div>
+          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Preferred Region / Area</label>
+          <input
+            type="text"
+            name="preferred-region"
+            placeholder="e.g. East Tennessee, Yavapai County AZ, Northwest Arkansas foothills..."
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+          />
+        </div>
+
+        <!-- Unrestricted -->
+        <div>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="unrestricted-only" value="yes" class="w-4 h-4 accent-gold" />
+            <div>
+              <span class="text-sm font-semibold text-bg-dark">Unrestricted land preferred</span>
+              <p class="text-xs text-gray-500 mt-0.5">No HOA, no deed restrictions, no zoning limitations</p>
+            </div>
+          </label>
         </div>
 
         <!-- Notes -->

@@ -4,7 +4,7 @@ export const siteConfig = {
   phone: "(423) 370-9888",
   phoneRaw: "4233709888",
   email: "David@alot.land",
-  tagline: "Find Land. Fund Deals. Build Wealth.",
+  tagline: "Find Land. Build Wealth. Live Free.",
   description: "A Lot of Land LLC buys and sells land across Arizona, Tennessee, and Arkansas. Browse available properties or partner with us as a private investor.",
   social: {
     facebook: "",

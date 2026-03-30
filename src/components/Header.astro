@@ -16,13 +16,12 @@ const navLinks = [
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-3 flex-shrink-0">
+      <a href="/" class="flex items-center flex-shrink-0">
         <img
-          src="/images/alotdotland_sqLogo.png"
+          src="/images/alotdotland_hzLogo.png"
           alt="A Lot of Land LLC"
-          class="h-10 w-10 rounded-lg"
+          class="h-9 w-auto"
         />
-        <span class="font-display font-bold text-white text-lg hidden sm:block">alot.land</span>
       </a>
 
       <!-- Desktop Nav -->
@@ -97,15 +96,19 @@ const navLinks = [
   </div>
 </header>
 
-<script>
-  const toggle = document.getElementById('menu-toggle');
-  const menu = document.getElementById('mobile-menu');
-  const iconOpen = document.getElementById('icon-open');
-  const iconClose = document.getElementById('icon-close');
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    var toggle = document.getElementById('menu-toggle');
+    var menu = document.getElementById('mobile-menu');
+    var iconOpen = document.getElementById('icon-open');
+    var iconClose = document.getElementById('icon-close');
 
-  toggle?.addEventListener('click', () => {
-    menu?.classList.toggle('hidden');
-    iconOpen?.classList.toggle('hidden');
-    iconClose?.classList.toggle('hidden');
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        menu && menu.classList.toggle('hidden');
+        iconOpen && iconOpen.classList.toggle('hidden');
+        iconClose && iconClose.classList.toggle('hidden');
+      });
+    }
   });
 </script>
