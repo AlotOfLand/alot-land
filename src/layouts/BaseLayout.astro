@@ -56,6 +56,9 @@ const { gaMeasurementId } = siteConfig.analytics;
       rel="stylesheet"
     />
 
+    <!-- Page-specific head content (e.g. Leaflet CSS) -->
+    <slot name="head" />
+
     <!-- Netlify Identity (CMS) -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 

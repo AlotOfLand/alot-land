@@ -6,9 +6,27 @@ import { getCollection } from 'astro:content';
 const allListings = await getCollection('listings');
 const sorted = allListings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
+
+// Build map data (only listings with coordinates)
+const mapListings = sorted
+  .filter(l => l.data.lat && l.data.lng)
+  .map(l => ({
+    slug: l.slug,
+    title: l.data.title,
+    status: l.data.status,
+    state: l.data.state,
+    acreage: l.data.acreage,
+    price: l.data.price || 'Contact for Price',
+    lat: l.data.lat,
+    lng: l.data.lng,
+    photo: l.data.photos[0] || '',
+  }));
 ---
 
 <BaseLayout title="Available Land" description="Browse available land for sale in Arizona, Tennessee, and Northwest Arkansas. Off-market deals direct from A Lot of Land LLC.">
+  <!-- Leaflet CSS -->
+  <link slot="head" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <div class="bg-bg-dark text-white py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Available Land</h1>
@@ -16,9 +34,9 @@ const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
     </div>
   </div>
 
-  <!-- Filter Bar -->
+  <!-- Filter + View Toggle Bar -->
   <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap gap-4 items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap gap-3 items-center">
 
       <!-- State filter -->
       <select
@@ -26,9 +44,7 @@ const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
         class="border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-gold"
       >
         <option value="all">All States</option>
-        {states.map(s => (
-          <option value={s}>{s}</option>
-        ))}
+        {states.map(s => <option value={s}>{s}</option>)}
       </select>
 
       <!-- Status filter -->
@@ -38,21 +54,36 @@ const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
           { value: 'available', label: 'Available' },
           { value: 'sold', label: 'Sold' },
         ].map(opt => (
-          <button
-            class="status-btn px-4 py-2 transition-colors"
-            data-status={opt.value}
-          >
+          <button class="status-btn px-4 py-2 transition-colors" data-status={opt.value}>
             {opt.label}
           </button>
         ))}
       </div>
 
-      <span id="listing-count" class="text-sm text-text-muted ml-auto"></span>
+      <!-- Count -->
+      <span id="listing-count" class="text-sm text-text-muted"></span>
+
+      <!-- View toggle (grid / map) -->
+      <div class="ml-auto flex rounded-xl border border-gray-200 overflow-hidden text-sm font-medium">
+        <button id="view-grid" class="flex items-center gap-1.5 px-4 py-2 bg-bg-dark text-white transition-colors" aria-label="Grid view">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16">
+            <rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/>
+            <rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/>
+          </svg>
+          Grid
+        </button>
+        <button id="view-map" class="flex items-center gap-1.5 px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors" aria-label="Map view">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+          Map
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- All listings rendered, filtered via JS -->
+  <!-- GRID VIEW -->
+  <div id="grid-view" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div id="listings-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {sorted.map(listing => (
         <div
@@ -75,7 +106,6 @@ const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
       ))}
     </div>
 
-    <!-- Empty state -->
     <div id="no-results" class="hidden text-center py-20 bg-white rounded-2xl border border-gray-100">
       <p class="text-2xl mb-3">🗺️</p>
       <h3 class="font-display font-bold text-xl text-bg-dark mb-2">No listings match this filter</h3>
@@ -85,80 +115,195 @@ const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
       </a>
     </div>
   </div>
-</BaseLayout>
 
-<script is:inline>
-  document.addEventListener('DOMContentLoaded', function () {
-    var stateSelect = document.getElementById('filter-state');
-    var statusBtns = document.querySelectorAll('.status-btn');
-    var items = document.querySelectorAll('.listing-item');
-    var noResults = document.getElementById('no-results');
-    var countEl = document.getElementById('listing-count');
+  <!-- MAP VIEW -->
+  <div id="map-view" class="hidden">
+    <div id="map" style="height: calc(100vh - 130px); width: 100%;"></div>
+    <div id="map-no-results" class="hidden absolute inset-0 flex items-center justify-center bg-white/80 z-10">
+      <div class="text-center p-8 bg-white rounded-2xl shadow-lg border border-gray-100">
+        <p class="text-2xl mb-3">📍</p>
+        <h3 class="font-display font-bold text-xl text-bg-dark mb-2">No pins match this filter</h3>
+        <p class="text-gray-500 text-sm">Try a different state or status.</p>
+      </div>
+    </div>
 
-    var activeState = 'all';
-    var activeStatus = 'all';
+    <!-- Map legend -->
+    <div class="absolute bottom-8 right-4 z-[1000] bg-white rounded-xl shadow-md border border-gray-100 p-3 text-xs font-medium space-y-2">
+      <div class="flex items-center gap-2">
+        <svg width="14" height="20" viewBox="0 0 14 20"><path d="M7 0C3.134 0 0 3.134 0 7c0 5.25 7 13 7 13s7-7.75 7-13C14 3.134 10.866 0 7 0z" fill="#3CB054"/><circle cx="7" cy="7" r="3" fill="white"/></svg>
+        Available
+      </div>
+      <div class="flex items-center gap-2">
+        <svg width="14" height="20" viewBox="0 0 14 20"><path d="M7 0C3.134 0 0 3.134 0 7c0 5.25 7 13 7 13s7-7.75 7-13C14 3.134 10.866 0 7 0z" fill="#DC2626"/><circle cx="7" cy="7" r="3" fill="white"/></svg>
+        Sold
+      </div>
+    </div>
+  </div>
 
-    // Read URL params on load
-    var params = new URLSearchParams(window.location.search);
-    if (params.get('state')) activeState = params.get('state');
-    if (params.get('status')) activeStatus = params.get('status');
+  <!-- Map data passed to client -->
+  <script type="application/json" id="map-data" set:html={JSON.stringify(mapListings)}></script>
 
-    // Set initial select value
-    if (stateSelect) stateSelect.value = activeState;
+  <!-- Leaflet JS -->
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    function applyFilters() {
-      var visible = 0;
+  <!-- Filter + Map logic -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function () {
+      // ── State ──────────────────────────────────────────────
+      var activeState = 'all';
+      var activeStatus = 'all';
+      var currentView = 'grid'; // 'grid' | 'map'
+      var map = null;
+      var markers = []; // { marker, state, status }
 
-      items.forEach(function (item) {
-        var itemState = item.getAttribute('data-state');
-        var itemStatus = item.getAttribute('data-status');
-        var stateOk = activeState === 'all' || itemState === activeState;
-        var statusOk = activeStatus === 'all' || itemStatus === activeStatus;
+      // ── Elements ───────────────────────────────────────────
+      var stateSelect   = document.getElementById('filter-state');
+      var statusBtns    = document.querySelectorAll('.status-btn');
+      var gridItems     = document.querySelectorAll('.listing-item');
+      var noResults     = document.getElementById('no-results');
+      var mapNoResults  = document.getElementById('map-no-results');
+      var countEl       = document.getElementById('listing-count');
+      var gridView      = document.getElementById('grid-view');
+      var mapView       = document.getElementById('map-view');
+      var btnGrid       = document.getElementById('view-grid');
+      var btnMap        = document.getElementById('view-map');
 
-        if (stateOk && statusOk) {
-          item.style.display = '';
-          visible++;
+      // ── Read URL params ────────────────────────────────────
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('state'))  activeState  = params.get('state');
+      if (params.get('status')) activeStatus = params.get('status');
+      if (params.get('view') === 'map') currentView = 'map';
+      if (stateSelect) stateSelect.value = activeState;
+
+      // ── Custom pin icons ───────────────────────────────────
+      function makeIcon(color) {
+        return L.divIcon({
+          className: '',
+          html: '<svg width="22" height="32" viewBox="0 0 22 32" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 21 11 21s11-13.333 11-21C22 4.925 17.075 0 11 0z" fill="' + color + '" stroke="white" stroke-width="1.5"/>' +
+                '<circle cx="11" cy="11" r="4.5" fill="white"/>' +
+                '</svg>',
+          iconSize: [22, 32],
+          iconAnchor: [11, 32],
+          popupAnchor: [0, -34],
+        });
+      }
+      var iconGreen = makeIcon('#3CB054');
+      var iconRed   = makeIcon('#DC2626');
+
+      // ── Init Leaflet map ───────────────────────────────────
+      function initMap() {
+        if (map) return;
+        map = L.map('map', { zoomControl: true }).setView([38.5, -96], 4);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          maxZoom: 18,
+        }).addTo(map);
+
+        // Add markers from embedded JSON
+        var raw = document.getElementById('map-data');
+        if (!raw) return;
+        var listings = JSON.parse(raw.textContent || '[]');
+
+        listings.forEach(function (l) {
+          var icon = l.status === 'available' ? iconGreen : iconRed;
+          var popup = '<div style="min-width:180px;font-family:sans-serif;">' +
+            (l.photo ? '<img src="' + l.photo + '" style="width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:8px;" />' : '') +
+            '<div style="font-weight:700;font-size:14px;margin-bottom:4px;">' + l.title + '</div>' +
+            '<div style="font-size:12px;color:#888;margin-bottom:6px;">' + l.acreage + ' acres · ' + l.state + '</div>' +
+            '<div style="font-weight:700;color:' + (l.status === 'available' ? '#F5B800' : '#888') + ';margin-bottom:10px;">' +
+              (l.status === 'available' ? l.price : '🔴 SOLD') +
+            '</div>' +
+            '<a href="/listings/' + l.slug + '" style="display:block;background:#0A0A0A;color:#fff;text-align:center;padding:7px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;">View Details →</a>' +
+            '</div>';
+
+          var m = L.marker([l.lat, l.lng], { icon: icon }).bindPopup(popup);
+          m.addTo(map);
+          markers.push({ marker: m, state: l.state, status: l.status });
+        });
+      }
+
+      // ── Apply filters ──────────────────────────────────────
+      function applyFilters() {
+        var visible = 0;
+
+        // Grid
+        gridItems.forEach(function (item) {
+          var s = item.getAttribute('data-state');
+          var t = item.getAttribute('data-status');
+          var show = (activeState === 'all' || s === activeState) && (activeStatus === 'all' || t === activeStatus);
+          item.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
+
+        // Map markers
+        var mapVisible = 0;
+        markers.forEach(function (m) {
+          var show = (activeState === 'all' || m.state === activeState) && (activeStatus === 'all' || m.status === activeStatus);
+          if (show) { m.marker.addTo(map); mapVisible++; }
+          else       { m.marker.remove(); }
+        });
+
+        if (mapNoResults) mapNoResults.classList.toggle('hidden', mapVisible > 0);
+
+        // Count (use grid count so "3 listings" is consistent)
+        if (countEl) countEl.textContent = visible + ' listing' + (visible !== 1 ? 's' : '');
+
+        // Status button styles
+        statusBtns.forEach(function (btn) {
+          var active = btn.getAttribute('data-status') === activeStatus;
+          btn.className = 'status-btn px-4 py-2 transition-colors ' + (active ? 'bg-bg-dark text-white' : 'text-gray-600 hover:bg-gray-50');
+        });
+
+        // Update URL
+        var url = new URL(window.location.href);
+        activeState  !== 'all' ? url.searchParams.set('state',  activeState)  : url.searchParams.delete('state');
+        activeStatus !== 'all' ? url.searchParams.set('status', activeStatus) : url.searchParams.delete('status');
+        currentView  === 'map' ? url.searchParams.set('view',   'map')        : url.searchParams.delete('view');
+        window.history.replaceState({}, '', url);
+      }
+
+      // ── View toggle ────────────────────────────────────────
+      function setView(v) {
+        currentView = v;
+        if (v === 'map') {
+          gridView.classList.add('hidden');
+          mapView.classList.remove('hidden');
+          mapView.style.position = 'relative';
+          btnGrid.className = 'flex items-center gap-1.5 px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors';
+          btnMap.className  = 'flex items-center gap-1.5 px-4 py-2 bg-bg-dark text-white transition-colors';
+          initMap();
+          setTimeout(function () { if (map) map.invalidateSize(); }, 100);
         } else {
-          item.style.display = 'none';
+          gridView.classList.remove('hidden');
+          mapView.classList.add('hidden');
+          btnGrid.className = 'flex items-center gap-1.5 px-4 py-2 bg-bg-dark text-white transition-colors';
+          btnMap.className  = 'flex items-center gap-1.5 px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors';
         }
-      });
+        applyFilters();
+      }
 
-      // Count
-      if (countEl) countEl.textContent = visible + ' listing' + (visible !== 1 ? 's' : '');
-
-      // Empty state
-      if (noResults) noResults.classList.toggle('hidden', visible > 0);
-
-      // Update status button styles
+      // ── Event listeners ────────────────────────────────────
+      if (stateSelect) {
+        stateSelect.addEventListener('change', function () {
+          activeState = stateSelect.value;
+          applyFilters();
+        });
+      }
       statusBtns.forEach(function (btn) {
-        var isActive = btn.getAttribute('data-status') === activeStatus;
-        btn.className = 'status-btn px-4 py-2 transition-colors ' + (isActive ? 'bg-bg-dark text-white' : 'text-gray-600 hover:bg-gray-50');
+        btn.addEventListener('click', function () {
+          activeStatus = btn.getAttribute('data-status');
+          applyFilters();
+        });
       });
+      if (btnGrid) btnGrid.addEventListener('click', function () { setView('grid'); });
+      if (btnMap)  btnMap.addEventListener('click',  function () { setView('map');  });
 
-      // Update URL without reload
-      var url = new URL(window.location.href);
-      if (activeState !== 'all') { url.searchParams.set('state', activeState); } else { url.searchParams.delete('state'); }
-      if (activeStatus !== 'all') { url.searchParams.set('status', activeStatus); } else { url.searchParams.delete('status'); }
-      window.history.replaceState({}, '', url);
-    }
-
-    // State filter
-    if (stateSelect) {
-      stateSelect.addEventListener('change', function () {
-        activeState = stateSelect.value;
-        applyFilters();
-      });
-    }
-
-    // Status filter
-    statusBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        activeStatus = btn.getAttribute('data-status');
-        applyFilters();
-      });
+      // ── Init ───────────────────────────────────────────────
+      if (currentView === 'map') setView('map');
+      else applyFilters();
     });
-
-    // Run on load
-    applyFilters();
-  });
-</script>
+  </script>
+</BaseLayout>

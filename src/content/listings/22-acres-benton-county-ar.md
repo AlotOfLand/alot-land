@@ -8,6 +8,8 @@ acreage: "22"
 zoning: "Agricultural"
 roadAccess: "County road frontage"
 water: "Well potential"
+lat: 36.3748
+lng: -94.2088
 power: "Yes"
 photos:
   - /images/land-arkansas-1.jpg

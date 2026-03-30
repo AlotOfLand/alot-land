@@ -11,6 +11,8 @@ roadAccess: "Paved road frontage"
 water: "Seasonal creek"
 power: "Power nearby"
 gps: "36.3789, -84.9123"
+lat: 36.3789
+lng: -84.9123
 photos:
   - /images/land-tennessee-1.jpg
   - /images/land-tennessee-2.jpg

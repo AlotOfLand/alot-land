@@ -11,6 +11,8 @@ roadAccess: "Dirt road frontage"
 water: "No"
 power: "No"
 gps: "34.5678, -112.3456"
+lat: 34.5678
+lng: -112.3456
 photos:
   - /images/land-arizona-1.jpg
   - /images/land-arizona-2.jpg

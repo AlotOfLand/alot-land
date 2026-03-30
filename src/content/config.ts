@@ -19,6 +19,8 @@ const listings = defineCollection({
     photos: z.array(z.string()).default([]),
     buyerTestimonial: z.string().optional(),
     buyerName: z.string().optional(),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
     date: z.coerce.date(),
   }),
 });

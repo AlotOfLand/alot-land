@@ -30,6 +30,8 @@ collections:
       - { label: "Date Listed", name: "date", widget: "datetime" }
       - { label: "Buyer Testimonial", name: "buyerTestimonial", widget: "text", required: false, hint: "Add when sold — appears as a quote on the listing page" }
       - { label: "Buyer Name", name: "buyerName", widget: "string", required: false, hint: "e.g. John D. or Allan R. Koepsell" }
+      - { label: "Latitude", name: "lat", widget: "number", required: false, value_type: "float", hint: "e.g. 36.3789 — find at maps.google.com (right-click any spot → copy coordinates)" }
+      - { label: "Longitude", name: "lng", widget: "number", required: false, value_type: "float", hint: "e.g. -84.9123 — must be negative for US locations" }
 
   - name: "testimonials"
     label: "Testimonials"
