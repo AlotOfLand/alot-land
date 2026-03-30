@@ -194,22 +194,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 </BaseLayout>
 
-<script>
-  // Toggle other state field
-  const otherCb = document.getElementById('other-state-cb') as HTMLInputElement;
-  const otherInput = document.getElementById('other-state-input') as HTMLInputElement;
-  otherCb?.addEventListener('change', () => {
-    otherInput.classList.toggle('hidden', !otherCb.checked);
-  });
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Toggle other state field
+    var otherCb = document.getElementById('other-state-cb');
+    var otherInput = document.getElementById('other-state-input');
+    if (otherCb && otherInput) {
+      otherCb.addEventListener('change', function () {
+        otherInput.classList.toggle('hidden', !otherCb.checked);
+        if (otherCb.checked) otherInput.focus();
+      });
+    }
 
-  // Form submission
-  const form = document.getElementById('land-request-form') as HTMLFormElement;
-  const thanks = document.getElementById('land-request-thanks');
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = new FormData(form);
-    await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data as any).toString() });
-    form.classList.add('hidden');
-    thanks?.classList.remove('hidden');
+    // Form submission
+    var form = document.getElementById('land-request-form');
+    var thanks = document.getElementById('land-request-thanks');
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var data = new FormData(form);
+        await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
+        form.classList.add('hidden');
+        if (thanks) thanks.classList.remove('hidden');
+      });
+    }
   });
 </script>
