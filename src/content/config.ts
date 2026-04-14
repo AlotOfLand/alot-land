@@ -21,6 +21,7 @@ const listings = defineCollection({
     buyerName: z.string().optional(),
     lat: z.number().optional(),
     lng: z.number().optional(),
+    community: z.string().optional(),
     date: z.coerce.date(),
   }),
 });
@@ -37,4 +38,15 @@ const testimonials = defineCollection({
   }),
 });
 
-export const collections = { listings, testimonials };
+const communities = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    location: z.string().optional(),
+    status: z.enum(['coming-soon', 'lots-available', 'sold-out']),
+    image: z.string().optional(),
+    date: z.coerce.date(),
+  }),
+});
+
+export const collections = { listings, testimonials, communities };

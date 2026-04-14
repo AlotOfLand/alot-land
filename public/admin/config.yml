@@ -32,6 +32,7 @@ collections:
       - { label: "Buyer Name", name: "buyerName", widget: "string", required: false, hint: "e.g. John D. or Allan R. Koepsell" }
       - { label: "Latitude", name: "lat", widget: "number", required: false, value_type: "float", hint: "e.g. 36.3789 — find at maps.google.com (right-click any spot → copy coordinates)" }
       - { label: "Longitude", name: "lng", widget: "number", required: false, value_type: "float", hint: "e.g. -84.9123 — must be negative for US locations" }
+      - { label: "Community (optional)", name: "community", widget: "relation", collection: "communities", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"], required: false, hint: "Link this listing to a community subdivision if applicable" }
 
   - name: "testimonials"
     label: "Testimonials"
@@ -45,6 +46,19 @@ collections:
       - { label: "Show on Site", name: "featured", widget: "boolean", default: true }
       - { label: "Display Order", name: "order", widget: "number", default: 99, hint: "Lower number = shows first" }
       - { label: "Testimonial", name: "body", widget: "text", hint: "Write the full testimonial quote here — no quotation marks needed, they are added automatically" }
+      - { label: "Date", name: "date", widget: "datetime" }
+
+  - name: "communities"
+    label: "Communities"
+    folder: "src/content/communities"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Community Name", name: "title", widget: "string", hint: "e.g. Desert Ridge Estates" }
+      - { label: "Location", name: "location", widget: "string", required: false, hint: "e.g. Yavapai County, AZ" }
+      - { label: "Status", name: "status", widget: "select", options: [{label: "Coming Soon", value: "coming-soon"}, {label: "Lots Available", value: "lots-available"}, {label: "Sold Out", value: "sold-out"}] }
+      - { label: "Community Image", name: "image", widget: "image", required: false }
+      - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Date", name: "date", widget: "datetime" }
 
   - name: "settings"
