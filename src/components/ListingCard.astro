@@ -2,7 +2,7 @@
 interface Props {
   slug: string;
   title: string;
-  status: 'available' | 'sold';
+  status: 'available' | 'sold' | 'coming-soon';
   acreage: string;
   county: string;
   state: string;
@@ -21,12 +21,18 @@ const excerpt = description.slice(0, 120) + (description.length > 120 ? '…' : 
     <img
       src={firstPhoto}
       alt={`${acreage} acres for sale in ${county}, ${state}`}
-      class={`w-full h-48 object-cover ${status === 'sold' ? 'brightness-50' : ''}`}
+      class={`w-full h-48 object-cover ${status === 'sold' || status === 'coming-soon' ? 'brightness-50' : ''}`}
     />
     {status === 'available' ? (
       <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-green-brand text-white">
         Available
       </span>
+    ) : status === 'coming-soon' ? (
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-blue-400 font-black text-3xl tracking-widest rotate-[-15deg] border-[6px] border-blue-400 px-4 py-1 rounded-lg select-none whitespace-nowrap" style="text-shadow: 2px 2px 0 rgba(0,0,0,0.4);">
+          COMING SOON
+        </span>
+      </div>
     ) : (
       <div class="absolute inset-0 flex items-center justify-center">
         <span class="text-red-600 font-black text-5xl tracking-widest rotate-[-15deg] border-[6px] border-red-600 px-4 py-1 rounded-lg select-none" style="text-shadow: 2px 2px 0 rgba(0,0,0,0.4);">

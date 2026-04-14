@@ -47,6 +47,7 @@ const mapListings = sorted
         {[
           { value: 'all', label: 'All' },
           { value: 'available', label: 'Available' },
+          { value: 'coming-soon', label: 'Coming Soon' },
           { value: 'sold', label: 'Sold' },
         ].map(opt => (
           <button class="status-btn px-4 py-2 transition-colors" data-status={opt.value}>{opt.label}</button>
@@ -82,6 +83,10 @@ const mapListings = sorted
       <div class="flex items-center gap-2">
         <svg width="12" height="18" viewBox="0 0 12 18"><path d="M6 0C2.686 0 0 2.686 0 6c0 4.5 6 12 6 12s6-7.5 6-12C12 2.686 9.314 0 6 0z" fill="#3CB054"/><circle cx="6" cy="6" r="2.5" fill="white"/></svg>
         Available
+      </div>
+      <div class="flex items-center gap-2">
+        <svg width="12" height="18" viewBox="0 0 12 18"><path d="M6 0C2.686 0 0 2.686 0 6c0 4.5 6 12 6 12s6-7.5 6-12C12 2.686 9.314 0 6 0z" fill="#3B82F6"/><circle cx="6" cy="6" r="2.5" fill="white"/></svg>
+        Coming Soon
       </div>
       <div class="flex items-center gap-2">
         <svg width="12" height="18" viewBox="0 0 12 18"><path d="M6 0C2.686 0 0 2.686 0 6c0 4.5 6 12 6 12s6-7.5 6-12C12 2.686 9.314 0 6 0z" fill="#DC2626"/><circle cx="6" cy="6" r="2.5" fill="white"/></svg>
@@ -158,6 +163,7 @@ const mapListings = sorted
       }
       var iconGreen = makeIcon('#3CB054');
       var iconRed   = makeIcon('#DC2626');
+      var iconBlue  = makeIcon('#3B82F6');
 
       // ── Init map ─────────────────────────────────────────
       function initMap() {
@@ -176,11 +182,12 @@ const mapListings = sorted
             (l.photo ? '<img src="' + l.photo + '" style="width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:8px;"/>' : '') +
             '<div style="font-weight:700;font-size:14px;margin-bottom:4px;">' + l.title + '</div>' +
             '<div style="font-size:12px;color:#888;margin-bottom:6px;">' + l.acreage + ' acres · ' + l.state + '</div>' +
-            '<div style="font-weight:700;color:' + (l.status === 'available' ? '#F5B800' : '#888') + ';margin-bottom:10px;">' +
-              (l.status === 'available' ? l.price : '🔴 SOLD') + '</div>' +
+            '<div style="font-weight:700;color:' + (l.status === 'available' ? '#F5B800' : l.status === 'coming-soon' ? '#3B82F6' : '#888') + ';margin-bottom:10px;">' +
+              (l.status === 'available' ? l.price : l.status === 'coming-soon' ? '🔵 Coming Soon' : '🔴 SOLD') + '</div>' +
             '<a href="/listings/' + l.slug + '" style="display:block;background:#0A0A0A;color:#fff;text-align:center;padding:7px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;">View Details →</a>' +
             '</div>';
-          var m = L.marker([l.lat, l.lng], { icon: l.status === 'available' ? iconGreen : iconRed }).bindPopup(popup);
+          var icon = l.status === 'available' ? iconGreen : l.status === 'coming-soon' ? iconBlue : iconRed;
+          var m = L.marker([l.lat, l.lng], { icon: icon }).bindPopup(popup);
           m.addTo(map);
           markers.push({ marker: m, state: l.state, status: l.status });
         });
