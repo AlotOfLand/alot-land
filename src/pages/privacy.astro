@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site.js';
+const { name, domain, email } = siteConfig;
+const year = new Date().getFullYear();
+---
+
+<BaseLayout title="Privacy Policy" description="Privacy policy for A Lot of Land LLC (alot.land).">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <h1 class="font-display font-black text-4xl text-bg-dark mb-3">Privacy Policy</h1>
+    <p class="text-text-muted text-sm mb-10">Last updated: January 1, {year}</p>
+
+    <div class="prose prose-gray max-w-none space-y-8 text-gray-600 leading-relaxed">
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">1. Who We Are</h2>
+        <p>
+          {name} operates the website <strong>{domain}</strong>. This privacy policy explains how we collect, use, and protect information you provide when using our website.
+        </p>
+        <p class="mt-2">
+          Contact: <a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a>
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">2. Information We Collect</h2>
+        <p>We collect information you voluntarily provide through our contact forms, including:</p>
+        <ul class="list-disc list-inside mt-2 space-y-1">
+          <li>Name, phone number, and email address</li>
+          <li>Property inquiry details and preferences</li>
+          <li>Investment interest and capital information</li>
+          <li>Messages and notes you submit</li>
+        </ul>
+        <p class="mt-3">
+          We also automatically collect standard web analytics data (pages visited, time on site, general location) through Google Analytics 4.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">3. How We Use Your Information</h2>
+        <p>We use your information only to:</p>
+        <ul class="list-disc list-inside mt-2 space-y-1">
+          <li>Respond to your inquiries about land listings or investment opportunities</li>
+          <li>Contact you about properties that match your stated preferences</li>
+          <li>Notify you about new listings or opportunities (only if you've requested this)</li>
+          <li>Improve our website and understand how visitors use it (via analytics)</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">4. We Do Not Sell Your Data</h2>
+        <p>
+          We do not sell, rent, trade, or share your personal information with third parties for their marketing purposes. Your information is used solely to respond to your requests and communicate with you about our services.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">5. Cookies &amp; Google Analytics</h2>
+        <p>
+          Our website uses Google Analytics 4 to collect anonymized usage data (such as pages viewed and time on site). Google Analytics uses cookies — small text files stored on your browser. This data helps us understand how visitors use our site.
+        </p>
+        <p class="mt-3">
+          Google Analytics data is processed by Google according to their privacy policy. You can opt out of Google Analytics tracking by using the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">Google Analytics Opt-out Browser Add-on</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">6. Form Submissions</h2>
+        <p>
+          Forms on this website are processed by Netlify Forms. Submission data is stored securely on Netlify's servers and forwarded to our email. Netlify's privacy practices are governed by their own <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">privacy policy</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">7. Data Retention</h2>
+        <p>
+          We retain your contact information only as long as necessary to respond to your inquiry or maintain a business relationship. You may request deletion of your information at any time by emailing <a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">8. Your Rights</h2>
+        <p>You have the right to:</p>
+        <ul class="list-disc list-inside mt-2 space-y-1">
+          <li>Request access to the personal data we hold about you</li>
+          <li>Request correction of inaccurate data</li>
+          <li>Request deletion of your data</li>
+          <li>Opt out of any communications at any time</li>
+        </ul>
+        <p class="mt-3">
+          To exercise any of these rights, contact us at <a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">9. Security</h2>
+        <p>
+          Our website is served over HTTPS (SSL/TLS encryption). We take reasonable measures to protect your information, but no method of transmission over the internet is 100% secure.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">10. Changes to This Policy</h2>
+        <p>
+          We may update this privacy policy from time to time. The "last updated" date at the top of this page will reflect any changes. Continued use of our website constitutes acceptance of the updated policy.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">11. Contact</h2>
+        <p>
+          Questions about this privacy policy? Contact us at:<br />
+          <strong>{name}</strong><br />
+          <a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a>
+        </p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>

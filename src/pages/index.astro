@@ -1,0 +1,265 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ListingCard from '../components/ListingCard.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import TestimonialSection from '../components/TestimonialSection.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site.js';
+
+const { phone, phoneRaw } = siteConfig;
+
+const allListings = await getCollection('listings');
+const featuredListings = allListings
+  .filter(l => l.data.featured && l.data.status === 'available')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="relative min-h-[85vh] flex items-center justify-center text-white overflow-hidden">
+    <img
+      src="/images/hero-land.jpg"
+      alt="Aerial view of open land at golden hour"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+      <h1 class="font-display font-black text-5xl sm:text-6xl lg:text-7xl mb-6 leading-tight">
+        A Lot of Land.
+      </h1>
+      <p class="text-xl sm:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed">
+        Off-market deals in Arizona, Tennessee &amp; Arkansas.<br class="hidden sm:block" />
+        We find it — you own it.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
+        <a
+          href="/listings"
+          class="bg-gold text-bg-dark font-bold text-lg px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors"
+        >
+          Browse Available Land
+        </a>
+        <a
+          href="/invest"
+          class="border-2 border-white text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-white/10 transition-colors"
+        >
+          Invest With Us
+        </a>
+      </div>
+      <a
+        href={`tel:${phoneRaw}`}
+        class="inline-flex items-center gap-2 text-gray-300 hover:text-white text-lg transition-colors"
+      >
+        📞 {phone}
+      </a>
+    </div>
+  </section>
+
+  <!-- What We Do -->
+  <section class="py-20 bg-bg-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+          <div class="text-4xl mb-4">🏡</div>
+          <h2 class="font-display font-bold text-2xl text-bg-dark mb-3">Buy Land</h2>
+          <p class="text-gray-600 leading-relaxed mb-6">
+            Looking for land? Browse our available properties or tell us exactly what you want and we'll go find it off-market for you.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a href="/listings" class="text-center bg-bg-dark text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-800 transition-colors text-sm">
+              View Listings
+            </a>
+            <a href="/find-land" class="text-center border border-bg-dark text-bg-dark font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-colors text-sm">
+              Request a Search
+            </a>
+          </div>
+        </div>
+
+        <div class="bg-bg-dark rounded-2xl p-8 text-white">
+          <div class="text-4xl mb-4">💰</div>
+          <h2 class="font-display font-bold text-2xl mb-3">Invest With Us</h2>
+          <p class="text-gray-300 leading-relaxed mb-6">
+            We find undervalued land, subdivide it, and sell the new parcels. Join us as a private investor and put your capital to work.
+          </p>
+          <a href="/invest" class="inline-block bg-gold text-bg-dark font-semibold px-5 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
+            Learn More
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Listings -->
+  <section class="py-20 bg-bg-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between mb-10">
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bg-dark">Available Now</h2>
+        <a href="/listings" class="text-sm font-semibold text-gold hover:underline hidden sm:block">See All Listings →</a>
+      </div>
+
+      {featuredListings.length > 0 ? (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featuredListings.map(listing => (
+            <ListingCard
+              slug={listing.slug}
+              title={listing.data.title}
+              status={listing.data.status}
+              acreage={listing.data.acreage}
+              county={listing.data.county}
+              state={listing.data.state}
+              price={listing.data.price}
+              photos={listing.data.photos}
+              description={listing.body}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-16 bg-white rounded-2xl border border-gray-100">
+          <p class="text-gray-500 mb-4">New listings coming soon — check back often!</p>
+          <a href="/find-land" class="text-gold font-semibold hover:underline">Tell us what you're looking for →</a>
+        </div>
+      )}
+
+      <div class="text-center mt-10 sm:hidden">
+        <a href="/listings" class="text-gold font-semibold hover:underline">See All Listings →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Operating States -->
+  <section class="py-20 bg-bg-dark text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl mb-4">Where We Work</h2>
+      <p class="text-gray-400 mb-12 text-lg">Active markets — with more on the way.</p>
+
+      <div class="grid sm:grid-cols-3 gap-6 mb-8">
+        {[
+          { state: 'Arizona', emoji: '🌵', desc: 'Desert land, off-grid parcels, rural homesteads' },
+          { state: 'Tennessee', emoji: '🏞️', desc: 'Wooded tracts, hunting land, mountain cabins' },
+          { state: 'Northwest Arkansas', emoji: '🌲', desc: 'Ozark foothills, recreational & investment land' },
+        ].map(item => (
+          <div class="bg-border-dark rounded-2xl p-6 border border-[#333]">
+            <div class="text-5xl mb-4">{item.emoji}</div>
+            <h3 class="font-display font-bold text-xl mb-2">{item.state}</h3>
+            <p class="text-gray-400 text-sm">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <p class="text-text-muted text-sm">Entering new markets — check back often.</p>
+    </div>
+  </section>
+
+  <!-- How It Works: Buyer -->
+  <section class="py-20 bg-bg-light">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-center text-bg-dark mb-12">
+        How It Works — Buying Land
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-8">
+        {[
+          { step: '01', icon: '📬', title: 'We Find It Off-Market', desc: 'We reach out directly to landowners through direct mail — not on MLS, not on auction sites.' },
+          { step: '02', icon: '📝', title: 'We Get It Under Contract', desc: 'We negotiate directly with the owner and get the property under contract at a fair price.' },
+          { step: '03', icon: '🤝', title: 'You Buy It', desc: 'We list the property with top local land realtors. You buy it at a fair, transparent price.' },
+        ].map(item => (
+          <div class="text-center">
+            <div class="w-16 h-16 bg-gold rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+              {item.icon}
+            </div>
+            <div class="text-gold font-bold text-sm mb-2">{item.step}</div>
+            <h3 class="font-display font-bold text-lg text-bg-dark mb-2">{item.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div class="text-center mt-10">
+        <a href="/listings" class="bg-bg-dark text-white font-bold px-8 py-4 rounded-2xl hover:bg-gray-800 transition-colors inline-block">
+          Browse Available Land
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works: Investor -->
+  <section class="py-20 bg-bg-dark text-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-center mb-12">
+        How It Works — Investing
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-8">
+        {[
+          { step: '01', icon: '🔍', title: 'We Identify a Parcel', desc: 'We find undervalued land with subdivision potential — researching zoning, access, and market demand.' },
+          { step: '02', icon: '💼', title: 'Private Funders Join', desc: 'We bring in private investors to fund the acquisition and subdivision costs on a deal-by-deal basis.' },
+          { step: '03', icon: '📈', title: 'We Subdivide & Sell', desc: 'We subdivide the parcel into individual lots, sell them on-market, and funders are repaid with a return.' },
+        ].map(item => (
+          <div class="text-center">
+            <div class="w-16 h-16 bg-green-brand rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+              {item.icon}
+            </div>
+            <div class="text-green-brand font-bold text-sm mb-2">{item.step}</div>
+            <h3 class="font-display font-bold text-lg mb-2">{item.title}</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div class="text-center mt-10">
+        <a href="/invest" class="bg-green-brand text-white font-bold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity inline-block">
+          Learn About Investing
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Strip -->
+  <section class="py-14 bg-gold">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-bg-dark">
+        {[
+          { stat: '100%', label: 'Off-Market Deals' },
+          { stat: '3', label: 'Active States' },
+          { stat: 'Direct', label: 'With the Owner' },
+        ].map(item => (
+          <div>
+            <div class="font-display font-black text-4xl mb-1">{item.stat}</div>
+            <div class="font-semibold text-sm uppercase tracking-wider">{item.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Section -->
+  <section class="py-20 bg-bg-light">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-bg-dark mb-4">Hear From David</h2>
+      <p class="text-gray-500 mb-8">Watch a quick 60-second overview of how we work.</p>
+      <!-- Replace with your YouTube video ID -->
+      <div class="aspect-video w-full rounded-2xl overflow-hidden bg-gray-200 flex items-center justify-center">
+        <div class="text-center text-gray-400">
+          <div class="text-5xl mb-3">▶️</div>
+          <p class="text-sm">Video coming soon</p>
+          <p class="text-xs mt-1"><!-- Replace with your YouTube video ID --></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <TestimonialSection variant="dark" max={3} />
+
+  <!-- Bottom CTA -->
+  <section class="py-20 bg-bg-dark text-white text-center">
+    <div class="max-w-2xl mx-auto px-4">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl mb-4">Ready to find your land?</h2>
+      <p class="text-gray-400 mb-8 text-lg">Browse current listings or reach out and tell us what you're looking for.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/listings" class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors">
+          Browse Listings
+        </a>
+        <a href={`tel:${phoneRaw}`} class="border-2 border-white text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-colors">
+          📞 Call Us
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

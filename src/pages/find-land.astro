@@ -1,0 +1,222 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Find Land For Me"
+  description="Tell us what land you're looking for and we'll source it off-market. Arizona, Tennessee, and Northwest Arkansas."
+>
+  <!-- Hero -->
+  <div class="bg-bg-dark text-white py-16">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-4">
+        Tell Us What You Want — We'll Go Find It
+      </h1>
+      <p class="text-gray-300 text-lg leading-relaxed">
+        We specialize in sourcing off-market land deals. Tell us your target area, budget, and what you're looking for — we'll do the legwork.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+      <form
+        name="land-request"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        id="land-request-form"
+        class="space-y-6"
+      >
+        <input type="hidden" name="form-name" value="land-request" />
+        <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+        <!-- Name -->
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-bg-dark mb-1.5">First Name *</label>
+            <input
+              type="text"
+              name="first-name"
+              required
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Last Name *</label>
+            <input
+              type="text"
+              name="last-name"
+              required
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Phone *</label>
+            <input
+              type="tel"
+              name="phone"
+              required
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Email *</label>
+            <input
+              type="email"
+              name="email"
+              required
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+        </div>
+
+        <!-- Target States -->
+        <div>
+          <label class="block text-sm font-semibold text-bg-dark mb-2">Target State(s)</label>
+          <div class="space-y-2">
+            {['Arizona', 'Tennessee', 'Northwest Arkansas'].map(s => (
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="states" value={s} class="w-4 h-4 accent-gold" />
+                <span class="text-sm text-gray-700">{s}</span>
+              </label>
+            ))}
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="states" value="Other" id="other-state-cb" class="w-4 h-4 accent-gold" />
+              <span class="text-sm text-gray-700">Other</span>
+            </label>
+            <input
+              type="text"
+              name="other-state"
+              id="other-state-input"
+              placeholder="Specify state..."
+              class="hidden w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold mt-1"
+            />
+          </div>
+        </div>
+
+        <!-- Acreage Range -->
+        <div>
+          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Acreage Range</label>
+          <select
+            name="acreage-range"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold bg-white"
+          >
+            <option value="">Select acreage...</option>
+            <option>Under 5 acres</option>
+            <option>5–20 acres</option>
+            <option>20–50 acres</option>
+            <option>50–100 acres</option>
+            <option>100+ acres</option>
+          </select>
+        </div>
+
+        <!-- Budget Range -->
+        <div>
+          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Budget Range</label>
+          <select
+            name="budget-range"
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold bg-white"
+          >
+            <option value="">Select budget...</option>
+            <option>Under $25K</option>
+            <option>$25K–$75K</option>
+            <option>$75K–$150K</option>
+            <option>$150K–$300K</option>
+            <option>$300K+</option>
+          </select>
+        </div>
+
+        <!-- Intended Use -->
+        <div>
+          <label class="block text-sm font-semibold text-bg-dark mb-2">Intended Use</label>
+          <div class="grid grid-cols-2 gap-2">
+            {['Recreational', 'Homestead', 'Investment', 'Hunting', 'Residential', 'Ranch', 'Farm', 'Creekside', 'Waterfront', 'Other'].map(use => (
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="intended-use" value={use} class="w-4 h-4 accent-gold" />
+                <span class="text-sm text-gray-700">{use}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <!-- Preferred Region/Area -->
+        <div>
+          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Preferred Region / Area</label>
+          <input
+            type="text"
+            name="preferred-region"
+            placeholder="e.g. East Tennessee, Yavapai County AZ, Northwest Arkansas foothills..."
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+          />
+        </div>
+
+        <!-- Unrestricted -->
+        <div>
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input type="checkbox" name="unrestricted-only" value="yes" class="w-4 h-4 accent-gold" />
+            <div>
+              <span class="text-sm font-semibold text-bg-dark">Unrestricted land preferred</span>
+              <p class="text-xs text-gray-500 mt-0.5">No HOA, no deed restrictions, no zoning limitations</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Additional Notes</label>
+          <textarea
+            name="notes"
+            rows="4"
+            placeholder="Tell us anything else — specific counties, water needs, road access requirements, timeline, etc."
+            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-gold text-bg-dark font-bold py-4 rounded-2xl hover:bg-yellow-400 transition-colors text-base"
+        >
+          Send My Request
+        </button>
+      </form>
+
+      <div id="land-request-thanks" class="hidden text-center py-8">
+        <div class="text-4xl mb-4">✅</div>
+        <h3 class="font-display font-bold text-xl text-bg-dark mb-2">Got it — we're on it!</h3>
+        <p class="text-gray-500">We'll review your request and reach out within 1–2 business days.</p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Toggle other state field
+    var otherCb = document.getElementById('other-state-cb');
+    var otherInput = document.getElementById('other-state-input');
+    if (otherCb && otherInput) {
+      otherCb.addEventListener('change', function () {
+        otherInput.classList.toggle('hidden', !otherCb.checked);
+        if (otherCb.checked) otherInput.focus();
+      });
+    }
+
+    // Form submission
+    var form = document.getElementById('land-request-form');
+    var thanks = document.getElementById('land-request-thanks');
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var data = new FormData(form);
+        await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
+        form.classList.add('hidden');
+        if (thanks) thanks.classList.remove('hidden');
+      });
+    }
+  });
+</script>
