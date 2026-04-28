@@ -56,9 +56,11 @@ if (gps) {
     <!-- Status badge + Title -->
     <div class="flex items-start gap-4 flex-wrap mb-6">
       <span class={`text-sm font-bold px-3 py-1.5 rounded-full flex-shrink-0 ${
-        status === 'available' ? 'bg-green-brand text-white' : 'bg-gray-400 text-white'
+        status === 'available' ? 'bg-green-brand text-white' :
+        status === 'coming-soon' ? 'bg-blue-500 text-white' :
+        'bg-gray-400 text-white'
       }`}>
-        {status === 'available' ? 'Available' : '🔴 SOLD'}
+        {status === 'available' ? 'Available' : status === 'coming-soon' ? 'Coming Soon' : '🔴 Sold'}
       </span>
       <h1 class="font-display font-black text-3xl sm:text-4xl text-bg-dark leading-tight">
         {title}
@@ -86,10 +88,7 @@ if (gps) {
         </div>
 
         <!-- Share -->
-        <div>
-          <h3 class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Share This Listing</h3>
-          <ShareButtons title={title} url={canonicalUrl} />
-        </div>
+        <ShareButtons title={title} url={canonicalUrl} price={price} acreage={acreage} state={state} />
       </div>
 
       <!-- Sidebar -->

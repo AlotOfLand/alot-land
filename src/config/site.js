@@ -13,5 +13,6 @@ export const siteConfig = {
   },
   analytics: {
     gaMeasurementId: "GA_MEASUREMENT_ID"
-  }
+  },
+  homepageVideoId: "lR3ZteyGK14"
 };
