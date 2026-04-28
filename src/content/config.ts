@@ -49,4 +49,55 @@ const communities = defineCollection({
   }),
 });
 
-export const collections = { listings, testimonials, communities };
+const press = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    publication: z.string().optional(),
+    date: z.coerce.date(),
+    excerpt: z.string().optional(),
+    externalUrl: z.string().optional(),
+    pdf: z.string().optional(),
+    featured: z.boolean().default(false),
+  }),
+});
+
+const podcasts = defineCollection({
+  type: 'content',
+  schema: z.object({
+    showName: z.string(),
+    episodeTitle: z.string(),
+    date: z.coerce.date(),
+    description: z.string().optional(),
+    coverImage: z.string().optional(),
+    listenUrl: z.string(),
+    featured: z.boolean().default(false),
+  }),
+});
+
+const books = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    coverImage: z.string().optional(),
+    description: z.string().optional(),
+    amazonPaperbackUrl: z.string().optional(),
+    amazonKindleUrl: z.string().optional(),
+    publishedDate: z.coerce.date().optional(),
+    featured: z.boolean().default(false),
+  }),
+});
+
+const ebooks = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    coverImage: z.string().optional(),
+    description: z.string().optional(),
+    audience: z.enum(['buyers', 'investors', 'both']).default('both'),
+    mailerliteEmbed: z.string().optional(),
+    featured: z.boolean().default(true),
+  }),
+});
+
+export const collections = { listings, testimonials, communities, press, podcasts, books, ebooks };

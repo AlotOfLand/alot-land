@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPress    = await getCollection('press').catch(() => []);
+const allPodcasts = await getCollection('podcasts').catch(() => []);
+const allBooks    = await getCollection('books').catch(() => []);
+const allEbooks   = await getCollection('ebooks').catch(() => []);
+
+const press    = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const podcasts = allPodcasts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const books    = allBooks.sort((a, b) => (b.data.publishedDate?.getTime() ?? 0) - (a.data.publishedDate?.getTime() ?? 0));
+const ebooks   = allEbooks.filter(e => e.data.featured);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+---
+
+<BaseLayout
+  title="Media & Resources"
+  description="Press coverage, podcast appearances, books, and free resources from A Lot of Land LLC."
+>
+  <!-- Hero -->
+  <div class="bg-bg-dark text-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Media & Resources</h1>
+      <p class="text-gray-400 text-lg max-w-2xl">Press coverage, podcast appearances, books, and free guides to help you find land and build wealth.</p>
+    </div>
+  </div>
+
+  <!-- Quick nav -->
+  <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex gap-6 overflow-x-auto text-sm font-semibold">
+        {ebooks.length > 0 && (
+          <a href="#free-resources" class="py-4 border-b-2 border-transparent hover:border-gold hover:text-gold transition-colors whitespace-nowrap text-gray-600">📖 Free Resources</a>
+        )}
+        {books.length > 0 && (
+          <a href="#books" class="py-4 border-b-2 border-transparent hover:border-gold hover:text-gold transition-colors whitespace-nowrap text-gray-600">📚 Books</a>
+        )}
+        {podcasts.length > 0 && (
+          <a href="#podcasts" class="py-4 border-b-2 border-transparent hover:border-gold hover:text-gold transition-colors whitespace-nowrap text-gray-600">🎙️ Podcasts</a>
+        )}
+        {press.length > 0 && (
+          <a href="#press" class="py-4 border-b-2 border-transparent hover:border-gold hover:text-gold transition-colors whitespace-nowrap text-gray-600">📰 Press</a>
+        )}
+        <a href="#press-contact" class="py-4 border-b-2 border-transparent hover:border-gold hover:text-gold transition-colors whitespace-nowrap text-gray-600">✉️ Press Inquiries</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20">
+
+    <!-- ── FREE EBOOKS ─────────────────────────────────────── -->
+    {ebooks.length > 0 && (
+      <section id="free-resources">
+        <div class="mb-8">
+          <h2 class="font-display font-black text-3xl text-bg-dark mb-2">📖 Free Resources</h2>
+          <p class="text-gray-500">Download our free guides — no fluff, just actionable information.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {ebooks.map(ebook => (
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+              {ebook.data.coverImage ? (
+                <img src={ebook.data.coverImage} alt={ebook.data.title} class="w-full h-56 object-cover" />
+              ) : (
+                <div class={`w-full h-56 flex items-center justify-center text-white font-display font-black text-xl text-center px-6 leading-snug
+                  ${ebook.data.audience === 'investors' ? 'bg-gradient-to-br from-bg-dark to-gray-700' : 'bg-gradient-to-br from-green-800 to-green-600'}`}>
+                  {ebook.data.title}
+                </div>
+              )}
+              <div class="p-6 flex flex-col flex-1">
+                <span class={`self-start text-xs font-bold px-2.5 py-1 rounded-full mb-3
+                  ${ebook.data.audience === 'investors' ? 'bg-gold/20 text-yellow-700' :
+                    ebook.data.audience === 'buyers' ? 'bg-green-100 text-green-700' :
+                    'bg-gray-100 text-gray-600'}`}>
+                  {ebook.data.audience === 'investors' ? 'Capital Investors' :
+                   ebook.data.audience === 'buyers' ? 'Land Buyers' : 'Everyone'}
+                </span>
+                <h3 class="font-display font-black text-xl text-bg-dark mb-2">{ebook.data.title}</h3>
+                {ebook.data.description && (
+                  <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-5">{ebook.data.description}</p>
+                )}
+                {ebook.data.mailerliteEmbed ? (
+                  <div class="mailerlite-form" set:html={ebook.data.mailerliteEmbed} />
+                ) : (
+                  <div class="mt-auto">
+                    <p class="text-xs text-gray-400 mb-2 text-center">Free download — coming soon</p>
+                    <a href="/contact" class="block text-center bg-gold text-bg-dark font-bold py-3 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
+                      Get Notified When It's Ready
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ── BOOKS ───────────────────────────────────────────── -->
+    {books.length > 0 && (
+      <section id="books">
+        <div class="mb-8">
+          <h2 class="font-display font-black text-3xl text-bg-dark mb-2">📚 Books</h2>
+          <p class="text-gray-500">Available on Amazon in paperback and Kindle.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {books.map(book => (
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+              {book.data.coverImage ? (
+                <img src={book.data.coverImage} alt={book.data.title} class="w-full h-64 object-contain bg-gray-50 p-4" />
+              ) : (
+                <div class="w-full h-64 bg-gradient-to-br from-bg-dark to-gray-700 flex items-center justify-center p-6">
+                  <p class="text-white font-display font-black text-xl text-center leading-snug">{book.data.title}</p>
+                </div>
+              )}
+              <div class="p-6 flex flex-col flex-1">
+                <h3 class="font-display font-black text-xl text-bg-dark mb-2">{book.data.title}</h3>
+                {book.data.publishedDate && (
+                  <p class="text-xs text-gray-400 mb-2">{formatDate(book.data.publishedDate)}</p>
+                )}
+                {book.data.description && (
+                  <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-5">{book.data.description}</p>
+                )}
+                <div class="flex gap-3 mt-auto">
+                  {book.data.amazonPaperbackUrl && (
+                    <a
+                      href={book.data.amazonPaperbackUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex-1 text-center bg-[#FF9900] text-white font-bold py-2.5 rounded-xl hover:opacity-90 transition-opacity text-sm"
+                    >
+                      📦 Paperback
+                    </a>
+                  )}
+                  {book.data.amazonKindleUrl && (
+                    <a
+                      href={book.data.amazonKindleUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex-1 text-center bg-bg-dark text-white font-bold py-2.5 rounded-xl hover:bg-gray-800 transition-colors text-sm"
+                    >
+                      📱 Kindle
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ── PODCASTS ────────────────────────────────────────── -->
+    {podcasts.length > 0 && (
+      <section id="podcasts">
+        <div class="mb-8">
+          <h2 class="font-display font-black text-3xl text-bg-dark mb-2">🎙️ Podcast Appearances</h2>
+          <p class="text-gray-500">Listen to David discuss land investing, off-market deals, and building wealth through land.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {podcasts.map(ep => (
+            <a
+              href={ep.data.listenUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex gap-4 p-5 group"
+            >
+              {ep.data.coverImage ? (
+                <img src={ep.data.coverImage} alt={ep.data.showName} class="w-16 h-16 rounded-xl object-cover flex-shrink-0" />
+              ) : (
+                <div class="w-16 h-16 rounded-xl bg-bg-dark flex items-center justify-center flex-shrink-0 text-2xl">🎙️</div>
+              )}
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-gold uppercase tracking-wider mb-1">{ep.data.showName}</p>
+                <h3 class="font-display font-bold text-bg-dark text-sm leading-snug mb-1 group-hover:text-gold transition-colors">{ep.data.episodeTitle}</h3>
+                <p class="text-xs text-gray-400">{formatDate(ep.data.date)}</p>
+                {ep.data.description && (
+                  <p class="text-xs text-gray-500 mt-2 leading-relaxed line-clamp-2">{ep.data.description}</p>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ── PRESS ───────────────────────────────────────────── -->
+    {press.length > 0 && (
+      <section id="press">
+        <div class="mb-8">
+          <h2 class="font-display font-black text-3xl text-bg-dark mb-2">📰 Press & Coverage</h2>
+          <p class="text-gray-500">News and features about A Lot of Land LLC.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {press.map(item => (
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col">
+              <div class="flex items-center justify-between gap-3 mb-3">
+                {item.data.publication && (
+                  <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">{item.data.publication}</span>
+                )}
+                <span class="text-xs text-gray-400 ml-auto whitespace-nowrap">{formatDate(item.data.date)}</span>
+              </div>
+              <h3 class="font-display font-bold text-bg-dark text-lg leading-snug mb-3 flex-1">{item.data.title}</h3>
+              {item.data.excerpt && (
+                <p class="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-3">{item.data.excerpt}</p>
+              )}
+              <div class="flex gap-3 mt-auto">
+                {item.data.externalUrl && (
+                  <a
+                    href={item.data.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex-1 text-center border border-bg-dark text-bg-dark font-bold py-2 rounded-xl hover:bg-bg-dark hover:text-white transition-colors text-sm"
+                  >
+                    Read Article ↗
+                  </a>
+                )}
+                {item.data.pdf && (
+                  <a
+                    href={item.data.pdf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex-1 text-center bg-bg-dark text-white font-bold py-2 rounded-xl hover:bg-gray-800 transition-colors text-sm"
+                  >
+                    Download PDF
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- ── EMPTY STATE (when no content yet) ─────────────────── -->
+    {ebooks.length === 0 && books.length === 0 && podcasts.length === 0 && press.length === 0 && (
+      <div class="text-center py-20">
+        <p class="text-5xl mb-4">📡</p>
+        <h2 class="font-display font-bold text-2xl text-bg-dark mb-3">Content Coming Soon</h2>
+        <p class="text-gray-500 max-w-md mx-auto">Press releases, podcast episodes, books, and free resources will appear here. Check back soon.</p>
+      </div>
+    )}
+
+    <!-- ── PRESS INQUIRIES ────────────────────────────────────── -->
+    <section id="press-contact" class="bg-bg-dark text-white rounded-3xl p-10 text-center">
+      <h2 class="font-display font-black text-3xl mb-3">Press Inquiries</h2>
+      <p class="text-gray-400 mb-6 max-w-xl mx-auto">
+        Journalists, podcast hosts, and media professionals — we'd love to connect. Reach out directly and we'll get back to you promptly.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="mailto:David@alot.land?subject=Media%20Inquiry"
+          class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors"
+        >
+          ✉️ Email David
+        </a>
+        <a
+          href="/contact"
+          class="border-2 border-white text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-colors"
+        >
+          Contact Form
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

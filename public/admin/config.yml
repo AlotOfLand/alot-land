@@ -61,6 +61,65 @@ collections:
       - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Date", name: "date", widget: "datetime" }
 
+  - name: "press"
+    label: "Press & Coverage"
+    folder: "src/content/press"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Headline", name: "title", widget: "string" }
+      - { label: "Publication / Source", name: "publication", widget: "string", required: false, hint: "e.g. Forbes, Arizona Republic, Land Investor Weekly" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Excerpt / Summary", name: "excerpt", widget: "text", required: false }
+      - { label: "External Article URL", name: "externalUrl", widget: "string", required: false, hint: "Link to the article online" }
+      - { label: "PDF Upload", name: "pdf", widget: "file", required: false, hint: "Upload a PDF of the article if no live URL" }
+      - { label: "Feature on Media page", name: "featured", widget: "boolean", default: false }
+      - { label: "Body (optional)", name: "body", widget: "markdown", required: false }
+
+  - name: "podcasts"
+    label: "Podcast Appearances"
+    folder: "src/content/podcasts"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Podcast / Show Name", name: "showName", widget: "string", hint: "e.g. The Land Investing Show" }
+      - { label: "Episode Title", name: "episodeTitle", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Show Cover Image", name: "coverImage", widget: "image", required: false }
+      - { label: "Listen / Watch URL", name: "listenUrl", widget: "string", hint: "Link to Spotify, Apple Podcasts, YouTube, etc." }
+      - { label: "Feature on Media page", name: "featured", widget: "boolean", default: false }
+      - { label: "Notes (optional)", name: "body", widget: "markdown", required: false }
+
+  - name: "books"
+    label: "Books"
+    folder: "src/content/books"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Book Title", name: "title", widget: "string" }
+      - { label: "Cover Image", name: "coverImage", widget: "image", required: false }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Amazon Paperback URL", name: "amazonPaperbackUrl", widget: "string", required: false }
+      - { label: "Amazon Kindle URL", name: "amazonKindleUrl", widget: "string", required: false }
+      - { label: "Published Date", name: "publishedDate", widget: "datetime", required: false }
+      - { label: "Feature on Media page", name: "featured", widget: "boolean", default: true }
+      - { label: "About the Book (optional)", name: "body", widget: "markdown", required: false }
+
+  - name: "ebooks"
+    label: "Free Ebooks"
+    folder: "src/content/ebooks"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Ebook Title", name: "title", widget: "string" }
+      - { label: "Cover Image", name: "coverImage", widget: "image", required: false }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Audience", name: "audience", widget: "select", options: [{label: "Land Buyers", value: "buyers"}, {label: "Capital Investors", value: "investors"}, {label: "Both", value: "both"}] }
+      - { label: "MailerLite Form Embed Code", name: "mailerliteEmbed", widget: "text", required: false, hint: "Paste the HTML embed code from MailerLite here once set up" }
+      - { label: "Show on Site", name: "featured", widget: "boolean", default: true }
+      - { label: "Description (long)", name: "body", widget: "markdown", required: false }
+
   - name: "settings"
     label: "Site Settings"
     files:
@@ -71,3 +130,9 @@ collections:
           - { label: "Phone Number (display)", name: "phone", widget: "string" }
           - { label: "Phone Number (digits only)", name: "phoneRaw", widget: "string" }
           - { label: "Email", name: "email", widget: "string" }
+      - label: "Homepage Settings"
+        name: "homepage"
+        file: "src/content/settings/homepage.json"
+        fields:
+          - { label: "YouTube Video ID", name: "homepageVideoId", widget: "string", required: false, hint: "The ID from your YouTube URL e.g. lR3ZteyGK14 from youtube.com/watch?v=lR3ZteyGK14" }
+          - { label: "Hero Tagline", name: "heroTagline", widget: "string", required: false, hint: "e.g. Off-market deals in Arizona, Tennessee & Arkansas." }
