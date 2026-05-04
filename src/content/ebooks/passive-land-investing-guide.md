@@ -1,7 +1,42 @@
 ---
-title: Passive Land Investing Guide
+title: Passive Land Investing Guide - How to Earn Passive Returns on Land
+  Without The Hassle of Owning a Single Acre.
 coverImage: /images/_alotofland_passive_land_investing_cover.png
-description: How to Earn Passive Returns On Land Without The Hassle Of Doing It Yourself.
+description: >-
+  Most people think land investing means buying a parcel, managing it, and
+  hoping it appreciates. That's one way to do it. But it's not the only way —
+  and for many investors, it's not the best way.
+
+
+  Passive Land Investing: The A Lot of Land Guide is written for accredited investors, self-directed IRA holders, business owners, and high-income earners who want real-asset exposure without the operational burden of direct ownership.
+
+
+  A Lot of Land LLC acquires off-market land in Arizona, Tennessee, and Northwest Arkansas at significant discounts to market value — through direct mail outreach to motivated sellers who never list their property publicly. We do the work. Our capital partners invest alongside us and receive a target return of 25% on their capital in a defined, deal-specific timeframe.
+
+
+  Inside this guide, you'll learn:
+
+  - How off-market land deals actually work — the complete three-phase deal cycle from acquisition to exit, including a real deal example showing exactly how investor capital is deployed and repaid.
+
+
+  - Why returns like this are achievable — the five structural reasons land deals can generate 25% without speculation: acquisition discount, minimal carrying costs, short timelines, eliminating the bank, and operator expertise.
+
+
+  - An honest look at the risk profile — liquidity risk, market risk, execution risk, concentration risk, and operator risk — explained plainly so you can make an informed decision, not just an excited one.
+
+
+  - How land compares to conventional alternatives — a side-by-side comparison of private land deals vs. the stock market and rental property across every factor that matters: return, volatility, management burden, liquidity, and asset backing.
+
+
+  - Who this investment is right for — and who it isn't. Plus a clear four-step process for how capital partners get started, from the first conversation to the first exit payment.
+
+  This isn't a guide for people who want to get rich overnight. It's for investors who want their money in something real, with a defined exit, managed by a team that knows the market.
+
+
+  Free. No pitch. Just the full picture.
+
+
+  Download it at alot.land.
 audience: investors
 mailerliteEmbed: >-
   <style type="text/css">@import
