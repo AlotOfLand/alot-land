@@ -1,8 +1,32 @@
 ---
-title: The Land Owners Opportunity Guide
+title: The Land Owners Opportunity Guide - Buy Land, Build Wealth
 coverImage: /images/_alotofland_the_land_owners_opportunity_guide_cover.png
-description: "Everything You Can Do With Raw Land - Plus How to Earn a 25%
-  Return Without Ever Owning a Single Acre. "
+description: >-
+  Land is one of the most versatile, undervalued assets in America. But most
+  people who own it — or are thinking about buying it — have no idea how many
+  options are actually on the table.
+
+
+  The Land Owner's Opportunity Guide is a free resource from A Lot of Land LLC that cuts through the confusion and gives you a clear, practical picture of what land can do for you.
+
+
+  Inside, you'll discover:
+
+  - Seven ways to use land once you own it — from building your dream home and generating passive rental income, to subdividing for profit, farming, commercial development, recreational retreats, and even conservation tax strategies that can dramatically reduce your tax burden.
+
+
+  - Six reasons land is one of the smartest investments you can make — including why raw land has virtually no maintenance costs, why it appreciates without the volatility of the stock market, and why the growing scarcity of infill land in Sun Belt markets is creating opportunities right now.
+
+
+  - How to earn a 25% return without owning a single acre — a detailed breakdown of how private capital participation in off-market land deals works, what your capital funds, how deals are structured, and whether this kind of investment is a fit for your financial situation.
+
+
+  - Whether you're a first-time land buyer, a current landowner looking to maximize what you have, or an investor looking for alternatives to the stock market — this guide gives you a foundation to make smarter decisions about one of the oldest and most reliable wealth-building assets in the world.
+
+
+  Free. No fluff. No obligation.
+
+  Download it at alot.land.
 audience: buyers
 mailerliteEmbed: >-
   <style type="text/css">@import
