@@ -1,0 +1,362 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Sell Your Land Fast — Get a Cash Offer"
+  description="Get a fast, fair cash offer on your land. Fill out our quick form and we'll be in touch within 1 business day."
+>
+  <!-- Hero -->
+  <div class="bg-bg-dark text-white py-14">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="inline-block bg-gold/20 text-gold text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4">No Obligation</span>
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-4">Get a Cash Offer on Your Land</h1>
+      <p class="text-gray-400 text-lg max-w-xl mx-auto">
+        We buy land in Arizona, Tennessee, and Arkansas. Fast closings, no commissions, no hassle. Fill out the form below and we'll get back to you within 1 business day.
+      </p>
+      <div class="flex flex-wrap justify-center gap-6 mt-8 text-sm text-gray-400">
+        <span class="flex items-center gap-2"><span class="text-gold">✓</span> No agent fees</span>
+        <span class="flex items-center gap-2"><span class="text-gold">✓</span> Close in as little as 2 weeks</span>
+        <span class="flex items-center gap-2"><span class="text-gold">✓</span> We buy as-is</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <form
+      id="sell-form"
+      name="sell-land"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      enctype="multipart/form-data"
+      class="space-y-10"
+    >
+      <input type="hidden" name="form-name" value="sell-land" />
+      <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+      <!-- ── SECTION 1: Owner & Contact ───────────────── -->
+      <div>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-1">Owner Information</h2>
+        <p class="text-sm text-gray-500 mb-5">All owners on the title should be listed.</p>
+
+        <div class="space-y-4">
+          <!-- Owner list -->
+          <div id="owners-list" class="space-y-3">
+            <div class="owner-row flex gap-3 items-center">
+              <input
+                type="text"
+                name="owner_1"
+                placeholder="Owner Name"
+                required
+                class="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            id="add-owner"
+            class="flex items-center gap-2 text-sm font-semibold text-gold hover:text-yellow-500 transition-colors"
+          >
+            <span class="w-6 h-6 rounded-full border-2 border-gold flex items-center justify-center text-lg leading-none">+</span>
+            Add another owner
+          </button>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4 mt-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Your Email <span class="text-red-400">*</span></label>
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="(555) 000-0000"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Timeline to Sell <span class="text-red-400">*</span></label>
+          <select
+            name="timeline"
+            required
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold"
+          >
+            <option value="" disabled selected>Select a timeline…</option>
+            <option value="ASAP">ASAP — I need to sell now</option>
+            <option value="1-2 months">1–2 months</option>
+            <option value="3-6 months">3–6 months</option>
+            <option value="No rush">No rush — just exploring</option>
+            <option value="When I get the right price">When I get the right price</option>
+          </select>
+        </div>
+
+        <div class="mt-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Why are you selling?</label>
+          <textarea
+            name="reason_selling"
+            rows="3"
+            placeholder="e.g. Inherited the property, no longer need it, need cash quickly…"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- ── SECTION 2: Property Location ─────────────── -->
+      <div class="border-t border-gray-100 pt-10">
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-1">Property Location</h2>
+        <p class="text-sm text-gray-500 mb-5">Raw land often has no street address — fill in what you know.</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Property Address</label>
+            <input
+              type="text"
+              name="address"
+              placeholder="Street address, or leave blank if none"
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+            />
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">County <span class="text-red-400">*</span></label>
+              <input
+                type="text"
+                name="county"
+                placeholder="e.g. Yavapai"
+                required
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">State <span class="text-red-400">*</span></label>
+              <select
+                name="state"
+                required
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold"
+              >
+                <option value="" disabled selected>Select state…</option>
+                <option>Alabama</option><option>Alaska</option><option>Arizona</option>
+                <option>Arkansas</option><option>California</option><option>Colorado</option>
+                <option>Connecticut</option><option>Delaware</option><option>Florida</option>
+                <option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+                <option>Illinois</option><option>Indiana</option><option>Iowa</option>
+                <option>Kansas</option><option>Kentucky</option><option>Louisiana</option>
+                <option>Maine</option><option>Maryland</option><option>Massachusetts</option>
+                <option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+                <option>Missouri</option><option>Montana</option><option>Nebraska</option>
+                <option>Nevada</option><option>New Hampshire</option><option>New Jersey</option>
+                <option>New Mexico</option><option>New York</option><option>North Carolina</option>
+                <option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+                <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
+                <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option>
+                <option>Texas</option><option>Utah</option><option>Vermont</option>
+                <option>Virginia</option><option>Washington</option><option>West Virginia</option>
+                <option>Wisconsin</option><option>Wyoming</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">APN (Parcel Number)</label>
+              <input
+                type="text"
+                name="apn"
+                placeholder="e.g. 302-14-021"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">GPS / Lat & Long</label>
+              <input
+                type="text"
+                name="gps"
+                placeholder="e.g. 34.5678, -112.3456"
+                class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION 3: Property Details ───────────────── -->
+      <div class="border-t border-gray-100 pt-10">
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-1">Property Details</h2>
+        <p class="text-sm text-gray-500 mb-5">The more you share, the faster we can put together an offer.</p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tell us more about the property</label>
+            <textarea
+              name="property_details"
+              rows="4"
+              placeholder="Acreage, terrain, access, utilities, any structures, how you acquired it — anything that helps us understand what you have."
+              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+            ></textarea>
+          </div>
+
+          <!-- Yes/No/Not Sure questions -->
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Is there a survey?</label>
+              <select name="has_survey" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
+                <option value="" disabled selected>Select…</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Not sure">Not sure</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Is it landlocked?</label>
+              <select name="is_landlocked" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
+                <option value="" disabled selected>Select…</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Not sure">Not sure</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Floodplain or wetland?</label>
+              <select name="is_floodplain" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
+                <option value="" disabled selected>Select…</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Not sure">Not sure</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Survey upload (shown when survey = Yes) -->
+          <div id="survey-upload-wrap" class="hidden">
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+              Upload Survey
+              <span class="font-normal text-gray-400 ml-1">(PDF, JPG, or PNG)</span>
+            </label>
+            <input
+              type="file"
+              name="survey_file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gold/20 file:text-yellow-700 hover:file:bg-gold/30"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION 4: Asking Price ────────────────────── -->
+      <div class="border-t border-gray-100 pt-10">
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-1">Asking Price</h2>
+        <p class="text-sm text-gray-500 mb-5">What are you hoping to get? Be honest — we'll make a fair offer either way.</p>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">How much do you want for the property?</label>
+          <input
+            type="text"
+            name="asking_price"
+            placeholder="e.g. $45,000 or 'Make me an offer'"
+            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+          />
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="border-t border-gray-100 pt-8">
+        <button
+          type="submit"
+          class="w-full bg-gold text-bg-dark font-black text-lg py-4 rounded-2xl hover:bg-yellow-400 transition-colors"
+        >
+          Get My Cash Offer →
+        </button>
+        <p class="text-center text-xs text-gray-400 mt-3">No obligation. We'll respond within 1 business day.</p>
+      </div>
+    </form>
+
+    <!-- Thank you message -->
+    <div id="sell-thanks" class="hidden text-center py-20">
+      <div class="text-5xl mb-5">🎉</div>
+      <h2 class="font-display font-black text-3xl text-bg-dark mb-3">We Got Your Submission!</h2>
+      <p class="text-gray-500 mb-6 max-w-md mx-auto">
+        Thanks for reaching out. David will personally review your property and get back to you within 1 business day with a cash offer or follow-up questions.
+      </p>
+      <a href="/listings" class="inline-block bg-gold text-bg-dark font-bold px-8 py-3 rounded-xl hover:bg-yellow-400 transition-colors">
+        Browse Our Listings
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // ── Add / remove owners ───────────────────────────────
+    var ownersList  = document.getElementById('owners-list');
+    var addOwnerBtn = document.getElementById('add-owner');
+    var ownerCount  = 1;
+
+    if (addOwnerBtn && ownersList) {
+      addOwnerBtn.addEventListener('click', function () {
+        ownerCount++;
+        var row = document.createElement('div');
+        row.className = 'owner-row flex gap-3 items-center';
+        row.innerHTML =
+          '<input type="text" name="owner_' + ownerCount + '" placeholder="Owner Name" ' +
+          'class="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />' +
+          '<button type="button" class="remove-owner text-gray-400 hover:text-red-500 transition-colors text-xl leading-none" title="Remove">×</button>';
+        ownersList.appendChild(row);
+
+        row.querySelector('.remove-owner').addEventListener('click', function () {
+          row.remove();
+        });
+      });
+    }
+
+    // ── Show survey upload when "Yes" selected ────────────
+    var surveySelect = document.querySelector('select[name="has_survey"]');
+    var uploadWrap   = document.getElementById('survey-upload-wrap');
+
+    if (surveySelect && uploadWrap) {
+      surveySelect.addEventListener('change', function () {
+        uploadWrap.classList.toggle('hidden', surveySelect.value !== 'Yes');
+      });
+    }
+
+    // ── Form submission ───────────────────────────────────
+    var form   = document.getElementById('sell-form');
+    var thanks = document.getElementById('sell-thanks');
+
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+
+        try {
+          var formData = new FormData(form);
+          await fetch('/', {
+            method: 'POST',
+            body: formData,
+          });
+          form.classList.add('hidden');
+          if (thanks) thanks.classList.remove('hidden');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+          if (btn) { btn.textContent = 'Get My Cash Offer →'; btn.disabled = false; }
+          alert('Something went wrong. Please try again or email us directly at David@alot.land');
+        }
+      });
+    }
+  });
+</script>
