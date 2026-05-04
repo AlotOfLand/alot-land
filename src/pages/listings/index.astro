@@ -125,6 +125,40 @@ const mapListings = sorted
     </div>
   </div>
 
+  <!-- Get Notified of New Listings -->
+  <div class="bg-bg-dark py-14">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-display font-black text-3xl text-white mb-3">Get Notified of New Listings</h2>
+      <p class="text-gray-400 mb-8">Be the first to know when new off-market land hits our site. Enter your email and we'll reach out the moment something new drops.</p>
+      <form
+        name="notify-listings"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        id="notify-form"
+        class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+      >
+        <input type="hidden" name="form-name" value="notify-listings" />
+        <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+        <input
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+          class="flex-1 border border-white/20 bg-white/10 text-white placeholder-gray-400 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+        />
+        <button
+          type="submit"
+          id="notify-btn"
+          class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors text-sm whitespace-nowrap"
+        >
+          Notify Me
+        </button>
+      </form>
+      <p id="notify-thanks" class="hidden text-green-400 font-semibold mt-4">✓ You're on the list!</p>
+    </div>
+  </div>
+
   <script type="application/json" id="map-data" set:html={JSON.stringify(mapListings)}></script>
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -248,6 +282,21 @@ const mapListings = sorted
       // ── Boot ──────────────────────────────────────────────
       initMap();
       applyFilters();
+
+      // ── Get Notified form ─────────────────────────────────
+      var notifyForm  = document.getElementById('notify-form');
+      var notifyBtn   = document.getElementById('notify-btn');
+      var notifyThanks = document.getElementById('notify-thanks');
+      if (notifyForm) {
+        notifyForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          if (notifyBtn) { notifyBtn.textContent = 'Saving…'; notifyBtn.disabled = true; }
+          var data = new FormData(notifyForm);
+          await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
+          notifyForm.style.display = 'none';
+          if (notifyThanks) notifyThanks.classList.remove('hidden');
+        });
+      }
     });
   </script>
 </BaseLayout>

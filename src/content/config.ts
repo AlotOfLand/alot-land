@@ -94,8 +94,7 @@ const ebooks = defineCollection({
     title: z.string(),
     coverImage: z.string().optional(),
     description: z.string().optional(),
-    audience: z.enum(['buyers', 'investors', 'both']).default('both'),
-    mailerliteEmbed: z.string().optional(),
+    audience: z.enum(['buyers', 'investors', 'sellers', 'both']).default('both'),
     featured: z.boolean().default(true),
   }),
 });

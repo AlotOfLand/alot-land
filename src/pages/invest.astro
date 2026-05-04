@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import MailerLiteForm from '../components/MailerLiteForm.astro';
 ---
 
 <BaseLayout
@@ -101,39 +102,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
-  <!-- Section 3: Future Syndications -->
+  <!-- Section 3: Free Investor Guide -->
   <section class="py-20 bg-bg-light">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <span class="text-text-muted font-bold text-sm uppercase tracking-wider">Coming Soon</span>
-      <h2 class="font-display font-bold text-3xl sm:text-4xl text-bg-dark mt-2 mb-5">Larger Deals Coming</h2>
+    <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <span class="text-green-brand font-bold text-sm uppercase tracking-wider">Free Resource</span>
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-bg-dark mt-2 mb-4">Get the Free Passive Land Investing Guide</h2>
       <p class="text-gray-600 leading-relaxed mb-8">
-        As we scale into bigger projects, we'll be structuring formal investment opportunities. Get on our list to be notified first — no commitment required.
+        Curious how land investing works without buying or managing land yourself? Download our free guide — no commitment required.
       </p>
-      <form
-        name="investor-list"
-        method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        id="investor-list-form"
-        class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-      >
-        <input type="hidden" name="form-name" value="investor-list" />
-        <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
-        <input
-          type="email"
-          name="email"
-          placeholder="your@email.com"
-          required
-          class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
-        />
-        <button
-          type="submit"
-          class="bg-bg-dark text-white font-bold px-6 py-2.5 rounded-xl hover:bg-gray-800 transition-colors text-sm"
-        >
-          Notify Me
-        </button>
-      </form>
-      <p id="investor-list-thanks" class="hidden text-green-brand font-semibold mt-4">✓ You're on the list!</p>
+      <MailerLiteForm
+        containerId="mlb2-40807480"
+        formAction="https://assets.mailerlite.com/jsonp/2316201/forms/186552180887521130/subscribe"
+        title="Free Passive Land Investing Guide"
+        description="Learn how to earn passive income from land without the hassle of buying, managing, or developing it yourself."
+        successMessage="Check your email for your free <em>Passive Land Investing</em> guide!"
+      />
     </div>
   </section>
 
@@ -217,17 +200,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <script>
-  // Investor list form
-  const listForm = document.getElementById('investor-list-form') as HTMLFormElement;
-  const listThanks = document.getElementById('investor-list-thanks');
-  listForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const data = new FormData(listForm);
-    await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data as any).toString() });
-    listForm.classList.add('hidden');
-    listThanks?.classList.remove('hidden');
-  });
-
   // Investor inquiry form
   const inquiryForm = document.getElementById('investor-inquiry-form') as HTMLFormElement;
   const inquiryThanks = document.getElementById('investor-inquiry-thanks');

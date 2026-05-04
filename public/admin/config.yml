@@ -115,10 +115,9 @@ collections:
       - { label: "Ebook Title", name: "title", widget: "string" }
       - { label: "Cover Image", name: "coverImage", widget: "image", required: false }
       - { label: "Description", name: "description", widget: "text", required: false }
-      - { label: "Audience", name: "audience", widget: "select", options: [{label: "Land Buyers", value: "buyers"}, {label: "Capital Investors", value: "investors"}, {label: "Both", value: "both"}] }
-      - { label: "MailerLite Form Embed Code", name: "mailerliteEmbed", widget: "text", required: false, hint: "Paste the HTML embed code from MailerLite here once set up" }
-      - { label: "Show on Site", name: "featured", widget: "boolean", default: true }
-      - { label: "Description (long)", name: "body", widget: "markdown", required: false }
+      - { label: "Audience", name: "audience", widget: "select", options: [{label: "Land Buyers", value: "buyers"}, {label: "Capital Investors", value: "investors"}, {label: "Land Sellers", value: "sellers"}, {label: "Both / General", value: "both"}] }
+      - { label: "Show on Media Page", name: "featured", widget: "boolean", default: true, hint: "Toggle ON to show this ebook on the /media page. The form embed is auto-loaded based on the Audience selection above." }
+      - { label: "Long Description (optional)", name: "body", widget: "markdown", required: false }
 
   - name: "settings"
     label: "Site Settings"
