@@ -1,5 +1,5 @@
 ---
-title: Land Sellers Ebook
+title: How To Sell Your Land Quick For Top Dollar
 coverImage: /images/_alotofland_what-is-your-land-really-worth_cover.png
 description: Get a CASH offer for your land fast — without hassle, no agent
   fees, and get paid quickly. Learn how to evaluate your land and negotiate the
