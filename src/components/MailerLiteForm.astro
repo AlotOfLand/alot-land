@@ -1,0 +1,117 @@
+---
+/**
+ * MailerLiteForm — renders an embedded MailerLite signup form.
+ *
+ * Requires BaseLayout to load:
+ *  - /css/mailerlite.css
+ *  - groot.mailerlite.com/js/w/webforms.min.js
+ */
+interface Props {
+  /** Full container id, e.g. 'mlb2-40806955' */
+  containerId: string;
+  /** Full form POST URL */
+  formAction: string;
+  title: string;
+  description: string;
+  successMessage?: string;
+}
+
+const {
+  containerId,
+  formAction,
+  title,
+  description,
+  successMessage = 'Check your email — your free guide is on its way!',
+} = Astro.props;
+
+// The numeric suffix used in CSS classes and the JS callback, e.g. '40806955'
+const suffix = containerId.replace('mlb2-', '');
+const formClass = `ml-form-embedContainer ml-subscribe-form ml-subscribe-form-${suffix}`;
+---
+
+<div id={containerId} class={formClass}>
+  <div class="ml-form-align-center">
+    <div class="ml-form-embedWrapper embedForm">
+
+      <!-- Form state -->
+      <div class="ml-form-embedBody ml-form-embedBodyDefault row-form">
+        <div class="ml-form-embedContent">
+          <h4>{title}</h4>
+          <p>{description}</p>
+        </div>
+
+        <form
+          class="ml-block-form"
+          action={formAction}
+          data-code=""
+          method="post"
+          target="_blank"
+        >
+          <div class="ml-form-formContent">
+            <div class="ml-form-fieldRow">
+              <div class="ml-field-group ml-field-name ml-validate-required">
+                <input
+                  aria-label="name"
+                  aria-required="true"
+                  type="text"
+                  class="form-control"
+                  name="fields[name]"
+                  placeholder="First Name"
+                  autocomplete="given-name"
+                />
+              </div>
+            </div>
+            <div class="ml-form-fieldRow ml-last-item">
+              <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
+                <input
+                  aria-label="email"
+                  aria-required="true"
+                  type="email"
+                  class="form-control"
+                  name="fields[email]"
+                  placeholder="Email"
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+          </div>
+
+          <input type="hidden" name="ml-submit" value="1" />
+
+          <div class="ml-form-embedSubmit">
+            <button type="submit" class="primary">Get Free Guide</button>
+            <button disabled style="display:none;" type="button" class="loading">
+              <div class="ml-form-embedSubmitLoad"></div>
+              <span class="sr-only">Loading...</span>
+            </button>
+          </div>
+
+          <input type="hidden" name="anticsrf" value="true" />
+        </form>
+      </div>
+
+      <!-- Success state -->
+      <div class="ml-form-successBody row-success" style="display:none;">
+        <div class="ml-form-successContent">
+          <h4>Thank you!</h4>
+          <p set:html={successMessage} />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ suffix }}>
+  (function () {
+    var fnName = 'ml_webform_success_' + suffix;
+    window[fnName] = function () {
+      var form = document.querySelector('.ml-subscribe-form-' + suffix);
+      if (!form) return;
+      var rowForm = form.querySelector('.row-form');
+      var rowSuccess = form.querySelector('.row-success');
+      if (rowForm) rowForm.style.display = 'none';
+      if (rowSuccess) rowSuccess.style.display = 'block';
+    };
+  })();
+</script>

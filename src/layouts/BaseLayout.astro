@@ -56,6 +56,9 @@ const { gaMeasurementId } = siteConfig.analytics;
       rel="stylesheet"
     />
 
+    <!-- MailerLite forms CSS -->
+    <link rel="stylesheet" href="/css/mailerlite.css" />
+
     <!-- Page-specific head content (e.g. Leaflet CSS) -->
     <slot name="head" />
 
@@ -77,6 +80,9 @@ const { gaMeasurementId } = siteConfig.analytics;
       <slot />
     </main>
     <Footer />
+
+    <!-- MailerLite webforms runtime -->
+    <script src="https://groot.mailerlite.com/js/w/webforms.min.js?vb397d78ebaa8a0f631d35384c46d781b" type="text/javascript"></script>
 
     <script>
       if (window.netlifyIdentity) {

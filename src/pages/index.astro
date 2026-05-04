@@ -37,11 +37,17 @@ const featuredListings = allListings
           href="/listings"
           class="bg-gold text-bg-dark font-bold text-lg px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors"
         >
-          Browse Available Land
+          Browse Land
+        </a>
+        <a
+          href="/sell-land"
+          class="bg-white/15 border border-white/40 text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-white/25 transition-colors"
+        >
+          Sell Your Land
         </a>
         <a
           href="/invest"
-          class="border-2 border-white text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-white/10 transition-colors"
+          class="border-2 border-gold text-gold font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gold hover:text-bg-dark transition-colors"
         >
           Invest With Us
         </a>
@@ -58,14 +64,15 @@ const featuredListings = allListings
   <!-- What We Do -->
   <section class="py-20 bg-bg-light">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Buy Land -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col">
           <div class="text-4xl mb-4">🏡</div>
           <h2 class="font-display font-bold text-2xl text-bg-dark mb-3">Buy Land</h2>
-          <p class="text-gray-600 leading-relaxed mb-6">
+          <p class="text-gray-600 leading-relaxed mb-6 flex-1">
             Looking for land? Browse our available properties or tell us exactly what you want and we'll go find it off-market for you.
           </p>
-          <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex flex-col gap-3">
             <a href="/listings" class="text-center bg-bg-dark text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-800 transition-colors text-sm">
               View Listings
             </a>
@@ -75,15 +82,32 @@ const featuredListings = allListings
           </div>
         </div>
 
-        <div class="bg-bg-dark rounded-2xl p-8 text-white">
+        <!-- Sell Land -->
+        <div class="bg-green-brand rounded-2xl p-8 text-white flex flex-col">
+          <div class="text-4xl mb-4">💵</div>
+          <h2 class="font-display font-bold text-2xl mb-3">Sell Your Land</h2>
+          <p class="text-green-100 leading-relaxed mb-6 flex-1">
+            Want to sell your land fast? We buy land direct — no agent fees, no commissions, no waiting. Get a cash offer within 24 hours.
+          </p>
+          <div class="flex flex-col gap-3">
+            <a href="/sell-land" class="text-center bg-white text-green-brand font-bold px-5 py-2.5 rounded-xl hover:bg-green-50 transition-colors text-sm">
+              Get a Cash Offer
+            </a>
+          </div>
+        </div>
+
+        <!-- Invest -->
+        <div class="bg-bg-dark rounded-2xl p-8 text-white flex flex-col">
           <div class="text-4xl mb-4">💰</div>
           <h2 class="font-display font-bold text-2xl mb-3">Invest With Us</h2>
-          <p class="text-gray-300 leading-relaxed mb-6">
+          <p class="text-gray-300 leading-relaxed mb-6 flex-1">
             We find undervalued land, subdivide it, and sell the new parcels. Join us as a private investor and put your capital to work.
           </p>
-          <a href="/invest" class="inline-block bg-gold text-bg-dark font-semibold px-5 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
-            Learn More
-          </a>
+          <div class="flex flex-col gap-3">
+            <a href="/invest" class="text-center bg-gold text-bg-dark font-bold px-5 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
+              Learn More
+            </a>
+          </div>
         </div>
       </div>
     </div>

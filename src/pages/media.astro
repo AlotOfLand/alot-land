@@ -1,6 +1,31 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import MailerLiteForm from '../components/MailerLiteForm.astro';
+
+const ML_FORMS = {
+  buyers: {
+    containerId: 'mlb2-40806955',
+    formAction: 'https://assets.mailerlite.com/jsonp/2316201/forms/186551539589972998/subscribe',
+    title: 'FREE Land Buyers E-Book',
+    description: 'Get your free Land Owners Opportunity Guide — everything you need to know before buying raw land.',
+    successMessage: "Check your email for your free <em>Land Owners Opportunity Guide</em>!",
+  },
+  investors: {
+    containerId: 'mlb2-40807480',
+    formAction: 'https://assets.mailerlite.com/jsonp/2316201/forms/186552180887521130/subscribe',
+    title: 'Free Passive Land Investing Guide',
+    description: 'Learn how to earn passive income from land without buying, managing, or developing it yourself.',
+    successMessage: 'Check your email for your free <em>Passive Land Investing</em> guide!',
+  },
+  sellers: {
+    containerId: 'mlb2-40807604',
+    formAction: 'https://assets.mailerlite.com/jsonp/2316201/forms/186552355474376210/subscribe',
+    title: 'Free Land Sellers Guide',
+    description: 'Get your FREE Land Sellers Ebook — learn how to get a cash offer for your land fast, without hassle.',
+    successMessage: 'Check your email for your free <em>Land Sellers</em> guide!',
+  },
+};
 
 const allPress    = await getCollection('press').catch(() => []);
 const allPodcasts = await getCollection('podcasts').catch(() => []);
@@ -82,8 +107,16 @@ function formatDate(date: Date) {
                 {ebook.data.description && (
                   <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-5">{ebook.data.description}</p>
                 )}
-                {ebook.data.mailerliteEmbed ? (
-                  <div class="mailerlite-form" set:html={ebook.data.mailerliteEmbed} />
+                {ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS] ? (
+                  <div class="mt-auto">
+                    <MailerLiteForm
+                      containerId={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].containerId}
+                      formAction={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].formAction}
+                      title={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].title}
+                      description={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].description}
+                      successMessage={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].successMessage}
+                    />
+                  </div>
                 ) : (
                   <div class="mt-auto">
                     <p class="text-xs text-gray-400 mb-2 text-center">Free download — coming soon</p>

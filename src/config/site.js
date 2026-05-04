@@ -7,12 +7,14 @@ export const siteConfig = {
   tagline: "Find Land. Build Wealth. Live Free.",
   description: "A Lot of Land LLC buys and sells land across Arizona, Tennessee, and Arkansas. Browse available properties or partner with us as a private investor.",
   social: {
-    facebook: "",
-    instagram: "",
-    youtube: ""
+    facebook: "https://www.facebook.com/share/189qLCsxS8/?mibextid=wwXIfr",
+    instagram: "https://www.instagram.com/davidbuysland/",
+    youtube: "https://www.youtube.com/@DavidBuysLand",
+    linkedin: "https://www.linkedin.com/in/davidbuysland/",
+    tiktok: "https://www.tiktok.com/@davidbuysland",
   },
   analytics: {
-    gaMeasurementId: "GA_MEASUREMENT_ID"
+    gaMeasurementId: "G-7YYB2KT0F6"
   },
   homepageVideoId: "lR3ZteyGK14"
 };
