@@ -918,5 +918,6 @@ mailerliteEmbed: >-
           <script>
               fetch("https://assets.mailerlite.com/jsonp/2316201/forms/186552180887521130/takel")
           </script>
-featured: true
+featured: false
 ---
+Description goes here
