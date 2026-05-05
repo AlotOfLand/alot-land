@@ -41,7 +41,7 @@ export default function AuthGate() {
     ni.on('init', (u) => { setUser(u); setReady(true); });
     ni.on('login', (u) => { setUser(u); ni.close(); });
     ni.on('logout', () => setUser(null));
-    ni.init();
+    ni.init({ APIUrl: 'https://alotofland.netlify.app/.netlify/identity' });
   }, []);
 
   const handleLogin = () => window.netlifyIdentity?.open('login');
