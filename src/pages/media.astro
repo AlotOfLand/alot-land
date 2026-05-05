@@ -99,9 +99,11 @@ function formatDate(date: Date) {
                 <span class={`self-start text-xs font-bold px-2.5 py-1 rounded-full mb-3
                   ${ebook.data.audience === 'investors' ? 'bg-gold/20 text-yellow-700' :
                     ebook.data.audience === 'buyers' ? 'bg-green-100 text-green-700' :
+                    ebook.data.audience === 'sellers' ? 'bg-orange-100 text-orange-700' :
                     'bg-gray-100 text-gray-600'}`}>
                   {ebook.data.audience === 'investors' ? 'Capital Investors' :
-                   ebook.data.audience === 'buyers' ? 'Land Buyers' : 'Everyone'}
+                   ebook.data.audience === 'buyers' ? 'Land Buyers' :
+                   ebook.data.audience === 'sellers' ? 'Land Sellers' : 'Everyone'}
                 </span>
                 <h3 class="font-display font-black text-xl text-bg-dark mb-2">{ebook.data.title}</h3>
                 {ebook.data.description && (
