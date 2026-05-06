@@ -1,10 +1,9 @@
 ---
 import { siteConfig } from '../config/site.js';
-const { phone, phoneRaw, email, name, social } = siteConfig;
+const { phone, phoneRaw, email, name, social, address } = siteConfig;
 
 const navLinks = [
   { label: 'Listings', href: '/listings' },
-  { label: 'Communities', href: '/communities' },
   { label: 'Find Land', href: '/find-land' },
   { label: 'Sell Your Land Fast', href: '/sell-land' },
   { label: 'Invest With Us', href: '/invest' },
@@ -76,7 +75,7 @@ const socialLinks = [
           </li>
           <li class="text-sm flex items-start gap-2">
             <span>📍</span>
-            <span>4539 N 22nd St Ste R<br />Phoenix, AZ 85016</span>
+            <span>{address.street}<br />{address.city}, {address.state} {address.zip}</span>
           </li>
         </ul>
       </div>

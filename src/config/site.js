@@ -4,8 +4,14 @@ export const siteConfig = {
   phone: "(423) 370-9888",
   phoneRaw: "4233709888",
   email: "David@alot.land",
-  tagline: "Find Land. Build Wealth. Live Free.",
-  description: "A Lot of Land LLC buys and sells land across Arizona, Tennessee, and Arkansas. Browse available properties or partner with us as a private investor.",
+  tagline: "Buy Land, Sell Land & Build Wealth With Land.",
+  description: "A Lot of Land LLC buys and sells land across Middle Tennessee, Arizona, and Northwest Arkansas. Browse available properties or partner with us as a private investor.",
+  address: {
+    street: "4539 N 22nd St Ste R",
+    city: "Phoenix",
+    state: "AZ",
+    zip: "85016",
+  },
   social: {
     facebook: "https://www.facebook.com/share/189qLCsxS8/?mibextid=wwXIfr",
     instagram: "https://www.instagram.com/davidbuysland/",

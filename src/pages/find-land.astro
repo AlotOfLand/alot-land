@@ -230,10 +230,17 @@ import MailerLiteForm from '../components/MailerLiteForm.astro';
     if (form) {
       form.addEventListener('submit', async function (e) {
         e.preventDefault();
-        var data = new FormData(form);
-        await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data).toString() });
-        form.classList.add('hidden');
-        if (thanks) thanks.classList.remove('hidden');
+        var submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
+        try {
+          var res = await fetch('/', { method: 'POST', body: new FormData(form) });
+          if (!res.ok) throw new Error('Network error');
+          form.classList.add('hidden');
+          if (thanks) thanks.classList.remove('hidden');
+        } catch (err) {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Request'; }
+          alert('Something went wrong. Please try again or call us at (423) 370-9888');
+        }
       });
     }
   });

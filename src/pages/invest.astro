@@ -203,11 +203,18 @@ import MailerLiteForm from '../components/MailerLiteForm.astro';
   // Investor inquiry form
   const inquiryForm = document.getElementById('investor-inquiry-form') as HTMLFormElement;
   const inquiryThanks = document.getElementById('investor-inquiry-thanks');
+  const inquirySubmitBtn = inquiryForm?.querySelector('button[type="submit"]') as HTMLButtonElement;
   inquiryForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = new FormData(inquiryForm);
-    await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data as any).toString() });
-    inquiryForm.classList.add('hidden');
-    inquiryThanks?.classList.remove('hidden');
+    if (inquirySubmitBtn) { inquirySubmitBtn.disabled = true; inquirySubmitBtn.textContent = 'Sending…'; }
+    try {
+      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(inquiryForm) as any).toString() });
+      if (!res.ok) throw new Error('Network error');
+      inquiryForm.classList.add('hidden');
+      inquiryThanks?.classList.remove('hidden');
+    } catch {
+      if (inquirySubmitBtn) { inquirySubmitBtn.disabled = false; inquirySubmitBtn.textContent = "I'm Interested — Let's Talk"; }
+      alert('Something went wrong. Please try again or email us at David@alot.land');
+    }
   });
 </script>

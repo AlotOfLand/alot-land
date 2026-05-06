@@ -206,11 +206,18 @@ if (gps) {
   const form = document.getElementById('inquiry-form') as HTMLFormElement;
   const thanks = document.getElementById('inquiry-thanks');
 
+  const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const data = new FormData(form);
-    await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data as any).toString() });
-    form.classList.add('hidden');
-    thanks?.classList.remove('hidden');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+    try {
+      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form) as any).toString() });
+      if (!res.ok) throw new Error('Network error');
+      form.classList.add('hidden');
+      thanks?.classList.remove('hidden');
+    } catch {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Inquiry'; }
+      alert('Something went wrong. Please try again or call us at (423) 370-9888');
+    }
   });
 </script>

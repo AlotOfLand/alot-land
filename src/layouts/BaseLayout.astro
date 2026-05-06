@@ -18,7 +18,9 @@ const {
 } = Astro.props;
 
 const pageTitle = title ? `${title} | alot.land` : `alot.land — ${siteConfig.tagline}`;
-const canonicalUrl = new URL(Astro.url.pathname, siteConfig.domain ? `https://${siteConfig.domain}` : Astro.site || 'https://alot.land').href;
+const siteOrigin = `https://${siteConfig.domain}`;
+const canonicalUrl = new URL(Astro.url.pathname, siteOrigin).href;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteOrigin}${ogImage}`;
 const { gaMeasurementId } = siteConfig.analytics;
 ---
 
@@ -33,7 +35,7 @@ const { gaMeasurementId } = siteConfig.analytics;
     <!-- Open Graph -->
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogImageUrl} />
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
 
@@ -41,12 +43,13 @@ const { gaMeasurementId } = siteConfig.analytics;
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <title>{pageTitle}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/images/alotdotland_sqLogo.png" />
+    <link rel="apple-touch-icon" href="/images/alotdotland_sqLogo.png" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
