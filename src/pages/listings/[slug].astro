@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ListingGallery from '../../components/ListingGallery.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import ShareButtons from '../../components/ShareButtons.astro';
+import AmenitySlideshow from '../../components/AmenitySlideshow.astro';
 import { getCollection, render } from 'astro:content';
 import { siteConfig } from '../../config/site.js';
 
@@ -16,7 +17,7 @@ export async function getStaticPaths() {
 
 const { listing } = Astro.props;
 const { Content } = await render(listing);
-const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, photos, buyerTestimonial, buyerName } = listing.data;
+const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, photos, amenityPhotos, buyerTestimonial, buyerName } = listing.data;
 
 const pageTitle = `${acreage} Acres for Sale — ${county}, ${state}`;
 const pageDescription = listing.body.slice(0, 155);
@@ -200,6 +201,11 @@ if (gps) {
       </div>
     </div>
   </div>
+
+  <!-- Amenity Slideshow — full width below the property grid -->
+  {amenityPhotos && amenityPhotos.length > 0 && (
+    <AmenitySlideshow photos={amenityPhotos} heading={`What's Near ${title}`} />
+  )}
 </BaseLayout>
 
 <script>

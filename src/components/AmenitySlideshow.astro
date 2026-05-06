@@ -1,0 +1,260 @@
+---
+interface AmenityPhoto {
+  image: string;
+  caption: string;
+  category?: string;
+}
+
+interface Props {
+  photos: AmenityPhoto[];
+  heading?: string;
+}
+
+const { photos = [], heading = "What's Nearby" } = Astro.props;
+if (photos.length === 0) return;
+
+const rawCategories = [...new Set(photos.map(p => p.category).filter(Boolean))] as string[];
+const hasCategories = rawCategories.length > 1;
+const categories = hasCategories ? ['All', ...rawCategories] : [];
+
+const id = `amenity-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<section class="py-14 bg-bg-light border-t border-gray-100">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-gold mb-1">Area Highlights</p>
+        <h2 class="font-display font-black text-2xl sm:text-3xl text-bg-dark">{heading}</h2>
+      </div>
+
+      <!-- Category pills (only shown when multiple categories exist) -->
+      {hasCategories && (
+        <div class="flex gap-2 flex-wrap" id={`${id}-filters`}>
+          {categories.map((cat, i) => (
+            <button
+              class={`category-pill text-xs font-bold px-4 py-1.5 rounded-full border transition-colors ${
+                i === 0
+                  ? 'bg-bg-dark text-white border-bg-dark'
+                  : 'bg-white text-gray-600 border-gray-200 hover:border-bg-dark hover:text-bg-dark'
+              }`}
+              data-category={cat}
+              data-slideshow={id}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Slideshow wrapper -->
+    <div class="relative group">
+
+      <!-- Track -->
+      <div
+        id={id}
+        class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 hide-scrollbar"
+        style="scroll-behavior: smooth;"
+      >
+        {photos.map((photo, index) => (
+          <div
+            class="amenity-slide snap-start flex-shrink-0 w-[85vw] sm:w-[60vw] lg:w-[45%] xl:w-[38%]"
+            data-category={photo.category || 'All'}
+            data-index={index}
+          >
+            <div class="rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-white h-full flex flex-col">
+              <div class="relative overflow-hidden" style="aspect-ratio: 4/3;">
+                <img
+                  src={photo.image}
+                  alt={photo.caption}
+                  class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  loading="lazy"
+                />
+                {photo.category && (
+                  <span class="absolute top-3 left-3 bg-bg-dark/80 text-white text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm">
+                    {photo.category}
+                  </span>
+                )}
+              </div>
+              <div class="p-4 flex-1 flex items-center">
+                <p class="text-sm text-gray-700 leading-relaxed">{photo.caption}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Prev arrow -->
+      <button
+        class="prev-btn absolute left-0 top-1/2 -translate-y-8 -translate-x-3 w-10 h-10 bg-white border border-gray-200 rounded-full shadow-md flex items-center justify-center text-bg-dark hover:bg-bg-dark hover:text-white hover:border-bg-dark transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10"
+        data-target={id}
+        aria-label="Previous photo"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+
+      <!-- Next arrow -->
+      <button
+        class="next-btn absolute right-0 top-1/2 -translate-y-8 translate-x-3 w-10 h-10 bg-white border border-gray-200 rounded-full shadow-md flex items-center justify-center text-bg-dark hover:bg-bg-dark hover:text-white hover:border-bg-dark transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10"
+        data-target={id}
+        aria-label="Next photo"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Dot indicators -->
+    <div id={`${id}-dots`} class="flex justify-center gap-2 mt-5 flex-wrap">
+      {photos.map((_, i) => (
+        <button
+          class={`dot w-2 h-2 rounded-full transition-all ${i === 0 ? 'bg-bg-dark w-5' : 'bg-gray-300 hover:bg-gray-400'}`}
+          data-index={i}
+          data-target={id}
+          aria-label={`Go to photo ${i + 1}`}
+        />
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script is:inline>
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+    function getTrackById(id) {
+      return document.getElementById(id);
+    }
+
+    function getVisibleSlides(track) {
+      return Array.from(track.querySelectorAll('.amenity-slide')).filter(
+        s => s.style.display !== 'none'
+      );
+    }
+
+    function getSlideWidth(track) {
+      const first = getVisibleSlides(track)[0];
+      if (!first) return 0;
+      return first.offsetWidth + parseInt(getComputedStyle(track).gap || '0');
+    }
+
+    function getCurrentIndex(track) {
+      const slides = getVisibleSlides(track);
+      const sw = getSlideWidth(track);
+      if (!sw) return 0;
+      return Math.round(track.scrollLeft / sw);
+    }
+
+    function scrollToIndex(track, index) {
+      const slides = getVisibleSlides(track);
+      const clamped = Math.max(0, Math.min(index, slides.length - 1));
+      const sw = getSlideWidth(track);
+      track.scrollTo({ left: clamped * sw, behavior: 'smooth' });
+    }
+
+    function updateDots(trackId, index, visibleSlides) {
+      const dotsContainer = document.getElementById(trackId + '-dots');
+      if (!dotsContainer) return;
+      const allDots = Array.from(dotsContainer.querySelectorAll('.dot'));
+      // Map visible slides back to their original indices
+      const visibleIndices = visibleSlides.map(s => parseInt(s.dataset.index));
+      allDots.forEach(dot => {
+        const di = parseInt(dot.dataset.index);
+        const visPos = visibleIndices.indexOf(di);
+        if (visibleIndices.includes(di)) {
+          dot.style.display = '';
+          const isActive = visPos === index;
+          dot.className = 'dot rounded-full transition-all ' +
+            (isActive ? 'bg-bg-dark w-5 h-2' : 'bg-gray-300 hover:bg-gray-400 w-2 h-2');
+        } else {
+          dot.style.display = 'none';
+        }
+      });
+    }
+
+    // ── Scroll → update dots ──────────────────────────────────────────────
+    document.querySelectorAll('.hide-scrollbar').forEach(function (track) {
+      const trackId = track.id;
+      if (!trackId) return;
+
+      track.addEventListener('scroll', function () {
+        const idx = getCurrentIndex(track);
+        updateDots(trackId, idx, getVisibleSlides(track));
+      }, { passive: true });
+    });
+
+    // ── Prev / Next buttons ───────────────────────────────────────────────
+    document.querySelectorAll('.prev-btn, .next-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const track = getTrackById(btn.dataset.target);
+        if (!track) return;
+        const dir = btn.classList.contains('prev-btn') ? -1 : 1;
+        scrollToIndex(track, getCurrentIndex(track) + dir);
+      });
+    });
+
+    // ── Dot clicks ────────────────────────────────────────────────────────
+    document.querySelectorAll('.dot').forEach(function (dot) {
+      dot.addEventListener('click', function () {
+        const track = getTrackById(dot.dataset.target);
+        if (!track) return;
+        const slides = getVisibleSlides(track);
+        const originalIndex = parseInt(dot.dataset.index);
+        const visPos = slides.findIndex(s => parseInt(s.dataset.index) === originalIndex);
+        if (visPos !== -1) scrollToIndex(track, visPos);
+      });
+    });
+
+    // ── Category filter pills ─────────────────────────────────────────────
+    document.querySelectorAll('.category-pill').forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        const trackId = pill.dataset.slideshow;
+        const selectedCat = pill.dataset.category;
+        const track = getTrackById(trackId);
+        if (!track) return;
+
+        // Update pill styles
+        const filterGroup = document.getElementById(trackId + '-filters');
+        if (filterGroup) {
+          filterGroup.querySelectorAll('.category-pill').forEach(function (p) {
+            const isActive = p.dataset.category === selectedCat;
+            p.className = 'category-pill text-xs font-bold px-4 py-1.5 rounded-full border transition-colors ' +
+              (isActive
+                ? 'bg-bg-dark text-white border-bg-dark'
+                : 'bg-white text-gray-600 border-gray-200 hover:border-bg-dark hover:text-bg-dark');
+          });
+        }
+
+        // Show/hide slides
+        Array.from(track.querySelectorAll('.amenity-slide')).forEach(function (slide) {
+          const match = selectedCat === 'All' || slide.dataset.category === selectedCat;
+          slide.style.display = match ? '' : 'none';
+        });
+
+        // Scroll to start and update dots
+        track.scrollTo({ left: 0, behavior: 'instant' });
+        updateDots(trackId, 0, getVisibleSlides(track));
+      });
+    });
+
+  });
+})();
+</script>

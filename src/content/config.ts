@@ -17,6 +17,11 @@ const listings = defineCollection({
     gps: z.string().optional(),
     videoUrl: z.string().optional(),
     photos: z.array(z.string()).default([]),
+    amenityPhotos: z.array(z.object({
+      image: z.string(),
+      caption: z.string(),
+      category: z.string().optional(),
+    })).optional().default([]),
     buyerTestimonial: z.string().optional(),
     buyerName: z.string().optional(),
     lat: z.number().optional(),
@@ -45,6 +50,11 @@ const communities = defineCollection({
     location: z.string().optional(),
     status: z.enum(['coming-soon', 'lots-available', 'sold-out']),
     image: z.string().optional(),
+    amenityPhotos: z.array(z.object({
+      image: z.string(),
+      caption: z.string(),
+      category: z.string().optional(),
+    })).optional().default([]),
     date: z.coerce.date(),
   }),
 });

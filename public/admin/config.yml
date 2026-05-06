@@ -33,6 +33,15 @@ collections:
       - { label: "Latitude", name: "lat", widget: "number", required: false, value_type: "float", hint: "e.g. 36.3789 — find at maps.google.com (right-click any spot → copy coordinates)" }
       - { label: "Longitude", name: "lng", widget: "number", required: false, value_type: "float", hint: "e.g. -84.9123 — must be negative for US locations" }
       - { label: "Community (optional)", name: "community", widget: "relation", collection: "communities", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"], required: false, hint: "Link this listing to a community subdivision if applicable" }
+      - label: "Nearby Amenities Photos"
+        name: "amenityPhotos"
+        widget: "list"
+        required: false
+        hint: "Add photos of nearby restaurants, parks, downtown areas, and activities. These appear in a 'What's Nearby' slideshow on the listing page."
+        fields:
+          - { label: "Photo", name: "image", widget: "image" }
+          - { label: "Caption", name: "caption", widget: "string", hint: "e.g. Cane Creek Park — great for kayaking and hiking on weekends" }
+          - { label: "Category", name: "category", widget: "select", required: false, options: ["Downtown", "Food & Drink", "Outdoors", "Recreation", "Shopping", "Schools", "Healthcare"] }
 
   - name: "testimonials"
     label: "Testimonials"
@@ -59,6 +68,15 @@ collections:
       - { label: "Status", name: "status", widget: "select", options: [{label: "Coming Soon", value: "coming-soon"}, {label: "Lots Available", value: "lots-available"}, {label: "Sold Out", value: "sold-out"}] }
       - { label: "Community Image", name: "image", widget: "image", required: false }
       - { label: "Description", name: "body", widget: "markdown" }
+      - label: "Nearby Amenities Photos"
+        name: "amenityPhotos"
+        widget: "list"
+        required: false
+        hint: "Add photos of nearby restaurants, parks, downtown areas, and activities. These appear in a 'What's Nearby' slideshow on the community page."
+        fields:
+          - { label: "Photo", name: "image", widget: "image" }
+          - { label: "Caption", name: "caption", widget: "string", hint: "e.g. The Square in downtown Cookeville — farmers markets every Saturday" }
+          - { label: "Category", name: "category", widget: "select", required: false, options: ["Downtown", "Food & Drink", "Outdoors", "Recreation", "Shopping", "Schools", "Healthcare"] }
       - { label: "Date", name: "date", widget: "datetime" }
 
   - name: "press"

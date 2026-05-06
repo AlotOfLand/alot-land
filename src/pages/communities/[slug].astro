@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ListingCard from '../../components/ListingCard.astro';
+import AmenitySlideshow from '../../components/AmenitySlideshow.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -13,7 +14,7 @@ export async function getStaticPaths() {
 
 const { community } = Astro.props;
 const { Content } = await render(community);
-const { title, location, status, image } = community.data;
+const { title, location, status, image, amenityPhotos } = community.data;
 
 const allListings = await getCollection('listings');
 const lots = allListings
@@ -126,4 +127,9 @@ const statusColor: Record<string, string> = {
       </div>
     )}
   </div>
+
+  <!-- Amenity Slideshow — full width below the lots grid -->
+  {amenityPhotos && amenityPhotos.length > 0 && (
+    <AmenitySlideshow photos={amenityPhotos} heading={`What's Near ${title}`} />
+  )}
 </BaseLayout>
