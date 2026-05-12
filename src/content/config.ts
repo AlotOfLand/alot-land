@@ -109,4 +109,14 @@ const ebooks = defineCollection({
   }),
 });
 
-export const collections = { listings, testimonials, communities, press, podcasts, books, ebooks };
+const faqs = defineCollection({
+  type: 'content',
+  schema: z.object({
+    question: z.string(),
+    category: z.enum(['buying', 'selling', 'general']),
+    order: z.number().default(99),
+    active: z.boolean().default(true),
+  }),
+});
+
+export const collections = { listings, testimonials, communities, press, podcasts, books, ebooks, faqs };

@@ -137,6 +137,18 @@ collections:
       - { label: "Show on Media Page", name: "featured", widget: "boolean", default: true, hint: "Toggle ON to show this ebook on the /media page. The form embed is auto-loaded based on the Audience selection above." }
       - { label: "Long Description (optional)", name: "body", widget: "markdown", required: false }
 
+  - name: "faqs"
+    label: "FAQs"
+    folder: "src/content/faqs"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Question", name: "question", widget: "string", hint: "The question as it appears in the accordion" }
+      - { label: "Category", name: "category", widget: "select", options: [{label: "Buying Land (from us)", value: "buying"}, {label: "Selling Land (to us)", value: "selling"}, {label: "General", value: "general"}] }
+      - { label: "Display Order", name: "order", widget: "number", default: 99, hint: "Lower number = shows first. Buying and Selling are sorted separately." }
+      - { label: "Show on Site", name: "active", widget: "boolean", default: true, hint: "Toggle off to hide this FAQ without deleting it" }
+      - { label: "Answer", name: "body", widget: "markdown", hint: "Full answer — supports bold, lists, and links" }
+
   - name: "settings"
     label: "Site Settings"
     files:

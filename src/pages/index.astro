@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ListingCard from '../components/ListingCard.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import TestimonialSection from '../components/TestimonialSection.astro';
+import FAQSection from '../components/FAQSection.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config/site.js';
 
@@ -271,6 +272,9 @@ const featuredListings = allListings
 
   <!-- Testimonials -->
   <TestimonialSection variant="dark" max={3} />
+
+  <!-- FAQ Section -->
+  <FAQSection />
 
   <!-- Bottom CTA -->
   <section class="py-20 bg-bg-dark text-white text-center">
