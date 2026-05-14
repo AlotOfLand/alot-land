@@ -6,7 +6,6 @@ const navLinks = [
   { label: 'Listings', href: '/listings' },
   { label: 'Find Land', href: '/find-land' },
   { label: 'Sell Your Land Fast', href: '/sell-land' },
-  { label: 'Invest With Us', href: '/invest' },
   { label: 'Media', href: '/media' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
@@ -83,7 +82,12 @@ const socialLinks = [
 
     <div class="mt-10 pt-6 border-t border-border-dark flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
       <p>© {new Date().getFullYear()} {name}. All rights reserved.</p>
-      <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
+      <div class="flex items-center gap-4">
+        <a href="https://alot.capital" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">
+          💼 Capital Investing → alot.capital
+        </a>
+        <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
+      </div>
     </div>
   </div>
 </footer>

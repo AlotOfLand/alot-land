@@ -45,12 +45,6 @@ const featuredListings = allListings
         >
           Sell Your Land
         </a>
-        <a
-          href="/invest"
-          class="border-2 border-gold text-gold font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gold hover:text-bg-dark transition-colors"
-        >
-          Invest With Us
-        </a>
       </div>
       <a
         href={`tel:${phoneRaw}`}
@@ -64,7 +58,7 @@ const featuredListings = allListings
   <!-- What We Do -->
   <section class="py-20 bg-bg-light">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
         <!-- Buy Land -->
         <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 flex flex-col">
           <div class="text-4xl mb-4">🏡</div>
@@ -96,19 +90,6 @@ const featuredListings = allListings
           </div>
         </div>
 
-        <!-- Invest -->
-        <div class="bg-bg-dark rounded-2xl p-8 text-white flex flex-col">
-          <div class="text-4xl mb-4">💰</div>
-          <h2 class="font-display font-bold text-2xl mb-3">Invest With Us</h2>
-          <p class="text-gray-300 leading-relaxed mb-6 flex-1">
-            We find undervalued land, subdivide it, and sell the new parcels. Join us as a private investor and put your capital to work.
-          </p>
-          <div class="flex flex-col gap-3">
-            <a href="/invest" class="text-center bg-gold text-bg-dark font-bold px-5 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
-              Learn More
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -199,36 +180,6 @@ const featuredListings = allListings
       <div class="text-center mt-10">
         <a href="/listings" class="bg-bg-dark text-white font-bold px-8 py-4 rounded-2xl hover:bg-gray-800 transition-colors inline-block">
           Browse Available Land
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- How It Works: Investor -->
-  <section class="py-20 bg-bg-dark text-white">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="font-display font-bold text-3xl sm:text-4xl text-center mb-12">
-        How It Works — Investing
-      </h2>
-      <div class="grid sm:grid-cols-3 gap-8">
-        {[
-          { step: '01', icon: '🔍', title: 'We Identify a Parcel', desc: 'We find undervalued land with subdivision potential — researching zoning, access, and market demand.' },
-          { step: '02', icon: '💼', title: 'Private Funders Join', desc: 'We bring in private investors to fund the acquisition and subdivision costs on a deal-by-deal basis.' },
-          { step: '03', icon: '📈', title: 'We Subdivide & Sell', desc: 'We subdivide the parcel into individual lots, sell them on-market, and funders are repaid with a return.' },
-        ].map(item => (
-          <div class="text-center">
-            <div class="w-16 h-16 bg-green-brand rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
-              {item.icon}
-            </div>
-            <div class="text-green-brand font-bold text-sm mb-2">{item.step}</div>
-            <h3 class="font-display font-bold text-lg mb-2">{item.title}</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
-      </div>
-      <div class="text-center mt-10">
-        <a href="/invest" class="bg-green-brand text-white font-bold px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity inline-block">
-          Learn About Investing
         </a>
       </div>
     </div>

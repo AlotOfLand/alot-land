@@ -3,6 +3,12 @@
   publish = "dist"
 
 [[redirects]]
+  from = "/invest"
+  to = "https://alot.capital"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/admin"
   to = "/admin/index.html"
   status = 200

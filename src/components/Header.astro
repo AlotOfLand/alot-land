@@ -15,7 +15,6 @@ const dropdowns = [
     links: [
       { label: 'Find Land', href: '/find-land', desc: "Tell us what you're looking for" },
       { label: 'Sell Your Land Fast', href: '/sell-land', desc: 'Get a cash offer on your property' },
-      { label: 'Invest With Us', href: '/invest', desc: 'Partner as a capital investor' },
     ],
   },
   {
@@ -103,8 +102,8 @@ function dropdownActive(links: { href: string }[]) {
         <a href={`tel:${phoneRaw}`} class="text-sm text-gray-300 hover:text-white transition-colors font-medium">
           {phone}
         </a>
-        <a href="/invest" class="border border-gold text-gold text-sm font-bold px-4 py-2 rounded-xl hover:bg-gold hover:text-bg-dark transition-colors">
-          Invest With Us
+        <a href="/sell-land" class="border border-gold text-gold text-sm font-bold px-4 py-2 rounded-xl hover:bg-gold hover:text-bg-dark transition-colors">
+          Get Cash Offer
         </a>
         <a href="/listings" class="bg-gold text-bg-dark text-sm font-bold px-4 py-2 rounded-xl hover:bg-yellow-400 transition-colors">
           Browse Land
@@ -171,8 +170,8 @@ function dropdownActive(links: { href: string }[]) {
       <!-- Mobile CTAs -->
       <div class="pt-3 border-t border-border-dark space-y-3 mt-2">
         <a href={`tel:${phoneRaw}`} class="block text-gray-300 text-sm font-medium">{phone}</a>
-        <a href="/invest" class="block border border-gold text-gold text-sm font-bold px-4 py-2.5 rounded-xl text-center">
-          Invest With Us
+        <a href="/sell-land" class="block border border-gold text-gold text-sm font-bold px-4 py-2.5 rounded-xl text-center">
+          Get Cash Offer
         </a>
         <a href="/listings" class="block bg-gold text-bg-dark text-sm font-bold px-4 py-2.5 rounded-xl text-center">
           Browse Land
