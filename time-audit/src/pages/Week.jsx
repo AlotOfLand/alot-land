@@ -9,6 +9,7 @@ import PageHeader from '../components/PageHeader.jsx';
 import WeekGrid from '../components/WeekGrid.jsx';
 import WeekPrompts from '../components/WeekPrompts.jsx';
 import TierBar from '../components/TierBar.jsx';
+import PdfDownloadButton from '../components/PdfDownloadButton.jsx';
 
 export default function Week() {
   const [anchor, setAnchor] = useState(new Date());
@@ -43,24 +44,27 @@ export default function Week() {
         title={weekRangeLabel(anchor)}
         subtitle={isThisWeek ? 'This week · Thursday – Wednesday' : 'Past week'}
         right={
-          <div className="flex items-center gap-1 bg-panel border border-border rounded-xl p-1">
-            <button
-              onClick={() => setAnchor(addDays(anchor, -7))}
-              className="px-2.5 py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition"
-            >‹</button>
-            <button
-              onClick={() => setAnchor(new Date())}
-              className={`px-3 py-1.5 rounded-lg text-sm transition ${
-                isThisWeek ? 'bg-panel-2 text-text' : 'text-muted hover:text-text'
-              }`}
-            >
-              This week
-            </button>
-            <button
-              onClick={() => setAnchor(addDays(anchor, 7))}
-              disabled={isThisWeek}
-              className="px-2.5 py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition disabled:opacity-30 disabled:cursor-not-allowed"
-            >›</button>
+          <div className="flex items-center gap-2">
+            <PdfDownloadButton weekStart={start} label="PDF" />
+            <div className="flex items-center gap-1 bg-panel border border-border rounded-xl p-1">
+              <button
+                onClick={() => setAnchor(addDays(anchor, -7))}
+                className="px-2.5 py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition"
+              >‹</button>
+              <button
+                onClick={() => setAnchor(new Date())}
+                className={`px-3 py-1.5 rounded-lg text-sm transition ${
+                  isThisWeek ? 'bg-panel-2 text-text' : 'text-muted hover:text-text'
+                }`}
+              >
+                This week
+              </button>
+              <button
+                onClick={() => setAnchor(addDays(anchor, 7))}
+                disabled={isThisWeek}
+                className="px-2.5 py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition disabled:opacity-30 disabled:cursor-not-allowed"
+              >›</button>
+            </div>
           </div>
         }
       />

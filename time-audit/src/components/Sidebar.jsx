@@ -5,6 +5,7 @@ const nav = [
   { to: '/',         label: 'Today',    icon: TodayIcon },
   { to: '/week',     label: 'Week',     icon: WeekIcon },
   { to: '/trends',   label: 'Trends',   icon: TrendsIcon },
+  { to: '/reports',  label: 'Reports',  icon: ReportsIcon },
   { to: '/settings', label: 'Settings', icon: SettingsIcon },
 ];
 
@@ -70,6 +71,14 @@ function TrendsIcon(p) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
       <path d="M3 17l5-5 4 4 8-8" /><path d="M14 8h6v6" />
+    </svg>
+  );
+}
+function ReportsIcon(p) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6M9 13h6M9 17h6M9 9h2" />
     </svg>
   );
 }

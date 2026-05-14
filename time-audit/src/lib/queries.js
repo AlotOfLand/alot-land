@@ -152,6 +152,78 @@ export async function unarchiveActivity(id) {
   return updateActivity(id, { archived_at: null });
 }
 
+// Day journal (wake-up time)
+export async function fetchDayJournal(date) {
+  const { data, error } = await supabase
+    .from('day_journal')
+    .select('*')
+    .eq('day', toISODate(date))
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertDayJournal(date, patch) {
+  const { data: userData } = await supabase.auth.getUser();
+  const user_id = userData?.user?.id;
+  const { data, error } = await supabase
+    .from('day_journal')
+    .upsert(
+      { user_id, day: toISODate(date), ...patch, updated_at: new Date().toISOString() },
+      { onConflict: 'user_id,day' },
+    )
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+// Timeline entries — manual time-block entries with started_at/ended_at
+export async function addTimelineBlock({ activityId, startedAt, minutes, notes = null }) {
+  const { data: userData } = await supabase.auth.getUser();
+  const user_id = userData?.user?.id;
+  if (!user_id) throw new Error('Not signed in');
+  const endedAt = new Date(new Date(startedAt).getTime() + minutes * 60_000);
+  const { data, error } = await supabase
+    .from('time_entries')
+    .insert({
+      user_id,
+      activity_id: activityId,
+      occurred_on: toISODate(startedAt),
+      minutes,
+      source: 'block',
+      started_at: new Date(startedAt).toISOString(),
+      ended_at: endedAt.toISOString(),
+      notes,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateTimelineBlock(id, { startedAt, minutes, activityId, notes }) {
+  const patch = {};
+  if (startedAt !== undefined) {
+    patch.started_at = new Date(startedAt).toISOString();
+    patch.occurred_on = toISODate(startedAt);
+  }
+  if (minutes !== undefined) patch.minutes = minutes;
+  if (activityId !== undefined) patch.activity_id = activityId;
+  if (notes !== undefined) patch.notes = notes;
+  if (startedAt !== undefined && minutes !== undefined) {
+    patch.ended_at = new Date(new Date(startedAt).getTime() + minutes * 60_000).toISOString();
+  }
+  const { data, error } = await supabase
+    .from('time_entries')
+    .update(patch)
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 // Week notes
 export async function fetchWeekNote(weekStartDate) {
   const { data, error } = await supabase

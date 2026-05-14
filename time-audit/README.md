@@ -14,10 +14,10 @@ Lives at `time.alot.land` — deployed from this subfolder to its own Netlify si
 ### 1. Run the database schema
 
 1. Open your Supabase project dashboard → **SQL Editor** → **New query**.
-2. Paste the entire contents of [`supabase/schema.sql`](./supabase/schema.sql).
-3. Click **Run**.
+2. Paste the entire contents of [`supabase/schema.sql`](./supabase/schema.sql) and click **Run**.
+3. **Then run** [`supabase/migration_002_timeline.sql`](./supabase/migration_002_timeline.sql) in a new query (adds the `day_journal` table for wake-up times and adds `'block'` as a valid `time_entries.source`).
 
-This creates the `activities`, `time_entries`, `week_notes`, and `active_timers` tables with row-level security so only the signed-in user can see their own data. It also installs a trigger that auto-seeds your 37 activities from the spreadsheet the first time you sign in.
+This creates the `activities`, `time_entries`, `week_notes`, `active_timers`, and `day_journal` tables with row-level security so only the signed-in user can see their own data. It also installs a trigger that auto-seeds your 39 activities from the spreadsheet the first time you sign in.
 
 ### 2. Configure auth redirect
 
@@ -63,9 +63,12 @@ Once DNS propagates (usually <10 min), HTTPS auto-provisions and the site is liv
 
 ## What's in the box (MVP)
 
-- **Today** — log per-activity minutes manually or run a live timer (it survives tab closes; resumes when you reopen). Navigate day-by-day for catch-up logging.
-- **Week** — Thursday→Wednesday grid like your xlsx, edit any cell, with tier totals and two prompts (focus & reflection) saved per week.
+- **Today** — two view modes via toggle:
+  - **Timeline**: set wake-up time, then chain time blocks through your day. Each block has a start time, duration, and an autocomplete activity picker that auto-categorizes by tier. Type a brand-new activity and you can create + tier it inline. Gaps between blocks show as `unlogged Nm`.
+  - **Buckets**: classic tier-grouped quick-tap minute entry. Each row has a `min` input + Log button, plus a hover-revealed ▶ to start the live timer (singleton, survives tab close).
+- **Week** — Thursday→Wednesday grid like your xlsx, edit any cell, with tier totals and two prompts (focus & reflection) saved per week. PDF export button in the top-right.
 - **Trends** — 4/8/12-week stacked bars by tier + a $10K-share line chart (the number that actually matters).
+- **Reports** — list of every tracked week (last 12) with one-click **PDF download**. Branded one-page printable audit with headline stats, tier breakdown, top activities, daily-hour bars, and your focus/reflection prompts.
 - **Settings** — add/rename/retier/archive activities.
 
 ## Coming next (round 2)

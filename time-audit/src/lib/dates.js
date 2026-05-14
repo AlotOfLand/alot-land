@@ -53,6 +53,23 @@ export function fmtHours(min) {
   return (min / 60).toFixed(1) + 'h';
 }
 
+export function fmtTime(d) {
+  // 7:30 AM
+  return format(new Date(d), 'h:mm a');
+}
+
+export function fmtTime24(d) {
+  return format(new Date(d), 'HH:mm');
+}
+
+// "07:30" string -> Date on the same calendar day as `dayDate`
+export function combineDateAndTime(dayDate, hhmm) {
+  const [h, m] = hhmm.split(':').map(Number);
+  const d = new Date(dayDate);
+  d.setHours(h || 0, m || 0, 0, 0);
+  return d;
+}
+
 export function fmtElapsed(sec) {
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);

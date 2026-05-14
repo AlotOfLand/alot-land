@@ -4,6 +4,7 @@ import SignIn from './pages/SignIn.jsx';
 import Today from './pages/Today.jsx';
 import Week from './pages/Week.jsx';
 import Trends from './pages/Trends.jsx';
+import Reports from './pages/Reports.jsx';
 import Settings from './pages/Settings.jsx';
 import Sidebar from './components/Sidebar.jsx';
 
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/" element={<Today />} />
           <Route path="/week" element={<Week />} />
           <Route path="/trends" element={<Trends />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
