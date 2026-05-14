@@ -1,41 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import MailerLiteForm from '../components/MailerLiteForm.astro';
-
-const ML_FORMS = {
-  buyers: {
-    containerId: 'mlb2-40806955',
-    formAction: 'https://assets.mailerlite.com/jsonp/2316201/forms/186551539589972998/subscribe',
-    title: 'FREE Land Buyers E-Book',
-    description: 'Get your free Land Owners Opportunity Guide — everything you need to know before buying raw land.',
-    successMessage: "Check your email for your free <em>Land Owners Opportunity Guide</em>!",
-  },
-  investors: {
-    containerId: 'mlb2-40807480',
-    formAction: 'https://assets.mailerlite.com/jsonp/2316201/forms/186552180887521130/subscribe',
-    title: 'Free Passive Land Investing Guide',
-    description: 'Learn how to earn passive income from land without buying, managing, or developing it yourself.',
-    successMessage: 'Check your email for your free <em>Passive Land Investing</em> guide!',
-  },
-  sellers: {
-    containerId: 'mlb2-40807604',
-    formAction: 'https://assets.mailerlite.com/jsonp/2316201/forms/186552355474376210/subscribe',
-    title: 'Free Land Sellers Guide',
-    description: 'Get your FREE Land Sellers Ebook — learn how to get a cash offer for your land fast, without hassle.',
-    successMessage: 'Check your email for your free <em>Land Sellers</em> guide!',
-  },
-};
 
 const allPress    = await getCollection('press').catch(() => []);
 const allPodcasts = await getCollection('podcasts').catch(() => []);
 const allBooks    = await getCollection('books').catch(() => []);
-const allEbooks   = await getCollection('ebooks').catch(() => []);
 
 const press    = allPress.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const podcasts = allPodcasts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const books    = allBooks.sort((a, b) => (b.data.publishedDate?.getTime() ?? 0) - (a.data.publishedDate?.getTime() ?? 0));
-const ebooks   = allEbooks.filter(e => e.data.featured);
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -58,9 +31,6 @@ function formatDate(date: Date) {
   <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex gap-6 overflow-x-auto text-sm font-semibold">
-        {ebooks.length > 0 && (
-          <a href="#free-resources" class="py-4 border-b-2 border-transparent hover:border-gold hover:text-gold transition-colors whitespace-nowrap text-gray-600">📖 Free Resources</a>
-        )}
         {books.length > 0 && (
           <a href="#books" class="py-4 border-b-2 border-transparent hover:border-gold hover:text-gold transition-colors whitespace-nowrap text-gray-600">📚 Books</a>
         )}
@@ -76,63 +46,6 @@ function formatDate(date: Date) {
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20">
-
-    <!-- ── FREE EBOOKS ─────────────────────────────────────── -->
-    {ebooks.length > 0 && (
-      <section id="free-resources">
-        <div class="mb-8">
-          <h2 class="font-display font-black text-3xl text-bg-dark mb-2">📖 Free Resources</h2>
-          <p class="text-gray-500">Download our free guides — no fluff, just actionable information.</p>
-        </div>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {ebooks.map(ebook => (
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-              {ebook.data.coverImage ? (
-                <img src={ebook.data.coverImage} alt={ebook.data.title} class="w-full h-56 object-cover" />
-              ) : (
-                <div class={`w-full h-56 flex items-center justify-center text-white font-display font-black text-xl text-center px-6 leading-snug
-                  ${ebook.data.audience === 'investors' ? 'bg-gradient-to-br from-bg-dark to-gray-700' : 'bg-gradient-to-br from-green-800 to-green-600'}`}>
-                  {ebook.data.title}
-                </div>
-              )}
-              <div class="p-6 flex flex-col flex-1">
-                <span class={`self-start text-xs font-bold px-2.5 py-1 rounded-full mb-3
-                  ${ebook.data.audience === 'investors' ? 'bg-gold/20 text-yellow-700' :
-                    ebook.data.audience === 'buyers' ? 'bg-green-100 text-green-700' :
-                    ebook.data.audience === 'sellers' ? 'bg-orange-100 text-orange-700' :
-                    'bg-gray-100 text-gray-600'}`}>
-                  {ebook.data.audience === 'investors' ? 'Capital Investors' :
-                   ebook.data.audience === 'buyers' ? 'Land Buyers' :
-                   ebook.data.audience === 'sellers' ? 'Land Sellers' : 'Everyone'}
-                </span>
-                <h3 class="font-display font-black text-xl text-bg-dark mb-2">{ebook.data.title}</h3>
-                {ebook.data.description && (
-                  <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-5">{ebook.data.description}</p>
-                )}
-                {ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS] ? (
-                  <div class="mt-auto">
-                    <MailerLiteForm
-                      containerId={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].containerId}
-                      formAction={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].formAction}
-                      title={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].title}
-                      description={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].description}
-                      successMessage={ML_FORMS[ebook.data.audience as keyof typeof ML_FORMS].successMessage}
-                    />
-                  </div>
-                ) : (
-                  <div class="mt-auto">
-                    <p class="text-xs text-gray-400 mb-2 text-center">Free download — coming soon</p>
-                    <a href="/contact" class="block text-center bg-gold text-bg-dark font-bold py-3 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
-                      Get Notified When It's Ready
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    )}
 
     <!-- ── BOOKS ───────────────────────────────────────────── -->
     {books.length > 0 && (
@@ -271,7 +184,7 @@ function formatDate(date: Date) {
     )}
 
     <!-- ── EMPTY STATE (when no content yet) ─────────────────── -->
-    {ebooks.length === 0 && books.length === 0 && podcasts.length === 0 && press.length === 0 && (
+    {books.length === 0 && podcasts.length === 0 && press.length === 0 && (
       <div class="text-center py-20">
         <p class="text-5xl mb-4">📡</p>
         <h2 class="font-display font-bold text-2xl text-bg-dark mb-3">Content Coming Soon</h2>
