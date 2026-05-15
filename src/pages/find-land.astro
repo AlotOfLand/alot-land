@@ -252,7 +252,7 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
           form.classList.add('hidden');
           if (thanks) thanks.classList.remove('hidden');
         } catch (err) {
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Request'; }
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send My Request'; }
           alert('Something went wrong. Please try again or call us at (423) 370-9888');
         }
       });

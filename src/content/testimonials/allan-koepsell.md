@@ -1,6 +1,5 @@
 ---
 name: "Allan R. Koepsell"
-location: ""
 role: "Former Real Estate Broker"
 featured: true
 order: 1

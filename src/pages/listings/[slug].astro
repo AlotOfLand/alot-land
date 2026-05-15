@@ -19,8 +19,8 @@ const { listing } = Astro.props;
 const { Content } = await render(listing);
 const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, photos, amenityPhotos, buyerTestimonial, buyerName } = listing.data;
 
-const pageTitle = `${acreage} Acres for Sale — ${county}, ${state}`;
-const pageDescription = listing.body.slice(0, 155);
+const pageTitle = `${acreage} Acres for Sale — ${county} County, ${state}`;
+const pageDescription = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim().slice(0, 155);
 const canonicalUrl = `https://${siteConfig.domain}/listings/${listing.slug}`;
 const ogImage = photos[0] || '/images/og-image.jpg';
 

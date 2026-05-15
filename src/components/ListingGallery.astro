@@ -51,6 +51,7 @@ const { photos, title } = Astro.props;
   function open(index: number) {
     current = index;
     img.src = photos[current];
+    img.alt = `Photo ${current + 1} of ${photos.length}`;
     lightbox.classList.remove('hidden');
     lightbox.classList.add('flex');
     if (photos.length > 1) {

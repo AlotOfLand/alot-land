@@ -377,10 +377,8 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
 
         try {
           var formData = new FormData(form);
-          await fetch('/', {
-            method: 'POST',
-            body: formData,
-          });
+          var res = await fetch('/', { method: 'POST', body: formData });
+          if (!res.ok) throw new Error('Network error');
           form.classList.add('hidden');
           if (thanks) thanks.classList.remove('hidden');
           window.scrollTo({ top: 0, behavior: 'smooth' });
