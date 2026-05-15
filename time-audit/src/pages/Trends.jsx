@@ -104,7 +104,7 @@ export default function Trends() {
         }
       />
 
-      <div className="px-8 py-6 space-y-6">
+      <div className="px-4 sm:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
           <StatCard label={`Avg $10K share · last ${weeks}w`} value={`${avg10kPct}%`} accent="#F5B800" />
           <StatCard
