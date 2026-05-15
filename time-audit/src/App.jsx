@@ -7,6 +7,8 @@ import Trends from './pages/Trends.jsx';
 import Reports from './pages/Reports.jsx';
 import Settings from './pages/Settings.jsx';
 import Sidebar from './components/Sidebar.jsx';
+import MobileNav from './components/MobileNav.jsx';
+import MobileHeader from './components/MobileHeader.jsx';
 
 export default function App() {
   const { session, loading } = useAuth();
@@ -24,7 +26,8 @@ export default function App() {
   return (
     <div className="min-h-screen flex">
       <Sidebar />
-      <main className="flex-1 min-w-0">
+      <main className="flex-1 min-w-0 pb-20 md:pb-0">
+        <MobileHeader />
         <Routes>
           <Route path="/" element={<Today />} />
           <Route path="/week" element={<Week />} />
@@ -34,6 +37,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <MobileNav />
     </div>
   );
 }

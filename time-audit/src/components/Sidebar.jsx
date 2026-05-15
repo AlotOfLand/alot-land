@@ -12,7 +12,7 @@ const nav = [
 export default function Sidebar() {
   const { user } = useAuth();
   return (
-    <aside className="w-60 shrink-0 border-r border-border bg-panel/60 backdrop-blur flex flex-col">
+    <aside className="hidden md:flex w-60 shrink-0 border-r border-border bg-panel/60 backdrop-blur flex-col">
       <div className="p-6 flex items-center gap-3">
         <img src="/brand-mark.png?v=4" alt="" width={56} height={56} className="shrink-0" />
         <div>
