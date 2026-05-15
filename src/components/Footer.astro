@@ -1,9 +1,16 @@
 ---
 import { siteConfig } from '../config/site.js';
-const { phone, phoneRaw, email, name, social, address } = siteConfig;
+import { getEntry } from 'astro:content';
+
+const contactSettings = await getEntry('settings', 'contact');
+const phone    = contactSettings?.data.phone    ?? siteConfig.phone;
+const phoneRaw = contactSettings?.data.phoneRaw ?? siteConfig.phoneRaw;
+const email    = contactSettings?.data.email    ?? siteConfig.email;
+const { name, social, address } = siteConfig;
 
 const navLinks = [
   { label: 'Listings', href: '/listings' },
+  { label: 'Communities', href: '/communities' },
   { label: 'Find Land', href: '/find-land' },
   { label: 'Sell Your Land Fast', href: '/sell-land' },
   { label: 'Press & Media', href: '/media' },

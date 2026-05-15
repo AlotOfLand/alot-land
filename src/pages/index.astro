@@ -4,10 +4,14 @@ import ListingCard from '../components/ListingCard.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import TestimonialSection from '../components/TestimonialSection.astro';
 import FAQSection from '../components/FAQSection.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import { siteConfig } from '../config/site.js';
 
-const { phone, phoneRaw } = siteConfig;
+const contactSettings  = await getEntry('settings', 'contact');
+const homepageSettings = await getEntry('settings', 'homepage');
+const phone           = contactSettings?.data.phone           ?? siteConfig.phone;
+const phoneRaw        = contactSettings?.data.phoneRaw        ?? siteConfig.phoneRaw;
+const homepageVideoId = homepageSettings?.data.homepageVideoId ?? siteConfig.homepageVideoId;
 
 const allListings = await getCollection('listings');
 const featuredListings = allListings
@@ -210,7 +214,7 @@ const featuredListings = allListings
       <p class="text-gray-500 mb-8">Watch a quick overview of how we work.</p>
       <div class="aspect-video w-full rounded-2xl overflow-hidden shadow-lg">
         <iframe
-          src={`https://www.youtube.com/embed/${siteConfig.homepageVideoId}?rel=0&modestbranding=1`}
+          src={`https://www.youtube.com/embed/${homepageVideoId}?rel=0&modestbranding=1`}
           title="A Lot of Land — How We Work"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen

@@ -119,4 +119,18 @@ const faqs = defineCollection({
   }),
 });
 
-export const collections = { listings, testimonials, communities, press, podcasts, books, ebooks, faqs };
+// CMS-editable site settings (src/content/settings/*.json)
+const settings = defineCollection({
+  type: 'data',
+  schema: z.object({
+    // contact.json
+    phone: z.string().optional(),
+    phoneRaw: z.string().optional(),
+    email: z.string().optional(),
+    // homepage.json
+    homepageVideoId: z.string().optional(),
+    heroTagline: z.string().optional(),
+  }),
+});
+
+export const collections = { listings, testimonials, communities, press, podcasts, books, ebooks, faqs, settings };
