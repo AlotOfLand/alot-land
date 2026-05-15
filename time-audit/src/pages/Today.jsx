@@ -59,14 +59,14 @@ export default function Today() {
         title={dayLabelLong(occurredOn)}
         subtitle={isToday(occurredOn) ? 'Today · log as you go' : 'Logging for another day'}
         right={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <ViewToggle mode={mode} setMode={setMode} />
             <DayNav dayOffset={dayOffset} setDayOffset={setDayOffset} />
           </div>
         }
       />
 
-      <div className="px-8 py-6 space-y-6">
+      <div className="px-4 sm:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
         <TierBar totalsByTier={totalsByTier} title="Today by tier" />
 
         {mode === 'timeline' ? (
@@ -98,7 +98,7 @@ function ViewToggle({ mode, setMode }) {
     <div className="flex items-center gap-1 bg-panel border border-border rounded-xl p-1">
       <button
         onClick={() => setMode('timeline')}
-        className={`px-3 py-1.5 rounded-lg text-sm transition ${
+        className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm transition ${
           mode === 'timeline' ? 'bg-panel-2 text-text' : 'text-muted hover:text-text'
         }`}
       >
@@ -106,7 +106,7 @@ function ViewToggle({ mode, setMode }) {
       </button>
       <button
         onClick={() => setMode('buckets')}
-        className={`px-3 py-1.5 rounded-lg text-sm transition ${
+        className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm transition ${
           mode === 'buckets' ? 'bg-panel-2 text-text' : 'text-muted hover:text-text'
         }`}
       >
@@ -118,15 +118,15 @@ function ViewToggle({ mode, setMode }) {
 
 function DayNav({ dayOffset, setDayOffset }) {
   return (
-    <div className="flex items-center gap-1 bg-panel border border-border rounded-xl p-1">
+    <div className="flex items-center gap-0.5 sm:gap-1 bg-panel border border-border rounded-xl p-1">
       <button
         onClick={() => setDayOffset(dayOffset - 1)}
-        className="px-2.5 py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition"
+        className="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition"
         title="Previous day"
       >‹</button>
       <button
         onClick={() => setDayOffset(0)}
-        className={`px-3 py-1.5 rounded-lg text-sm transition ${
+        className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm transition ${
           dayOffset === 0 ? 'bg-panel-2 text-text' : 'text-muted hover:text-text'
         }`}
       >
@@ -135,7 +135,7 @@ function DayNav({ dayOffset, setDayOffset }) {
       <button
         onClick={() => setDayOffset(dayOffset + 1)}
         disabled={dayOffset >= 0}
-        className="px-2.5 py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition disabled:opacity-30 disabled:cursor-not-allowed"
+        className="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-muted hover:text-text hover:bg-panel-2 transition disabled:opacity-30 disabled:cursor-not-allowed"
         title="Next day"
       >›</button>
     </div>

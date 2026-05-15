@@ -96,7 +96,7 @@ export default function Reports() {
         }
       />
 
-      <div className="px-8 py-6 space-y-3">
+      <div className="px-4 sm:px-8 py-4 sm:py-6 space-y-3">
         {visibleWeeks.map((w) => (
           <WeekRow
             key={w.iso}
@@ -125,10 +125,10 @@ function WeekRow({ week, confirming, onAskConfirm, onCancelConfirm, onHide, onUn
         week.hidden ? 'border-border/40 opacity-50' : week.hasData ? 'border-border' : 'border-border/40 opacity-60'
       }`}
     >
-      <div className="p-5 flex items-center gap-6">
+      <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
         <div className="flex-1 min-w-0">
-          <div className="flex items-baseline gap-3">
-            <div className="font-display text-xl">
+          <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap">
+            <div className="font-display text-lg sm:text-xl">
               {format(week.weekStart, 'MMM d')} – {format(week.weekEnd, 'MMM d, yyyy')}
             </div>
             {week.isCurrent && (
@@ -139,6 +139,12 @@ function WeekRow({ week, confirming, onAskConfirm, onCancelConfirm, onHide, onUn
             )}
           </div>
           <div className="mt-1 text-xs text-muted">Thursday → Wednesday</div>
+
+          <div className="mt-3 sm:hidden flex items-center gap-5 text-xs">
+            <span><span className="text-muted">Tracked </span><span className="font-medium">{week.hasData ? `${week.totalHours.toFixed(1)}h` : '—'}</span></span>
+            <span><span className="text-muted">$10K </span><span className="font-medium" style={{ color: '#F5B800' }}>{week.hasData ? `${week.tenKPct.toFixed(0)}%` : '—'}</span></span>
+            <span><span className="text-muted">Activities </span><span className="font-medium">{week.hasData ? `${week.activityCount}` : '—'}</span></span>
+          </div>
         </div>
 
         <div className="hidden md:flex items-center gap-8">
