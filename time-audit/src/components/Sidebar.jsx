@@ -13,9 +13,14 @@ export default function Sidebar() {
   const { user } = useAuth();
   return (
     <aside className="w-60 shrink-0 border-r border-border bg-panel/60 backdrop-blur flex flex-col">
-      <div className="p-6">
-        <div className="font-display text-xl leading-none">Time Audit</div>
-        <div className="mt-1 text-[11px] uppercase tracking-widest text-muted">A Lot of Land</div>
+      <div className="p-6 flex items-center gap-3">
+        <img src="/brand-mark.png?v=4" alt="" width={56} height={56} className="shrink-0" />
+        <div>
+          <div className="font-display text-xl leading-none">Time Audit</div>
+          <div className="mt-1 text-[11px] tracking-wider text-muted">
+            Powered by <span className="text-text">Alot.Land</span>
+          </div>
+        </div>
       </div>
 
       <nav className="flex-1 px-3 space-y-1">

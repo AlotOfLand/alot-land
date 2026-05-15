@@ -224,6 +224,36 @@ export async function updateTimelineBlock(id, { startedAt, minutes, activityId, 
   return data;
 }
 
+// Hidden weeks
+export async function fetchHiddenWeeks() {
+  const { data, error } = await supabase
+    .from('hidden_weeks')
+    .select('week_start')
+    .order('week_start', { ascending: false });
+  if (error) throw error;
+  return (data || []).map((r) => r.week_start);
+}
+
+export async function hideWeek(weekStartDate) {
+  const { data: userData } = await supabase.auth.getUser();
+  const user_id = userData?.user?.id;
+  const { error } = await supabase
+    .from('hidden_weeks')
+    .upsert(
+      { user_id, week_start: toISODate(weekStartDate) },
+      { onConflict: 'user_id,week_start' },
+    );
+  if (error) throw error;
+}
+
+export async function unhideWeek(weekStartDate) {
+  const { error } = await supabase
+    .from('hidden_weeks')
+    .delete()
+    .eq('week_start', toISODate(weekStartDate));
+  if (error) throw error;
+}
+
 // Week notes
 export async function fetchWeekNote(weekStartDate) {
   const { data, error } = await supabase

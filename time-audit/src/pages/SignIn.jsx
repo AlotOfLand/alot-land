@@ -31,8 +31,15 @@ export default function SignIn() {
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="mb-10 text-center">
+          <img
+            src="/favicon-192.png?v=4"
+            alt=""
+            width={72}
+            height={72}
+            className="mx-auto mb-4 rounded-2xl"
+          />
           <div className="font-display text-3xl tracking-tight">Time Audit</div>
-          <div className="mt-2 text-sm text-muted">A Lot of Land · private</div>
+          <div className="mt-2 text-sm text-muted">Powered by Alot.Land · private</div>
         </div>
 
         {status === 'sent' ? (

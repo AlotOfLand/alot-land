@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
-  LineChart, Line,
+  LineChart, Line, PieChart, Pie, Cell,
 } from 'recharts';
 import { fetchActivities, fetchEntriesForRange } from '../lib/queries';
 import { TIERS, tierByKey } from '../lib/tiers';
@@ -63,6 +63,25 @@ export default function Trends() {
     return Math.round(valid.reduce((s, d) => s + d.pct10k, 0) / valid.length);
   }, [data]);
 
+  const tierTotals = useMemo(() => {
+    const totals = Object.fromEntries(TIERS.map((t) => [t.key, 0]));
+    for (const d of data) for (const t of TIERS) totals[t.key] += d[t.key];
+    const total = Object.values(totals).reduce((s, n) => s + n, 0);
+    return { totals, total };
+  }, [data]);
+
+  const donutData = useMemo(
+    () => TIERS.map((t) => ({
+      key: t.key,
+      name: t.short,
+      label: t.label,
+      color: t.color,
+      value: +tierTotals.totals[t.key].toFixed(1),
+      pct: tierTotals.total ? (tierTotals.totals[t.key] / tierTotals.total) * 100 : 0,
+    })),
+    [tierTotals],
+  );
+
   return (
     <div className="pb-16">
       <PageHeader
@@ -99,6 +118,78 @@ export default function Trends() {
             accent="#5B9BD5"
           />
         </div>
+
+        <section className="rounded-2xl border border-border bg-panel p-5">
+          <div className="text-[11px] uppercase tracking-widest text-muted mb-3">
+            Where your {weeks} weeks went
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 items-center">
+            <div className="h-64 relative">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={donutData}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius="62%"
+                    outerRadius="92%"
+                    paddingAngle={2}
+                    stroke="#0A0A0A"
+                    strokeWidth={2}
+                    startAngle={90}
+                    endAngle={-270}
+                    isAnimationActive={false}
+                  >
+                    {donutData.map((d) => (
+                      <Cell key={d.key} fill={d.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (!active || !payload?.length) return null;
+                      const d = payload[0].payload;
+                      return (
+                        <div className="rounded-xl border border-border-hi bg-bg/95 px-3 py-2 text-xs shadow-xl">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full" style={{ background: d.color }} />
+                            <span className="text-text">{d.label}</span>
+                          </div>
+                          <div className="text-muted tabular-nums mt-1">
+                            {d.value.toFixed(1)}h · {d.pct.toFixed(0)}%
+                          </div>
+                        </div>
+                      );
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <div className="font-display text-3xl text-gold">
+                  {donutData.find((d) => d.key === 'tier_10k')?.pct.toFixed(0) ?? 0}%
+                </div>
+                <div className="text-[10px] uppercase tracking-widest text-muted">at $10K</div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {donutData.map((d) => (
+                <div
+                  key={d.key}
+                  className="flex items-center gap-3 rounded-xl bg-panel-2/60 border border-border/60 p-3"
+                >
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: d.color }} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm">{d.label}</div>
+                    <div className="text-xs text-muted">{d.value.toFixed(1)}h tracked</div>
+                  </div>
+                  <div className="font-display text-xl tabular-nums" style={{ color: d.color }}>
+                    {d.pct.toFixed(0)}%
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <section className="rounded-2xl border border-border bg-panel p-5">
           <div className="text-[11px] uppercase tracking-widest text-muted mb-3">
