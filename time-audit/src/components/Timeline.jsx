@@ -130,14 +130,17 @@ function Block({ block, activity, activities, gapMin, day, onDelete, onUpdated }
   const tier = tierByKey[activity?.tier];
   const startStr = fmtTime24(block.started_at);
   const [startVal, setStartVal] = useState(startStr);
-  const [minVal, setMinVal] = useState(String(block.minutes));
+  const [hoursVal, setHoursVal] = useState(String(Math.floor(block.minutes / 60)));
+  const [minsVal, setMinsVal] = useState(String(block.minutes % 60));
   const [actVal, setActVal] = useState(activity);
+
+  const computedMinutes = (parseInt(hoursVal, 10) || 0) * 60 + (parseInt(minsVal, 10) || 0);
 
   const save = useMutation({
     mutationFn: () =>
       updateTimelineBlock(block.id, {
         startedAt: combineDateAndTime(day, startVal),
-        minutes: parseInt(minVal, 10) || block.minutes,
+        minutes: computedMinutes || block.minutes,
         activityId: actVal?.id,
       }),
     onSuccess: () => {
@@ -175,7 +178,7 @@ function Block({ block, activity, activities, gapMin, day, onDelete, onUpdated }
                 onSelect={setActVal}
                 autoFocus
               />
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <label className="text-[11px] uppercase tracking-widest text-muted">Start</label>
                 <input
                   type="time"
@@ -184,14 +187,12 @@ function Block({ block, activity, activities, gapMin, day, onDelete, onUpdated }
                   className="bg-bg border border-border-hi rounded-lg px-2 py-1 text-sm outline-none focus:border-gold"
                 />
                 <label className="text-[11px] uppercase tracking-widest text-muted ml-2">Duration</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={minVal}
-                  onChange={(e) => setMinVal(e.target.value)}
-                  className="w-20 bg-bg border border-border-hi rounded-lg px-2 py-1 text-sm outline-none focus:border-gold"
+                <HoursMinutesInput
+                  hours={hoursVal}
+                  minutes={minsVal}
+                  setHours={setHoursVal}
+                  setMinutes={setMinsVal}
                 />
-                <span className="text-xs text-muted">min</span>
               </div>
               <div className="flex items-center gap-2 pt-1">
                 <button
@@ -248,23 +249,26 @@ function AddBlock({ day, defaultStartMs, activities, onCreate, isPending }) {
   const [open, setOpen] = useState(false);
   const [activity, setActivity] = useState(null);
   const [start, setStart] = useState('');
-  const [duration, setDuration] = useState('30');
+  const [hours, setHours] = useState('0');
+  const [minutes, setMinutes] = useState('30');
 
   function openForm() {
     setStart(defaultStartMs ? fmtTime24(defaultStartMs) : '07:00');
     setActivity(null);
-    setDuration('30');
+    setHours('0');
+    setMinutes('30');
     setOpen(true);
   }
 
   function submit(e) {
     e.preventDefault();
-    if (!activity || !duration) return;
+    const totalMin = (parseInt(hours, 10) || 0) * 60 + (parseInt(minutes, 10) || 0);
+    if (!activity || totalMin <= 0) return;
     const startedAt = combineDateAndTime(day, start);
     onCreate({
       activityId: activity.id,
       startedAt,
-      minutes: parseInt(duration, 10) || 30,
+      minutes: totalMin,
     });
     setOpen(false);
   }
@@ -310,7 +314,7 @@ function AddBlock({ day, defaultStartMs, activities, onCreate, isPending }) {
           placeholder="What did you do?"
           autoFocus
         />
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <label className="text-[11px] uppercase tracking-widest text-muted">Start</label>
           <input
             type="time"
@@ -319,14 +323,12 @@ function AddBlock({ day, defaultStartMs, activities, onCreate, isPending }) {
             className="bg-bg border border-border-hi rounded-lg px-2 py-1 text-sm outline-none focus:border-gold"
           />
           <label className="text-[11px] uppercase tracking-widest text-muted ml-2">Duration</label>
-          <input
-            type="number"
-            min="1"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            className="w-20 bg-bg border border-border-hi rounded-lg px-2 py-1 text-sm outline-none focus:border-gold"
+          <HoursMinutesInput
+            hours={hours}
+            minutes={minutes}
+            setHours={setHours}
+            setMinutes={setMinutes}
           />
-          <span className="text-xs text-muted">min</span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -345,6 +347,44 @@ function AddBlock({ day, defaultStartMs, activities, onCreate, isPending }) {
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+function HoursMinutesInput({ hours, minutes, setHours, setMinutes }) {
+  return (
+    <div className="inline-flex items-center gap-1">
+      <input
+        type="number"
+        inputMode="numeric"
+        min="0"
+        value={hours}
+        onChange={(e) => setHours(e.target.value)}
+        className="w-12 bg-bg border border-border-hi rounded-lg px-2 py-1 text-sm text-right outline-none focus:border-gold tabular-nums"
+      />
+      <span className="text-xs text-muted">h</span>
+      <input
+        type="number"
+        inputMode="numeric"
+        min="0"
+        max="59"
+        value={minutes}
+        onChange={(e) => {
+          const v = e.target.value;
+          // Auto-carry: typing 90 minutes becomes 1h 30m
+          const n = parseInt(v, 10);
+          if (Number.isFinite(n) && n >= 60) {
+            const carryH = Math.floor(n / 60);
+            const remM = n % 60;
+            setHours(String((parseInt(hours, 10) || 0) + carryH));
+            setMinutes(String(remM));
+          } else {
+            setMinutes(v);
+          }
+        }}
+        className="w-12 bg-bg border border-border-hi rounded-lg px-2 py-1 text-sm text-right outline-none focus:border-gold tabular-nums"
+      />
+      <span className="text-xs text-muted">m</span>
     </div>
   );
 }
