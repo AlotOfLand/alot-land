@@ -4,7 +4,7 @@ import {
   fetchAllActivities, createActivity, updateActivity,
   archiveActivity, unarchiveActivity,
   fetchAllowedEmails, addAllowedEmail, updateAllowedEmail, deleteAllowedEmail,
-  isCurrentUserAdmin,
+  sendInviteEmail, isCurrentUserAdmin,
 } from '../lib/queries';
 import { TIERS } from '../lib/tiers';
 import PageHeader from '../components/PageHeader.jsx';
@@ -200,7 +200,17 @@ function AdminPanel() {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ['allowed-emails'] });
 
-  const add = useMutation({ mutationFn: addAllowedEmail, onSuccess: invalidate });
+  const add = useMutation({
+    mutationFn: async (input) => {
+      const row = await addAllowedEmail(input);
+      // Fire-and-forget invite email so the recipient doesn't have to go to
+      // the site and type their email themselves. If this fails the invite
+      // still succeeded — they can sign in manually.
+      try { await sendInviteEmail(input.email); } catch (e) { console.warn(e); }
+      return row;
+    },
+    onSuccess: invalidate,
+  });
   const update = useMutation({
     mutationFn: ({ email, ...patch }) => updateAllowedEmail(email, patch),
     onSuccess: invalidate,
@@ -261,7 +271,7 @@ function AdminPanel() {
           disabled={add.isPending || !newEmail.trim()}
           className="px-4 py-2 rounded-lg bg-gold text-bg text-sm font-medium disabled:opacity-50"
         >
-          {add.isPending ? 'Adding…' : 'Invite'}
+          {add.isPending ? 'Sending…' : 'Invite'}
         </button>
       </form>
 
@@ -270,6 +280,12 @@ function AdminPanel() {
           {add.error?.message?.includes('duplicate')
             ? 'That email is already on the list.'
             : `Couldn't add: ${add.error?.message || 'unknown error'}`}
+        </div>
+      )}
+
+      {add.isSuccess && (
+        <div className="text-xs text-green mb-3">
+          ✓ Invited. They should get an email with a one-click sign-in link.
         </div>
       )}
 

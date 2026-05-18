@@ -251,10 +251,11 @@ export async function fetchAllowedEmails() {
 export async function addAllowedEmail({ email, isAdmin = false, note = null }) {
   const { data: userData } = await supabase.auth.getUser();
   const user_id = userData?.user?.id;
+  const cleanEmail = email.toLowerCase().trim();
   const { data, error } = await supabase
     .from('allowed_emails')
     .insert({
-      email: email.toLowerCase().trim(),
+      email: cleanEmail,
       is_admin: isAdmin,
       added_by: user_id,
       note,
@@ -263,6 +264,18 @@ export async function addAllowedEmail({ email, isAdmin = false, note = null }) {
     .single();
   if (error) throw error;
   return data;
+}
+
+// Fire a magic-link email at someone you just invited so they don't have to
+// go to the site and type their email themselves. Does NOT change the caller's
+// auth session — Supabase only sends the email; the session is only created
+// on the recipient's device when they click the link.
+export async function sendInviteEmail(email) {
+  const { error } = await supabase.auth.signInWithOtp({
+    email: email.toLowerCase().trim(),
+    options: { emailRedirectTo: 'https://time.alot.land' },
+  });
+  if (error) throw error;
 }
 
 export async function updateAllowedEmail(email, patch) {
