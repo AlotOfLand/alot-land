@@ -1,22 +1,25 @@
 ---
-title: "8.2 Acres — Fentress County, TN"
-status: available
+title: .7 Acres in Dickson TN
+status: sold
 featured: true
 state: Tennessee
-county: Fentress
-acreage: "8.2"
-price: "$52,000"
-zoning: "Agricultural"
-roadAccess: "Paved road frontage"
-water: "Seasonal creek"
-power: "Power nearby"
-gps: "36.3789, -84.9123"
-lat: 36.3789
-lng: -84.9123
+county: Dickson
+acreage: ".7"
+price: $72,000
+zoning: Residential
+roadAccess: 168 ft Road Frontage - Corner Lot
+water: City Water
+power: City Power & Sewer
+gps: 36.0755,-87.3584
 photos:
-  - /images/land-tennessee-1.jpg
+  - /images/973eda84dc0352f268c9e42dc2bc788f-cc_ft_1536.webp
   - /images/land-tennessee-2.jpg
 date: 2025-02-01T00:00:00.000Z
+buyerTestimonial: We are lucky to have found this property at this price. It is
+  a great property to build on in a great area in Dickson
+lat: 36.0755
+lng: -87.3584
 ---
+One of the last available lots, in a well-established neighborhood. This property offers water, sewer and electric at the road.
 
-Wooded 8.2-acre tract with a seasonal creek running through the back portion of the property. Located minutes from Big South Fork National Recreation Area. Great for hunting, camping, or building your dream cabin. Power available at the road.
+Listing Provided by: R. Scott England 615-202-2100, E4 Real Estate Group
