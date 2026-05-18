@@ -1,5 +1,5 @@
 ---
-title: .7 Acres in Dickson TN
+title: .7 Acres - Dickson, TN
 status: sold
 featured: true
 state: Tennessee
