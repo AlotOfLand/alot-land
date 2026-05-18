@@ -1,5 +1,5 @@
 ---
-title: 160 Acres - $79,900 - Seligman - Yavapai County, AZ
+title: 160 Acres - Seligman, AZ
 status: available
 featured: true
 state: Arizona
