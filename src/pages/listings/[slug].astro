@@ -154,70 +154,29 @@ if (gps) {
             </div>
           )}
 
-          <!-- Inquiry Form -->
-          <div class="mt-8 pt-6 border-t border-gray-100">
-            <h3 class="font-display font-bold text-lg text-bg-dark mb-4">Inquire About This Property</h3>
-            <form
-              name="property-inquiry"
-              method="POST"
-              data-netlify="true"
-              netlify-honeypot="bot-field"
-              class="space-y-3"
-              id="inquiry-form"
-            >
-              <input type="hidden" name="form-name" value="property-inquiry" />
-              <input type="hidden" name="property" value={title} />
-              <p class="hidden">
-                <label>Don't fill this out: <input name="bot-field" /></label>
-              </p>
+        </div>
 
-              <label for="inq-name" class="sr-only">Your Name</label>
-              <input
-                id="inq-name"
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                required
-                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
-              />
-              <label for="inq-phone" class="sr-only">Phone Number</label>
-              <input
-                id="inq-phone"
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                required
-                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
-              />
-              <label for="inq-email" class="sr-only">Email Address</label>
-              <input
-                id="inq-email"
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                required
-                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
-              />
-              <label for="inq-message" class="sr-only">Message</label>
-              <textarea
-                id="inq-message"
-                name="message"
-                rows="3"
-                placeholder="I'm interested in this property..."
-                class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold resize-none"
-              ></textarea>
-              <button
-                type="submit"
-                class="w-full bg-gold text-bg-dark font-bold py-3 rounded-xl hover:bg-yellow-400 transition-colors text-sm"
-              >
-                Send Inquiry
-              </button>
-            </form>
-
-            <div id="inquiry-thanks" class="hidden text-center py-4">
-              <p class="text-green-brand font-semibold">✓ Message sent! We'll be in touch soon.</p>
-            </div>
-          </div>
+        <!-- Inquiry Form -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <h3 class="font-display font-bold text-lg text-bg-dark mb-2">Inquire About This Property</h3>
+          <iframe
+            src={`https://brand.alot.land/widget/form/f9D0fKTeKcjbc5H0aCab?property_name=${encodeURIComponent(title)}`}
+            style="width:100%;border:none;border-radius:8px"
+            id="inline-f9D0fKTeKcjbc5H0aCab"
+            data-layout="{'id':'INLINE'}"
+            data-trigger-type="alwaysShow"
+            data-trigger-value=""
+            data-activation-type="alwaysActivated"
+            data-activation-value=""
+            data-deactivation-type="neverDeactivate"
+            data-deactivation-value=""
+            data-form-name="Property Inquiry"
+            data-height="941"
+            data-layout-iframe-id="inline-f9D0fKTeKcjbc5H0aCab"
+            data-form-id="f9D0fKTeKcjbc5H0aCab"
+            title="Property Inquiry"
+          ></iframe>
+          <script src="https://brand.alot.land/js/form_embed.js"></script>
         </div>
 
         <!-- Buyer Testimonial (sold listings) -->
@@ -243,22 +202,3 @@ if (gps) {
   )}
 </BaseLayout>
 
-<script>
-  const form = document.getElementById('inquiry-form') as HTMLFormElement;
-  const thanks = document.getElementById('inquiry-thanks');
-
-  const submitBtn = form?.querySelector('button[type="submit"]') as HTMLButtonElement;
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
-    try {
-      const res = await fetch('/', { method: 'POST', body: new FormData(form) });
-      if (!res.ok) throw new Error('Network error');
-      form.classList.add('hidden');
-      thanks?.classList.remove('hidden');
-    } catch {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Send Inquiry'; }
-      alert('Something went wrong. Please try again or call us at (423) 370-9888');
-    }
-  });
-</script>
