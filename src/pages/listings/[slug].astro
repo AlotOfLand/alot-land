@@ -19,8 +19,9 @@ const { listing } = Astro.props;
 const { Content } = await render(listing);
 const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, photos, amenityPhotos, buyerTestimonial, buyerName } = listing.data;
 
-const pageTitle = `${acreage} Acres for Sale — ${county} County, ${state}`;
-const pageDescription = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim().slice(0, 155);
+const pageTitle = `${acreage} Acres for Sale${price ? ` — ${price}` : ''} | ${county} County, ${state}`;
+const bodyText = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim();
+const pageDescription = `${acreage} acres of land for sale in ${county} County, ${state}${price ? `. Asking ${price}` : ''}. ${bodyText}`.slice(0, 155);
 const canonicalUrl = `https://${siteConfig.domain}/listings/${listing.slug}`;
 const ogImage = photos[0] || '/images/og-image.jpg';
 
@@ -144,28 +145,36 @@ if (gps) {
                 <label>Don't fill this out: <input name="bot-field" /></label>
               </p>
 
+              <label for="inq-name" class="sr-only">Your Name</label>
               <input
+                id="inq-name"
                 type="text"
                 name="name"
                 placeholder="Your Name"
                 required
                 class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               />
+              <label for="inq-phone" class="sr-only">Phone Number</label>
               <input
+                id="inq-phone"
                 type="tel"
                 name="phone"
                 placeholder="Phone Number"
                 required
                 class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               />
+              <label for="inq-email" class="sr-only">Email Address</label>
               <input
+                id="inq-email"
                 type="email"
                 name="email"
                 placeholder="Email Address"
                 required
                 class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
               />
+              <label for="inq-message" class="sr-only">Message</label>
               <textarea
+                id="inq-message"
                 name="message"
                 rows="3"
                 placeholder="I'm interested in this property..."

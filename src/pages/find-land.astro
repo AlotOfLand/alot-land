@@ -39,8 +39,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
         <!-- Name -->
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-semibold text-bg-dark mb-1.5">First Name *</label>
+            <label for="fl-first-name" class="block text-sm font-semibold text-bg-dark mb-1.5">First Name *</label>
             <input
+              id="fl-first-name"
               type="text"
               name="first-name"
               required
@@ -48,8 +49,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
             />
           </div>
           <div>
-            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Last Name *</label>
+            <label for="fl-last-name" class="block text-sm font-semibold text-bg-dark mb-1.5">Last Name *</label>
             <input
+              id="fl-last-name"
               type="text"
               name="last-name"
               required
@@ -61,8 +63,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
         <!-- Contact -->
         <div class="grid sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Phone *</label>
+            <label for="fl-phone" class="block text-sm font-semibold text-bg-dark mb-1.5">Phone *</label>
             <input
+              id="fl-phone"
               type="tel"
               name="phone"
               required
@@ -70,8 +73,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
             />
           </div>
           <div>
-            <label class="block text-sm font-semibold text-bg-dark mb-1.5">Email *</label>
+            <label for="fl-email" class="block text-sm font-semibold text-bg-dark mb-1.5">Email *</label>
             <input
+              id="fl-email"
               type="email"
               name="email"
               required
@@ -106,8 +110,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
 
         <!-- Acreage Range -->
         <div>
-          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Acreage Range</label>
+          <label for="fl-acreage" class="block text-sm font-semibold text-bg-dark mb-1.5">Acreage Range</label>
           <select
+            id="fl-acreage"
             name="acreage-range"
             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold bg-white"
           >
@@ -122,8 +127,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
 
         <!-- Budget Range -->
         <div>
-          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Budget Range</label>
+          <label for="fl-budget" class="block text-sm font-semibold text-bg-dark mb-1.5">Budget Range</label>
           <select
+            id="fl-budget"
             name="budget-range"
             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold bg-white"
           >
@@ -151,8 +157,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
 
         <!-- Preferred Region/Area -->
         <div>
-          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Preferred Region / Area</label>
+          <label for="fl-region" class="block text-sm font-semibold text-bg-dark mb-1.5">Preferred Region / Area</label>
           <input
+            id="fl-region"
             type="text"
             name="preferred-region"
             placeholder="e.g. East Tennessee, Yavapai County AZ, Northwest Arkansas foothills..."
@@ -173,8 +180,9 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
 
         <!-- Notes -->
         <div>
-          <label class="block text-sm font-semibold text-bg-dark mb-1.5">Additional Notes</label>
+          <label for="fl-notes" class="block text-sm font-semibold text-bg-dark mb-1.5">Additional Notes</label>
           <textarea
+            id="fl-notes"
             name="notes"
             rows="4"
             placeholder="Tell us anything else — specific counties, water needs, road access requirements, timeline, etc."

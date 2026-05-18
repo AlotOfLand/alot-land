@@ -72,8 +72,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
 
         <div class="grid sm:grid-cols-2 gap-4 mt-5">
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Your Email <span class="text-red-400">*</span></label>
+            <label for="sl-email" class="block text-sm font-semibold text-gray-700 mb-1.5">Your Email <span class="text-red-400">*</span></label>
             <input
+              id="sl-email"
               type="email"
               name="email"
               placeholder="you@example.com"
@@ -82,8 +83,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
             />
           </div>
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
+            <label for="sl-phone" class="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
             <input
+              id="sl-phone"
               type="tel"
               name="phone"
               placeholder="(555) 000-0000"
@@ -93,8 +95,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
         </div>
 
         <div class="mt-5">
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Timeline to Sell <span class="text-red-400">*</span></label>
+          <label for="sl-timeline" class="block text-sm font-semibold text-gray-700 mb-1.5">Timeline to Sell <span class="text-red-400">*</span></label>
           <select
+            id="sl-timeline"
             name="timeline"
             required
             class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold"
@@ -109,8 +112,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
         </div>
 
         <div class="mt-5">
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Why are you selling?</label>
+          <label for="sl-reason" class="block text-sm font-semibold text-gray-700 mb-1.5">Why are you selling?</label>
           <textarea
+            id="sl-reason"
             name="reason_selling"
             rows="3"
             placeholder="e.g. Inherited the property, no longer need it, need cash quickly…"
@@ -126,8 +130,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
 
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Property Address</label>
+            <label for="sl-address" class="block text-sm font-semibold text-gray-700 mb-1.5">Property Address</label>
             <input
+              id="sl-address"
               type="text"
               name="address"
               placeholder="Street address, or leave blank if none"
@@ -137,8 +142,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
 
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1.5">County <span class="text-red-400">*</span></label>
+              <label for="sl-county" class="block text-sm font-semibold text-gray-700 mb-1.5">County <span class="text-red-400">*</span></label>
               <input
+                id="sl-county"
                 type="text"
                 name="county"
                 placeholder="e.g. Yavapai"
@@ -147,8 +153,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
               />
             </div>
             <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1.5">State <span class="text-red-400">*</span></label>
+              <label for="sl-state" class="block text-sm font-semibold text-gray-700 mb-1.5">State <span class="text-red-400">*</span></label>
               <select
+                id="sl-state"
                 name="state"
                 required
                 class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold"
@@ -177,8 +184,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
 
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1.5">APN (Parcel Number)</label>
+              <label for="sl-apn" class="block text-sm font-semibold text-gray-700 mb-1.5">APN (Parcel Number)</label>
               <input
+                id="sl-apn"
                 type="text"
                 name="apn"
                 placeholder="e.g. 302-14-021"
@@ -186,8 +194,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
               />
             </div>
             <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1.5">GPS / Lat & Long</label>
+              <label for="sl-gps" class="block text-sm font-semibold text-gray-700 mb-1.5">GPS / Lat & Long</label>
               <input
+                id="sl-gps"
                 type="text"
                 name="gps"
                 placeholder="e.g. 34.5678, -112.3456"
@@ -205,8 +214,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
 
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Tell us more about the property</label>
+            <label for="sl-details" class="block text-sm font-semibold text-gray-700 mb-1.5">Tell us more about the property</label>
             <textarea
+              id="sl-details"
               name="property_details"
               rows="4"
               placeholder="Acreage, terrain, access, utilities, any structures, how you acquired it — anything that helps us understand what you have."
@@ -217,8 +227,8 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
           <!-- Yes/No/Not Sure questions -->
           <div class="grid sm:grid-cols-3 gap-4">
             <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Is there a survey?</label>
-              <select name="has_survey" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
+              <label for="sl-has-survey" class="block text-sm font-semibold text-gray-700 mb-1.5">Is there a survey?</label>
+              <select id="sl-has-survey" name="has_survey" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
                 <option value="" disabled selected>Select…</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -226,8 +236,8 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
               </select>
             </div>
             <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Is it landlocked?</label>
-              <select name="is_landlocked" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
+              <label for="sl-landlocked" class="block text-sm font-semibold text-gray-700 mb-1.5">Is it landlocked?</label>
+              <select id="sl-landlocked" name="is_landlocked" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
                 <option value="" disabled selected>Select…</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -235,8 +245,8 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
               </select>
             </div>
             <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-1.5">Floodplain or wetland?</label>
-              <select name="is_floodplain" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
+              <label for="sl-floodplain" class="block text-sm font-semibold text-gray-700 mb-1.5">Floodplain or wetland?</label>
+              <select id="sl-floodplain" name="is_floodplain" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold">
                 <option value="" disabled selected>Select…</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
@@ -247,11 +257,12 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
 
           <!-- Survey upload (shown when survey = Yes) -->
           <div id="survey-upload-wrap" class="hidden">
-            <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+            <label for="sl-survey-file" class="block text-sm font-semibold text-gray-700 mb-1.5">
               Upload Survey
               <span class="font-normal text-gray-400 ml-1">(PDF, JPG, or PNG)</span>
             </label>
             <input
+              id="sl-survey-file"
               type="file"
               name="survey_file"
               accept=".pdf,.jpg,.jpeg,.png"
@@ -267,8 +278,9 @@ const sellersEbook = allEbooks.find(e => e.data.audience === 'sellers' && e.data
         <p class="text-sm text-gray-500 mb-5">What are you hoping to get? Be honest — we'll make a fair offer either way.</p>
 
         <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-1.5">How much do you want for the property?</label>
+          <label for="sl-asking" class="block text-sm font-semibold text-gray-700 mb-1.5">How much do you want for the property?</label>
           <input
+            id="sl-asking"
             type="text"
             name="asking_price"
             placeholder="e.g. $45,000 or 'Make me an offer'"

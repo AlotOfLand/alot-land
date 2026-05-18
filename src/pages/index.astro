@@ -12,6 +12,7 @@ const homepageSettings = await getEntry('settings', 'homepage');
 const phone           = contactSettings?.data.phone           ?? siteConfig.phone;
 const phoneRaw        = contactSettings?.data.phoneRaw        ?? siteConfig.phoneRaw;
 const homepageVideoId = homepageSettings?.data.homepageVideoId ?? siteConfig.homepageVideoId;
+const heroTagline     = homepageSettings?.data.heroTagline     ?? siteConfig.tagline;
 
 const allListings = await getCollection('listings');
 const featuredListings = allListings
@@ -34,7 +35,7 @@ const featuredListings = allListings
         A Lot of Land.
       </h1>
       <p class="text-xl sm:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed">
-        Buy Land, Sell Land &amp; Build Wealth With Land.
+        {heroTagline}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center mb-10">
         <a
@@ -131,6 +132,41 @@ const featuredListings = allListings
 
       <div class="text-center mt-10 sm:hidden">
         <a href="/listings" class="text-gold font-semibold hover:underline">See All Listings →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter / New Listings Alert -->
+  <section class="py-16 bg-white border-b border-gray-100">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="text-3xl mb-3">📬</div>
+      <h2 class="font-display font-bold text-2xl sm:text-3xl text-bg-dark mb-2">Get New Listings First</h2>
+      <p class="text-gray-500 mb-8">Off-market deals in AZ, TN &amp; NW Arkansas. Be the first to know when new parcels drop.</p>
+      <form
+        name="newsletter"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        id="newsletter-form"
+        class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+      >
+        <input type="hidden" name="form-name" value="newsletter" />
+        <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+        <label for="newsletter-email" class="sr-only">Email Address</label>
+        <input
+          id="newsletter-email"
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+          class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-bg-dark text-sm focus:outline-none focus:ring-2 focus:ring-gold"
+        />
+        <button type="submit" class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors whitespace-nowrap text-sm">
+          Notify Me
+        </button>
+      </form>
+      <div id="newsletter-thanks" class="hidden mt-4">
+        <p class="text-green-brand font-semibold">✓ You're on the list! We'll let you know when new deals drop.</p>
       </div>
     </div>
   </section>
@@ -247,3 +283,22 @@ const featuredListings = allListings
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const nlForm = document.getElementById('newsletter-form') as HTMLFormElement;
+  const nlThanks = document.getElementById('newsletter-thanks');
+  const nlBtn = nlForm?.querySelector('button[type="submit"]') as HTMLButtonElement;
+  nlForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (nlBtn) { nlBtn.disabled = true; nlBtn.textContent = 'Subscribing…'; }
+    try {
+      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(nlForm) as any).toString() });
+      if (!res.ok) throw new Error();
+      nlForm.classList.add('hidden');
+      nlThanks?.classList.remove('hidden');
+    } catch {
+      if (nlBtn) { nlBtn.disabled = false; nlBtn.textContent = 'Notify Me'; }
+      alert('Something went wrong. Please try again.');
+    }
+  });
+</script>

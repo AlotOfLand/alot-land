@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ListingCard from '../components/ListingCard.astro';
+import { getCollection } from 'astro:content';
+
+const allListings = await getCollection('listings');
+const soldListings = allListings
+  .filter(l => l.data.status === 'sold')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const soldCount = soldListings.length;
+const withTestimonials = soldListings.filter(l => l.data.buyerTestimonial);
+---
+
+<BaseLayout
+  title="Sold Properties"
+  description="Browse our closed land deals in Arizona, Tennessee, and Northwest Arkansas. Real transactions, real buyers, real results."
+>
+  <!-- Hero -->
+  <div class="bg-bg-dark text-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Sold Properties</h1>
+      <p class="text-gray-400 text-lg">
+        {soldCount > 0
+          ? `${soldCount} deal${soldCount !== 1 ? 's' : ''} closed — and counting.`
+          : 'Deals closing soon — check back.'}
+      </p>
+    </div>
+  </div>
+
+  <!-- Listings grid -->
+  {soldCount > 0 ? (
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {soldListings.map(listing => (
+          <ListingCard
+            slug={listing.slug}
+            title={listing.data.title}
+            status={listing.data.status}
+            acreage={listing.data.acreage}
+            county={listing.data.county}
+            state={listing.data.state}
+            price={listing.data.price}
+            photos={listing.data.photos}
+            description={listing.body}
+          />
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+      <p class="text-5xl mb-4">🤝</p>
+      <h2 class="font-display font-bold text-2xl text-bg-dark mb-3">Deals Coming Soon</h2>
+      <p class="text-gray-500 mb-8">Check back as properties close — this page will fill up fast.</p>
+      <a href="/listings" class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors inline-block">
+        Browse Available Land
+      </a>
+    </div>
+  )}
+
+  <!-- Buyer testimonials pulled from sold listings -->
+  {withTestimonials.length > 0 && (
+    <section class="py-16 bg-bg-dark">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="font-display font-bold text-3xl text-white text-center mb-10">What Our Buyers Say</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {withTestimonials.map(listing => (
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+              <div class="text-gold text-4xl font-serif leading-none mb-3 select-none">&ldquo;</div>
+              <p class="text-gray-300 text-sm leading-relaxed mb-4">{listing.data.buyerTestimonial}</p>
+              <div class="flex items-center gap-3 pt-3 border-t border-white/10">
+                <div class="w-8 h-8 rounded-full bg-gold flex items-center justify-center font-display font-black text-bg-dark text-sm flex-shrink-0">
+                  {listing.data.buyerName ? listing.data.buyerName.charAt(0) : '★'}
+                </div>
+                <div>
+                  <p class="text-white font-semibold text-sm">{listing.data.buyerName || 'Verified Buyer'}</p>
+                  <p class="text-gray-500 text-xs">{listing.data.county} County, {listing.data.state}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="py-16 bg-bg-light text-center">
+    <div class="max-w-xl mx-auto px-4">
+      <h2 class="font-display font-bold text-2xl sm:text-3xl text-bg-dark mb-4">Ready to find your land?</h2>
+      <p class="text-gray-500 mb-8">Browse available properties or tell us what you're looking for and we'll source it off-market.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/listings" class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors">
+          Browse Listings
+        </a>
+        <a href="/find-land" class="border-2 border-bg-dark text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-gray-50 transition-colors">
+          Find Land For Me
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
