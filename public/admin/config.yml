@@ -15,7 +15,7 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Status", name: "status", widget: "select", options: ["available", "coming-soon", "sold"] }
       - { label: "Featured on Homepage", name: "featured", widget: "boolean", default: false }
-      - { label: "State", name: "state", widget: "select", options: ["Arizona", "Tennessee", "Northwest Arkansas"] }
+      - { label: "State", name: "state", widget: "select", options: ["Arizona", "Tennessee"] }
       - { label: "County", name: "county", widget: "string" }
       - { label: "Acreage", name: "acreage", widget: "string" }
       - { label: "Price", name: "price", widget: "string", required: false, hint: "e.g. $45,000 or leave blank for 'Contact for Price'" }

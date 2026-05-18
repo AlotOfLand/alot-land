@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout
   title="About"
-  description="A Lot of Land LLC — off-market land acquisitions in Arizona, Tennessee, and Northwest Arkansas. Founded by David with a mission to find undervalued land."
+  description="A Lot of Land LLC — off-market land acquisitions in Arizona and Tennessee. Founded by David with a mission to find undervalued land."
 >
   <!-- Hero -->
   <div class="bg-bg-dark text-white py-20 text-center">
@@ -40,7 +40,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               We specialize in off-market acquisitions — reaching out directly to landowners through direct mail, negotiating fair deals, and listing properties with the best land realtors in each market.
             </p>
             <p>
-              We currently operate in Middle Tennessee, Arizona, and Northwest Arkansas.
+              We currently operate in Middle Tennessee and Arizona.
             </p>
           </div>
         </div>
@@ -97,11 +97,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="py-20 bg-bg-light">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h2 class="font-display font-bold text-3xl text-bg-dark mb-10">Where We Operate</h2>
-      <div class="grid sm:grid-cols-3 gap-6 mb-8">
+      <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8">
         {[
           { state: 'Arizona', emoji: '🌵', desc: 'Desert land, rural homesteads, off-grid parcels' },
           { state: 'Tennessee', emoji: '🏞️', desc: 'Wooded tracts, hunting land, recreational property' },
-          { state: 'Northwest Arkansas', emoji: '🌲', desc: 'Ozark foothills, investment & recreational land' },
         ].map(item => (
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="text-5xl mb-4">{item.emoji}</div>

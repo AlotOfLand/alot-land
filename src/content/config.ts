@@ -6,7 +6,7 @@ const listings = defineCollection({
     title: z.string(),
     status: z.enum(['available', 'sold', 'coming-soon']),
     featured: z.boolean().default(false),
-    state: z.enum(['Arizona', 'Tennessee', 'Northwest Arkansas']),
+    state: z.enum(['Arizona', 'Tennessee']),
     county: z.string(),
     acreage: z.string(),
     price: z.string().optional(),

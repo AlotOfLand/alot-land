@@ -141,7 +141,7 @@ const featuredListings = allListings
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <div class="text-3xl mb-3">📬</div>
       <h2 class="font-display font-bold text-2xl sm:text-3xl text-bg-dark mb-2">Get New Listings First</h2>
-      <p class="text-gray-500 mb-8">Off-market deals in AZ, TN &amp; NW Arkansas. Be the first to know when new parcels drop.</p>
+      <p class="text-gray-500 mb-8">Off-market deals in Arizona &amp; Tennessee. Be the first to know when new parcels drop.</p>
       <form
         name="newsletter"
         method="POST"
@@ -177,11 +177,10 @@ const featuredListings = allListings
       <h2 class="font-display font-bold text-3xl sm:text-4xl mb-4">Where We Work</h2>
       <p class="text-gray-400 mb-12 text-lg">Active markets — with more on the way.</p>
 
-      <div class="grid sm:grid-cols-3 gap-6 mb-8">
+      <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8">
         {[
           { state: 'Arizona', emoji: '🌵', desc: 'Desert land, off-grid parcels, rural homesteads' },
           { state: 'Tennessee', emoji: '🏞️', desc: 'Wooded tracts, hunting land, mountain cabins' },
-          { state: 'Northwest Arkansas', emoji: '🌲', desc: 'Ozark foothills, recreational & investment land' },
         ].map(item => (
           <div class="bg-border-dark rounded-2xl p-6 border border-[#333]">
             <div class="text-5xl mb-4">{item.emoji}</div>
@@ -292,13 +291,14 @@ const featuredListings = allListings
     e.preventDefault();
     if (nlBtn) { nlBtn.disabled = true; nlBtn.textContent = 'Subscribing…'; }
     try {
-      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(nlForm) as any).toString() });
+      const res = await fetch('/', { method: 'POST', body: new FormData(nlForm) });
       if (!res.ok) throw new Error();
       nlForm.classList.add('hidden');
       nlThanks?.classList.remove('hidden');
+      nlThanks?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch {
       if (nlBtn) { nlBtn.disabled = false; nlBtn.textContent = 'Notify Me'; }
-      alert('Something went wrong. Please try again.');
+      alert('Something went wrong. Please try again or call us directly.');
     }
   });
 </script>

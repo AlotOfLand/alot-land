@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 
 const allListings = await getCollection('listings');
 const sorted = allListings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const states = ['Arizona', 'Tennessee', 'Northwest Arkansas'];
+const states = ['Arizona', 'Tennessee'];
 
 const mapListings = sorted
   .filter(l => l.data.lat && l.data.lng)
@@ -22,13 +22,13 @@ const mapListings = sorted
   }));
 ---
 
-<BaseLayout title="Available Land" description="Browse available land for sale in Arizona, Tennessee, and Northwest Arkansas. Off-market deals direct from A Lot of Land LLC.">
+<BaseLayout title="Available Land" description="Browse available land for sale in Arizona and Tennessee. Off-market deals direct from A Lot of Land LLC.">
   <link slot="head" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <div class="bg-bg-dark text-white py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Available Land</h1>
-      <p class="text-gray-400 text-lg">Off-market parcels across Arizona, Tennessee &amp; Arkansas.</p>
+      <p class="text-gray-400 text-lg">Off-market parcels across Arizona &amp; Tennessee.</p>
     </div>
   </div>
 
@@ -292,7 +292,7 @@ const mapListings = sorted
           e.preventDefault();
           if (notifyBtn) { notifyBtn.textContent = 'Saving…'; notifyBtn.disabled = true; }
           try {
-            var res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(notifyForm)).toString() });
+            var res = await fetch('/', { method: 'POST', body: new FormData(notifyForm) });
             if (!res.ok) throw new Error('Network error');
             notifyForm.style.display = 'none';
             if (notifyThanks) notifyThanks.classList.remove('hidden');

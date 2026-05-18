@@ -12,7 +12,7 @@ const email    = contactSettings?.data.email    ?? siteConfig.email;
 
 <BaseLayout
   title="Contact"
-  description="Get in touch with A Lot of Land LLC. Call, email, or fill out our contact form. We work in Arizona, Tennessee, and Northwest Arkansas."
+  description="Get in touch with A Lot of Land LLC. Call, email, or fill out our contact form. We work in Arizona and Tennessee."
 >
   <div class="bg-bg-dark text-white py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,7 +57,7 @@ const email    = contactSettings?.data.email    ?? siteConfig.email;
         <div class="bg-bg-light rounded-2xl p-6 border border-gray-100">
           <h3 class="font-semibold text-bg-dark mb-3">Active Markets</h3>
           <div class="flex flex-wrap gap-2">
-            {['🌵 Arizona', '🏞️ Tennessee', '🌲 Northwest Arkansas'].map(s => (
+            {['🌵 Arizona', '🏞️ Tennessee'].map(s => (
               <span class="bg-white border border-gray-200 rounded-full px-4 py-1.5 text-sm font-medium">{s}</span>
             ))}
           </div>
@@ -135,7 +135,7 @@ const email    = contactSettings?.data.email    ?? siteConfig.email;
     e.preventDefault();
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
     try {
-      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form) as any).toString() });
+      const res = await fetch('/', { method: 'POST', body: new FormData(form) });
       if (!res.ok) throw new Error('Network error');
       form.classList.add('hidden');
       thanks?.classList.remove('hidden');

@@ -251,7 +251,7 @@ if (gps) {
     e.preventDefault();
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
     try {
-      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form) as any).toString() });
+      const res = await fetch('/', { method: 'POST', body: new FormData(form) });
       if (!res.ok) throw new Error('Network error');
       form.classList.add('hidden');
       thanks?.classList.remove('hidden');

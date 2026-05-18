@@ -9,7 +9,7 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
 
 <BaseLayout
   title="Find Land For Me"
-  description="Tell us what land you're looking for and we'll source it off-market. Arizona, Tennessee, and Northwest Arkansas."
+  description="Tell us what land you're looking for and we'll source it off-market. Arizona and Tennessee."
 >
   <!-- Hero -->
   <div class="bg-bg-dark text-white py-16">
@@ -88,7 +88,7 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
         <div>
           <label class="block text-sm font-semibold text-bg-dark mb-2">Target State(s)</label>
           <div class="space-y-2">
-            {['Arizona', 'Tennessee', 'Northwest Arkansas'].map(s => (
+            {['Arizona', 'Tennessee'].map(s => (
               <label class="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" name="states" value={s} class="w-4 h-4 accent-gold" />
                 <span class="text-sm text-gray-700">{s}</span>
@@ -162,7 +162,7 @@ const buyersEbook = allEbooks.find(e => e.data.audience === 'buyers' && e.data.f
             id="fl-region"
             type="text"
             name="preferred-region"
-            placeholder="e.g. East Tennessee, Yavapai County AZ, Northwest Arkansas foothills..."
+            placeholder="e.g. East Tennessee, Yavapai County AZ, Maricopa County..."
             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
           />
         </div>
