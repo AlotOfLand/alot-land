@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchAllActivities, createActivity, updateActivity,
   archiveActivity, unarchiveActivity,
+  fetchAllowedEmails, addAllowedEmail, updateAllowedEmail, deleteAllowedEmail,
+  isCurrentUserAdmin,
 } from '../lib/queries';
 import { TIERS } from '../lib/tiers';
 import PageHeader from '../components/PageHeader.jsx';
@@ -56,6 +58,8 @@ export default function Settings() {
       />
 
       <div className="px-4 sm:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6">
+        <AdminPanel />
+
         {TIERS.map((tier) => (
           <section
             key={tier.key}
@@ -177,5 +181,161 @@ function ActivityEditRow({ activity, onRename, onChangeTier, onArchive, onUnarch
         </button>
       )}
     </div>
+  );
+}
+
+// -------------------- Admin Panel: manage who can sign in --------------------
+
+function AdminPanel() {
+  const qc = useQueryClient();
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ['is-admin'],
+    queryFn: isCurrentUserAdmin,
+  });
+  const { data: emails = [] } = useQuery({
+    queryKey: ['allowed-emails'],
+    queryFn: fetchAllowedEmails,
+    enabled: isAdmin,
+  });
+
+  const invalidate = () => qc.invalidateQueries({ queryKey: ['allowed-emails'] });
+
+  const add = useMutation({ mutationFn: addAllowedEmail, onSuccess: invalidate });
+  const update = useMutation({
+    mutationFn: ({ email, ...patch }) => updateAllowedEmail(email, patch),
+    onSuccess: invalidate,
+  });
+  const remove = useMutation({ mutationFn: deleteAllowedEmail, onSuccess: invalidate });
+
+  const [newEmail, setNewEmail] = useState('');
+  const [newNote, setNewNote] = useState('');
+  const [confirmRemove, setConfirmRemove] = useState(null);
+
+  if (!isAdmin) return null;
+
+  function submitAdd(e) {
+    e.preventDefault();
+    if (!newEmail.trim()) return;
+    add.mutate(
+      { email: newEmail, note: newNote || null, isAdmin: false },
+      {
+        onSuccess: () => {
+          setNewEmail('');
+          setNewNote('');
+        },
+      },
+    );
+  }
+
+  return (
+    <section
+      className="rounded-2xl border border-border bg-panel p-5"
+      style={{ boxShadow: 'inset 4px 0 0 0 #F5B800' }}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <div className="text-[11px] uppercase tracking-widest text-gold">Admin · Access list</div>
+          <div className="text-xs text-muted mt-0.5">
+            {emails.length} {emails.length === 1 ? 'email' : 'emails'} can sign in to Time Audit
+          </div>
+        </div>
+      </div>
+
+      <form onSubmit={submitAdd} className="flex flex-wrap gap-2 mb-4">
+        <input
+          type="email"
+          value={newEmail}
+          onChange={(e) => setNewEmail(e.target.value)}
+          placeholder="someone@example.com"
+          className="flex-1 min-w-[200px] bg-bg border border-border-hi rounded-lg px-3 py-2 text-sm outline-none focus:border-gold"
+        />
+        <input
+          type="text"
+          value={newNote}
+          onChange={(e) => setNewNote(e.target.value)}
+          placeholder="note (optional, e.g. 'my coach')"
+          className="flex-1 min-w-[160px] bg-bg border border-border-hi rounded-lg px-3 py-2 text-sm outline-none focus:border-gold"
+        />
+        <button
+          type="submit"
+          disabled={add.isPending || !newEmail.trim()}
+          className="px-4 py-2 rounded-lg bg-gold text-bg text-sm font-medium disabled:opacity-50"
+        >
+          {add.isPending ? 'Adding…' : 'Invite'}
+        </button>
+      </form>
+
+      {add.isError && (
+        <div className="text-xs text-danger mb-3">
+          {add.error?.message?.includes('duplicate')
+            ? 'That email is already on the list.'
+            : `Couldn't add: ${add.error?.message || 'unknown error'}`}
+        </div>
+      )}
+
+      <div className="space-y-1">
+        {emails.map((row) => (
+          <div
+            key={row.email}
+            className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-panel-2/60 transition group"
+          >
+            <div className="flex-1 min-w-0">
+              <div className="text-sm flex items-center gap-2 flex-wrap">
+                <span className="truncate">{row.email}</span>
+                {row.is_admin && (
+                  <span className="text-[10px] uppercase tracking-widest text-gold border border-gold/40 rounded px-1.5 py-0.5">
+                    Admin
+                  </span>
+                )}
+              </div>
+              {row.note && (
+                <div className="text-xs text-muted mt-0.5 truncate">{row.note}</div>
+              )}
+            </div>
+
+            <button
+              onClick={() =>
+                update.mutate({ email: row.email, is_admin: !row.is_admin })
+              }
+              className="text-[11px] text-muted hover:text-gold transition px-2 py-1"
+              title={row.is_admin ? 'Demote to regular user' : 'Promote to admin'}
+            >
+              {row.is_admin ? 'Demote' : 'Make admin'}
+            </button>
+
+            {confirmRemove === row.email ? (
+              <div className="flex items-center gap-1 bg-panel-2 border border-border-hi rounded-lg p-1">
+                <button
+                  onClick={() => {
+                    remove.mutate(row.email);
+                    setConfirmRemove(null);
+                  }}
+                  className="px-2 py-1 rounded text-xs text-danger hover:bg-danger/10"
+                >
+                  Remove
+                </button>
+                <button
+                  onClick={() => setConfirmRemove(null)}
+                  className="px-2 py-1 rounded text-xs text-muted hover:text-text"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmRemove(row.email)}
+                className="opacity-0 group-hover:opacity-100 text-[11px] text-muted hover:text-danger transition px-2 py-1"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 text-[11px] text-muted">
+        Each invited user gets their own private copy when they sign in — your data stays yours.
+      </div>
+    </section>
   );
 }

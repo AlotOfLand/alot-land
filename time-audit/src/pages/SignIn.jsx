@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { supabase, ALLOWED_EMAIL } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
+import { isEmailAllowed } from '../lib/queries';
 
 export default function SignIn() {
-  const [email, setEmail] = useState(ALLOWED_EMAIL);
+  const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
 
@@ -10,17 +11,35 @@ export default function SignIn() {
     e.preventDefault();
     setError('');
     const v = email.toLowerCase().trim();
-    if (ALLOWED_EMAIL && v !== ALLOWED_EMAIL) {
-      setError(`Sign-in is restricted to ${ALLOWED_EMAIL}.`);
+    if (!v) return;
+
+    setStatus('checking');
+
+    // Server-side allow-list check (Supabase RPC). Anyone whose email isn't on
+    // the allowed_emails table gets a friendly bounce here — no magic link sent.
+    try {
+      const allowed = await isEmailAllowed(v);
+      if (!allowed) {
+        setError(
+          'This email is not on the access list. Ask David to invite you.'
+        );
+        setStatus('idle');
+        return;
+      }
+    } catch (err) {
+      console.error('Allow-list check failed', err);
+      setError('Could not verify access. Try again in a moment.');
+      setStatus('idle');
       return;
     }
+
     setStatus('sending');
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error: signInError } = await supabase.auth.signInWithOtp({
       email: v,
       options: { emailRedirectTo: window.location.origin },
     });
-    if (error) {
-      setError(error.message);
+    if (signInError) {
+      setError(signInError.message);
       setStatus('idle');
     } else {
       setStatus('sent');
@@ -73,10 +92,14 @@ export default function SignIn() {
             {error && <div className="text-sm text-danger">{error}</div>}
             <button
               type="submit"
-              disabled={status === 'sending'}
+              disabled={status === 'sending' || status === 'checking'}
               className="w-full rounded-xl bg-gold text-bg font-semibold py-3 hover:brightness-110 transition disabled:opacity-60"
             >
-              {status === 'sending' ? 'Sending…' : 'Send magic link'}
+              {status === 'checking'
+                ? 'Checking…'
+                : status === 'sending'
+                  ? 'Sending…'
+                  : 'Send magic link'}
             </button>
             <p className="text-xs text-muted text-center">
               No password — we'll email you a one-click sign-in link.

@@ -224,6 +224,66 @@ export async function updateTimelineBlock(id, { startedAt, minutes, activityId, 
   return data;
 }
 
+// Allow-list
+export async function isEmailAllowed(email) {
+  const { data, error } = await supabase.rpc('is_email_allowed', {
+    p_email: email.toLowerCase().trim(),
+  });
+  if (error) throw error;
+  return !!data;
+}
+
+export async function isCurrentUserAdmin() {
+  const { data, error } = await supabase.rpc('is_current_user_admin');
+  if (error) throw error;
+  return !!data;
+}
+
+export async function fetchAllowedEmails() {
+  const { data, error } = await supabase
+    .from('allowed_emails')
+    .select('*')
+    .order('added_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function addAllowedEmail({ email, isAdmin = false, note = null }) {
+  const { data: userData } = await supabase.auth.getUser();
+  const user_id = userData?.user?.id;
+  const { data, error } = await supabase
+    .from('allowed_emails')
+    .insert({
+      email: email.toLowerCase().trim(),
+      is_admin: isAdmin,
+      added_by: user_id,
+      note,
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateAllowedEmail(email, patch) {
+  const { data, error } = await supabase
+    .from('allowed_emails')
+    .update(patch)
+    .eq('email', email.toLowerCase())
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteAllowedEmail(email) {
+  const { error } = await supabase
+    .from('allowed_emails')
+    .delete()
+    .eq('email', email.toLowerCase());
+  if (error) throw error;
+}
+
 // Hidden weeks
 export async function fetchHiddenWeeks() {
   const { data, error } = await supabase
