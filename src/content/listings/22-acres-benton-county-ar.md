@@ -12,6 +12,8 @@ water: "-"
 power: "-"
 gps: 35.3387,-87.9762
 showVideo: false
+zillowUrl: https://www.zillow.com/homedetails/1-David-Brown-Rd-Clifton-TN-38425/460744335_zpid/
+showZillow: true
 photos:
   - /images/20b3bf2b1b9a00a2b845e2888d08ffc2-cc_ft_1536.webp
   - /images/472b4679a4cf7b129689570690cf0a45-cc_ft_768.webp
@@ -32,6 +34,4 @@ The front of the property offers a gentle roll, ideal for a future homesite, whi
 
 Enjoy a quiet country setting just minutes from the Tennessee River and Clifton Marina. Conveniently located less than 30 minutes from Savannah for shopping, dining, and everyday amenities, and approximately two hours to Nashville.
 
-Listed by: Samantha L Sagely, UC River City Realty 
-
-https://www.zillow.com/homedetails/1-David-Brown-Rd-Clifton-TN-38425/460744335_zpid/
+Listed by: Samantha L Sagely, UC River City Realty
