@@ -87,14 +87,19 @@ const socialLinks = [
       </div>
     </div>
 
-    <div class="mt-10 pt-6 border-t border-border-dark flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-      <p>© {new Date().getFullYear()} {name}. All rights reserved.</p>
-      <div class="flex items-center gap-4">
-        <a href="https://alot.capital" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">
-          💼 Capital Investing → alot.capital
+    <!-- Investment CTA -->
+    <div class="mt-10 pt-6 border-t border-border-dark text-center">
+      <p class="text-sm text-gray-400">
+        Want to invest in future real estate deals?
+        <a href="https://alot.capital" target="_blank" rel="noopener noreferrer" class="text-gold font-semibold hover:text-yellow-400 transition-colors ml-1">
+          Request an invitation at alot.capital →
         </a>
-        <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
-      </div>
+      </p>
+    </div>
+
+    <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <p>© {new Date().getFullYear()} {name}. All rights reserved.</p>
+      <a href="/privacy" class="hover:text-white transition-colors">Privacy Policy</a>
     </div>
   </div>
 </footer>

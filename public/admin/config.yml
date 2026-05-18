@@ -25,6 +25,7 @@ collections:
       - { label: "Power/Utilities", name: "power", widget: "string", required: false }
       - { label: "GPS Coordinates", name: "gps", widget: "string", required: false }
       - { label: "Video URL (YouTube or Vimeo)", name: "videoUrl", widget: "string", required: false }
+      - { label: "Show Video on Listing Page", name: "showVideo", widget: "boolean", default: true, hint: "Toggle off to hide the video without deleting the URL" }
       - { label: "Photos", name: "photos", widget: "list", field: { label: "Photo", name: "photo", widget: "image" } }
       - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Date Listed", name: "date", widget: "datetime" }
@@ -67,6 +68,8 @@ collections:
       - { label: "Location", name: "location", widget: "string", required: false, hint: "e.g. Yavapai County, AZ" }
       - { label: "Status", name: "status", widget: "select", options: [{label: "Coming Soon", value: "coming-soon"}, {label: "Lots Available", value: "lots-available"}, {label: "Sold Out", value: "sold-out"}] }
       - { label: "Community Image", name: "image", widget: "image", required: false }
+      - { label: "Video URL (YouTube or Vimeo)", name: "videoUrl", widget: "string", required: false, hint: "Paste a YouTube or Vimeo link to embed a community overview video" }
+      - { label: "Show Video on Community Page", name: "showVideo", widget: "boolean", default: true, hint: "Toggle off to hide the video without deleting the URL" }
       - { label: "Description", name: "body", widget: "markdown" }
       - label: "Nearby Amenities Photos"
         name: "amenityPhotos"

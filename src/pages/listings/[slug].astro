@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 
 const { listing } = Astro.props;
 const { Content } = await render(listing);
-const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, photos, amenityPhotos, buyerTestimonial, buyerName } = listing.data;
+const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, photos, amenityPhotos, buyerTestimonial, buyerName } = listing.data;
 
 const pageTitle = `${acreage} Acres for Sale — ${county} County, ${state}`;
 const pageDescription = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim().slice(0, 155);
@@ -75,7 +75,7 @@ if (gps) {
         <ListingGallery photos={photos} title={title} />
 
         <!-- Video -->
-        {videoUrl && (
+        {showVideo !== false && videoUrl && (
           <div>
             <h2 class="font-display font-bold text-xl text-bg-dark mb-4">Property Video</h2>
             <VideoEmbed url={videoUrl} title={title} />

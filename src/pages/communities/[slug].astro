@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ListingCard from '../../components/ListingCard.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
 import AmenitySlideshow from '../../components/AmenitySlideshow.astro';
 import { getCollection, render } from 'astro:content';
 
@@ -14,7 +15,7 @@ export async function getStaticPaths() {
 
 const { community } = Astro.props;
 const { Content } = await render(community);
-const { title, location, status, image, amenityPhotos } = community.data;
+const { title, location, status, image, videoUrl, showVideo, amenityPhotos } = community.data;
 
 const allListings = await getCollection('listings');
 const lots = allListings
@@ -95,6 +96,14 @@ const statusColor: Record<string, string> = {
     <div class="prose prose-gray max-w-3xl mb-12">
       <Content />
     </div>
+
+    <!-- Video -->
+    {showVideo !== false && videoUrl && (
+      <div class="max-w-3xl mb-12">
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-4">Community Video</h2>
+        <VideoEmbed url={videoUrl} title={title} />
+      </div>
+    )}
 
     <!-- Lots grid -->
     {lots.length > 0 ? (

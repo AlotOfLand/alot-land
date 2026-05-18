@@ -16,6 +16,7 @@ const listings = defineCollection({
     power: z.string().optional(),
     gps: z.string().optional(),
     videoUrl: z.string().optional(),
+    showVideo: z.boolean().default(true),
     photos: z.array(z.string()).default([]),
     amenityPhotos: z.array(z.object({
       image: z.string(),
@@ -50,6 +51,8 @@ const communities = defineCollection({
     location: z.string().optional(),
     status: z.enum(['coming-soon', 'lots-available', 'sold-out']),
     image: z.string().optional(),
+    videoUrl: z.string().optional(),
+    showVideo: z.boolean().default(true),
     amenityPhotos: z.array(z.object({
       image: z.string(),
       caption: z.string(),
