@@ -100,11 +100,11 @@ const featuredListings = allListings
   </section>
 
   <!-- Featured Listings -->
-  <section class="py-20 bg-bg-dark">
+  <section class="py-20 bg-gold">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-end justify-between mb-10">
-        <h2 class="font-display font-bold text-3xl sm:text-4xl text-white">Available Now</h2>
-        <a href="/listings" class="text-sm font-semibold text-gold hover:underline hidden sm:block">See All Listings →</a>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bg-dark">Available Now</h2>
+        <a href="/listings" class="text-sm font-semibold text-bg-dark font-bold hover:underline hidden sm:block">See All Listings →</a>
       </div>
 
       {featuredListings.length > 0 ? (
@@ -124,14 +124,14 @@ const featuredListings = allListings
           ))}
         </div>
       ) : (
-        <div class="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
-          <p class="text-gray-400 mb-4">New listings coming soon — check back often!</p>
-          <a href="/find-land" class="text-gold font-semibold hover:underline">Tell us what you're looking for →</a>
+        <div class="text-center py-16 bg-white/40 rounded-2xl border border-bg-dark/20">
+          <p class="text-bg-dark mb-4">New listings coming soon — check back often!</p>
+          <a href="/find-land" class="text-bg-dark font-semibold hover:underline">Tell us what you're looking for →</a>
         </div>
       )}
 
       <div class="text-center mt-10 sm:hidden">
-        <a href="/listings" class="text-gold font-semibold hover:underline">See All Listings →</a>
+        <a href="/listings" class="text-bg-dark font-bold hover:underline">See All Listings →</a>
       </div>
     </div>
   </section>
