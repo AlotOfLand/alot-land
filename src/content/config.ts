@@ -17,6 +17,8 @@ const listings = defineCollection({
     gps: z.string().optional(),
     videoUrl: z.string().optional(),
     showVideo: z.boolean().default(true),
+    zillowUrl: z.string().optional(),
+    showZillow: z.boolean().default(false),
     photos: z.array(z.string()).default([]),
     amenityPhotos: z.array(z.object({
       image: z.string(),

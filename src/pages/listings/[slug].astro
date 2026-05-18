@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 
 const { listing } = Astro.props;
 const { Content } = await render(listing);
-const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
+const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, zillowUrl, showZillow, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
 
 const pageTitle = `${acreage} Acres for Sale${price ? ` — ${price}` : ''} | ${county} County, ${state}`;
 const bodyText = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim();
@@ -135,6 +135,23 @@ if (gps) {
               </div>
             )}
           </dl>
+
+          <!-- Zillow Link -->
+          {showZillow && zillowUrl && (
+            <div class="mt-5">
+              <a
+                href={zillowUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-center gap-2 w-full border-2 border-[#006AFF] text-[#006AFF] font-bold py-2.5 rounded-xl hover:bg-[#006AFF] hover:text-white transition-colors text-sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 flex-shrink-0">
+                  <path d="M12 2L2 9.5V22h7v-7h6v7h7V9.5L12 2z"/>
+                </svg>
+                View on Zillow ↗
+              </a>
+            </div>
+          )}
 
           <!-- Inquiry Form -->
           <div class="mt-8 pt-6 border-t border-gray-100">

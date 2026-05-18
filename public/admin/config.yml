@@ -26,6 +26,8 @@ collections:
       - { label: "GPS Coordinates", name: "gps", widget: "string", required: false }
       - { label: "Video URL (YouTube or Vimeo)", name: "videoUrl", widget: "string", required: false }
       - { label: "Show Video on Listing Page", name: "showVideo", widget: "boolean", default: true, required: false, hint: "Toggle off to hide the video without deleting the URL" }
+      - { label: "Zillow Listing URL", name: "zillowUrl", widget: "string", required: false, hint: "Paste the full Zillow listing URL — e.g. https://www.zillow.com/homedetails/..." }
+      - { label: "Show Zillow Link on Listing Page", name: "showZillow", widget: "boolean", default: false, required: false, hint: "Toggle on to show a 'View on Zillow' button on the listing page" }
       - { label: "Photos", name: "photos", widget: "list", field: { label: "Photo", name: "photo", widget: "image" } }
       - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Date Listed", name: "date", widget: "datetime" }
