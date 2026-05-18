@@ -31,8 +31,8 @@ collections:
       - { label: "Date Listed", name: "date", widget: "datetime" }
       - { label: "Buyer Testimonial", name: "buyerTestimonial", widget: "text", required: false, hint: "Add when sold — appears as a quote on the listing page" }
       - { label: "Buyer Name", name: "buyerName", widget: "string", required: false, hint: "e.g. John D. or Allan R. Koepsell" }
-      - { label: "Latitude", name: "lat", widget: "number", required: false, value_type: "float", hint: "e.g. 36.3789 — find at maps.google.com (right-click any spot → copy coordinates)" }
-      - { label: "Longitude", name: "lng", widget: "number", required: false, value_type: "float", hint: "e.g. -84.9123 — must be negative for US locations" }
+      - { label: "Latitude", name: "lat", widget: "string", required: false, hint: "e.g. 36.3789 — find at maps.google.com (right-click any spot → copy coordinates)" }
+      - { label: "Longitude", name: "lng", widget: "string", required: false, hint: "e.g. -84.9123 — must be negative for US locations" }
       - { label: "Community (optional)", name: "community", widget: "relation", collection: "communities", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"], required: false, hint: "Link this listing to a community subdivision if applicable" }
       - label: "Nearby Amenities Photos"
         name: "amenityPhotos"
