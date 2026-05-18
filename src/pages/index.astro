@@ -224,20 +224,32 @@ const featuredListings = allListings
     </div>
   </section>
 
-  <!-- Trust Strip -->
-  <section class="py-14 bg-gold">
+  <!-- How It Works: Seller -->
+  <section class="py-20 bg-green-brand text-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-bg-dark">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-center mb-12">
+        How It Works — Selling Land
+      </h2>
+      <div class="grid sm:grid-cols-3 gap-8">
         {[
-          { stat: '100%', label: 'Off-Market Deals' },
-          { stat: '3', label: 'Active States' },
-          { stat: 'Direct', label: 'With the Owner' },
+          { step: '01', icon: '📋', title: 'Submit Your Property', desc: 'Fill out our quick form with your land details — location, acreage, and asking price. Takes less than 5 minutes.' },
+          { step: '02', icon: '💵', title: 'Get a Cash Offer', desc: 'David personally reviews your property and sends a fair cash offer within 24 hours. No agents, no fees.' },
+          { step: '03', icon: '🎉', title: 'Close & Get Paid', desc: 'We handle all the paperwork and close fast — usually in 2 weeks or less. Cash in hand, hassle-free.' },
         ].map(item => (
-          <div>
-            <div class="font-display font-black text-4xl mb-1">{item.stat}</div>
-            <div class="font-semibold text-sm uppercase tracking-wider">{item.label}</div>
+          <div class="text-center">
+            <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+              {item.icon}
+            </div>
+            <div class="text-white/60 font-bold text-sm mb-2">{item.step}</div>
+            <h3 class="font-display font-bold text-lg text-white mb-2">{item.title}</h3>
+            <p class="text-green-100 text-sm leading-relaxed">{item.desc}</p>
           </div>
         ))}
+      </div>
+      <div class="text-center mt-10">
+        <a href="/sell-land" class="bg-white text-green-brand font-bold px-8 py-4 rounded-2xl hover:bg-green-50 transition-colors inline-block">
+          Get a Cash Offer →
+        </a>
       </div>
     </div>
   </section>
