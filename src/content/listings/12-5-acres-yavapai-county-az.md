@@ -18,7 +18,7 @@ photos:
   - /images/screenshot-2026-05-07-at-17.32.10.png
 date: 2026-05-15T18:00:00.000-07:00
 lat: 35.2953
-lng: -120
+lng: -113.174
 ---
 If you’ve been waiting for the right Arizona land deal, this is it.
 
