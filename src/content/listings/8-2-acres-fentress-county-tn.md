@@ -11,6 +11,8 @@ roadAccess: 168 ft Road Frontage - Corner Lot
 water: City Water
 power: City Power & Sewer
 gps: 36.0755,-87.3584
+zillowUrl: https://www.zillow.com/homedetails/0-Canary-Dr-Dickson-TN-37055/2076130371_zpid/
+showZillow: true
 photos:
   - /images/973eda84dc0352f268c9e42dc2bc788f-cc_ft_1536.webp
   - /images/land-tennessee-2.jpg
