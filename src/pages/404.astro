@@ -6,23 +6,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   title="Page Not Found"
   description="The page you're looking for doesn't exist. Browse available land or get in touch with A Lot of Land LLC."
 >
-  <div class="bg-bg-dark text-white min-h-[60vh] flex items-center">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+  <div class="relative min-h-[90vh] flex items-center justify-center text-white overflow-hidden">
+    <img
+      src="/images/hero-land.jpg"
+      alt="Aerial view of open land"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-black/65"></div>
+    <div class="relative z-10 text-center px-4 max-w-2xl mx-auto">
       <p class="text-gold font-bold text-sm uppercase tracking-widest mb-4">404 — Page Not Found</p>
-      <h1 class="font-display font-black text-5xl sm:text-6xl mb-6">Lost in the Acres</h1>
-      <p class="text-gray-400 text-lg mb-10 leading-relaxed">
-        This page doesn't exist, but there's plenty of land that does. Head back and find your next property.
+      <h1 class="font-display font-black text-5xl sm:text-6xl lg:text-7xl mb-6 leading-tight">
+        Lost in the Acres
+      </h1>
+      <p class="text-gray-200 text-lg sm:text-xl mb-10 leading-relaxed max-w-lg mx-auto">
+        This page doesn't exist — but there's plenty of land that does. Head back and find your next property.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a
           href="/listings"
-          class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors"
+          class="bg-gold text-bg-dark font-bold text-lg px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors"
         >
           Browse Available Land
         </a>
         <a
           href="/"
-          class="border border-white/30 text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-colors"
+          class="bg-white/15 border border-white/40 text-white font-bold text-lg px-8 py-4 rounded-2xl hover:bg-white/25 transition-colors"
         >
           Go Home
         </a>

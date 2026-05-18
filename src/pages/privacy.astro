@@ -1,16 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { siteConfig } from '../config/site.js';
-const { name, domain, email } = siteConfig;
-const year = new Date().getFullYear();
+const { name, domain, email, address } = siteConfig;
 ---
 
-<BaseLayout title="Privacy Policy" description="Privacy policy for A Lot of Land LLC (alot.land).">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h1 class="font-display font-black text-4xl text-bg-dark mb-3">Privacy Policy</h1>
-    <p class="text-text-muted text-sm mb-10">Last updated: January 1, {year}</p>
+<BaseLayout title="Privacy Policy" description="Privacy policy for A Lot of Land LLC (alot.land). Learn how we collect, use, and protect your information.">
+  <div class="bg-bg-dark text-white py-14">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Privacy Policy</h1>
+      <p class="text-gray-400">Last updated: May 2026</p>
+    </div>
+  </div>
 
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="prose prose-gray max-w-none space-y-8 text-gray-600 leading-relaxed">
+
       <section>
         <h2 class="font-display font-bold text-xl text-bg-dark mb-3">1. Who We Are</h2>
         <p>
@@ -26,9 +30,9 @@ const year = new Date().getFullYear();
         <p>We collect information you voluntarily provide through our contact forms, including:</p>
         <ul class="list-disc list-inside mt-2 space-y-1">
           <li>Name, phone number, and email address</li>
-          <li>Property inquiry details and preferences</li>
-          <li>Investment interest and capital information</li>
-          <li>Messages and notes you submit</li>
+          <li>Property details and preferences you submit when requesting a cash offer or land search</li>
+          <li>Messages and notes you submit via contact or inquiry forms</li>
+          <li>Files you voluntarily upload (e.g. survey documents)</li>
         </ul>
         <p class="mt-3">
           We also automatically collect standard web analytics data (pages visited, time on site, general location) through Google Analytics 4.
@@ -39,52 +43,61 @@ const year = new Date().getFullYear();
         <h2 class="font-display font-bold text-xl text-bg-dark mb-3">3. How We Use Your Information</h2>
         <p>We use your information only to:</p>
         <ul class="list-disc list-inside mt-2 space-y-1">
-          <li>Respond to your inquiries about land listings or investment opportunities</li>
-          <li>Contact you about properties that match your stated preferences</li>
-          <li>Notify you about new listings or opportunities (only if you've requested this)</li>
-          <li>Improve our website and understand how visitors use it (via analytics)</li>
+          <li>Respond to your inquiries about land listings</li>
+          <li>Prepare and deliver cash offers on properties you submit</li>
+          <li>Source off-market land deals that match your stated criteria</li>
+          <li>Notify you about new listings or opportunities (only if you have opted in)</li>
+          <li>Improve our website and understand how visitors use it</li>
+        </ul>
+        <p class="mt-3">
+          We do not sell, rent, trade, or share your personal information with third parties for their marketing purposes.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">4. Third-Party Services</h2>
+        <p>We use the following third-party services that may receive your information:</p>
+        <ul class="list-disc list-inside mt-2 space-y-2">
+          <li>
+            <strong>Netlify</strong> — hosts this website and processes form submissions. Submission data is stored securely on Netlify's servers and forwarded to our email.
+            <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">Netlify Privacy Policy ↗</a>
+          </li>
+          <li>
+            <strong>Google Analytics</strong> — collects anonymized usage data to help us understand site traffic.
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">Google Privacy Policy ↗</a>
+          </li>
+          <li>
+            <strong>MailerLite</strong> — used to deliver free resources and email updates when you opt in via our email forms.
+            <a href="https://www.mailerlite.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">MailerLite Privacy Policy ↗</a>
+          </li>
         </ul>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">4. We Do Not Sell Your Data</h2>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">5. Cookies &amp; Analytics</h2>
         <p>
-          We do not sell, rent, trade, or share your personal information with third parties for their marketing purposes. Your information is used solely to respond to your requests and communicate with you about our services.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">5. Cookies &amp; Google Analytics</h2>
-        <p>
-          Our website uses Google Analytics 4 to collect anonymized usage data (such as pages viewed and time on site). Google Analytics uses cookies — small text files stored on your browser. This data helps us understand how visitors use our site.
+          Our website uses Google Analytics 4, which uses cookies to collect anonymized usage data. You can opt out using the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">Google Analytics Opt-out Browser Add-on ↗</a>.
         </p>
         <p class="mt-3">
-          Google Analytics data is processed by Google according to their privacy policy. You can opt out of Google Analytics tracking by using the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">Google Analytics Opt-out Browser Add-on</a>.
+          You can also control or disable cookies through your browser settings. Note that disabling cookies may affect some site functionality.
         </p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">6. Form Submissions</h2>
-        <p>
-          Forms on this website are processed by Netlify Forms. Submission data is stored securely on Netlify's servers and forwarded to our email. Netlify's privacy practices are governed by their own <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">privacy policy</a>.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">7. Data Retention</h2>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">6. Data Retention</h2>
         <p>
           We retain your contact information only as long as necessary to respond to your inquiry or maintain a business relationship. You may request deletion of your information at any time by emailing <a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a>.
         </p>
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">8. Your Rights</h2>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">7. Your Rights</h2>
         <p>You have the right to:</p>
         <ul class="list-disc list-inside mt-2 space-y-1">
           <li>Request access to the personal data we hold about you</li>
           <li>Request correction of inaccurate data</li>
           <li>Request deletion of your data</li>
-          <li>Opt out of any communications at any time</li>
+          <li>Opt out of any email communications at any time via the unsubscribe link in any email</li>
         </ul>
         <p class="mt-3">
           To exercise any of these rights, contact us at <a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a>.
@@ -92,9 +105,16 @@ const year = new Date().getFullYear();
       </section>
 
       <section>
-        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">9. Security</h2>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">8. Security</h2>
         <p>
-          Our website is served over HTTPS (SSL/TLS encryption). We take reasonable measures to protect your information, but no method of transmission over the internet is 100% secure.
+          Our website is served over HTTPS. We take reasonable measures to protect your information, though no method of transmission over the internet is 100% secure.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-3">9. Children's Privacy</h2>
+        <p>
+          Our website is not directed at children under 13. We do not knowingly collect personal information from children.
         </p>
       </section>
 
@@ -107,12 +127,23 @@ const year = new Date().getFullYear();
 
       <section>
         <h2 class="font-display font-bold text-xl text-bg-dark mb-3">11. Contact</h2>
-        <p>
-          Questions about this privacy policy? Contact us at:<br />
-          <strong>{name}</strong><br />
-          <a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a>
-        </p>
+        <p>Questions about this privacy policy? Contact us at:</p>
+        <div class="mt-3 bg-gray-50 rounded-xl p-5 border border-gray-100 text-sm space-y-1">
+          <p class="font-semibold text-bg-dark">{name}</p>
+          <p>{address.street}, {address.city}, {address.state} {address.zip}</p>
+          <p><a href={`mailto:${email}`} class="text-gold hover:underline">{email}</a></p>
+        </div>
       </section>
+
+    </div>
+
+    <div class="mt-12 pt-8 border-t border-gray-200 flex flex-col sm:flex-row gap-4">
+      <a href="/" class="bg-bg-dark text-white font-bold px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors text-sm text-center">
+        ← Back to Home
+      </a>
+      <a href="/contact" class="border border-bg-dark text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm text-center">
+        Contact Us
+      </a>
     </div>
   </div>
 </BaseLayout>
