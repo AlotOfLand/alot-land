@@ -16,7 +16,7 @@ photos:
   - /images/20b3bf2b1b9a00a2b845e2888d08ffc2-cc_ft_1536.webp
   - /images/472b4679a4cf7b129689570690cf0a45-cc_ft_768.webp
   - /images/1817e847aa072dcf6aaae76920ccb3d7-cc_ft_1536.webp
-date: 2024-11-10T00:00:00.000Z
+date: 2026-02-27T17:00:00.000-07:00
 buyerTestimonial: "I got a great deal on this property. What I love most is the
   year round flowing creek in the back of the lot. This is a beautiful piece of
   property. "
