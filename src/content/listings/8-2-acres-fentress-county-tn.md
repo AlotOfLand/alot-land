@@ -15,7 +15,6 @@ zillowUrl: https://www.zillow.com/homedetails/0-Canary-Dr-Dickson-TN-37055/20761
 showZillow: true
 photos:
   - /images/973eda84dc0352f268c9e42dc2bc788f-cc_ft_1536.webp
-  - /images/land-tennessee-2.jpg
 date: 2025-03-25T17:00:00.000-07:00
 dateSold: 2026-04-15T06:00:00.000-07:00
 buyerTestimonial: We are lucky to have found this property at this price. It is
