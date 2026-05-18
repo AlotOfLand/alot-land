@@ -23,6 +23,8 @@ const listings = defineCollection({
       caption: z.string(),
       category: z.string().optional(),
     })).optional().default([]),
+    dateSold: z.coerce.date().optional(),
+    showDaysOnMarket: z.boolean().default(false),
     buyerTestimonial: z.string().optional(),
     buyerName: z.string().optional(),
     lat: z.coerce.number().optional(),

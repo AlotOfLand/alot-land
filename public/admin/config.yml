@@ -29,6 +29,8 @@ collections:
       - { label: "Photos", name: "photos", widget: "list", field: { label: "Photo", name: "photo", widget: "image" } }
       - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Date Listed", name: "date", widget: "datetime" }
+      - { label: "Date Sold", name: "dateSold", widget: "datetime", required: false, hint: "Fill in when the property closes" }
+      - { label: "Show Days on Market", name: "showDaysOnMarket", widget: "boolean", default: false, required: false, hint: "When both Date Listed and Date Sold are filled in, this displays the calculated days on market on the listing page" }
       - { label: "Buyer Testimonial", name: "buyerTestimonial", widget: "text", required: false, hint: "Add when sold — appears as a quote on the listing page" }
       - { label: "Buyer Name", name: "buyerName", widget: "string", required: false, hint: "e.g. John D. or Allan R. Koepsell" }
       - { label: "Latitude", name: "lat", widget: "string", required: false, hint: "e.g. 36.3789 — find at maps.google.com (right-click any spot → copy coordinates)" }

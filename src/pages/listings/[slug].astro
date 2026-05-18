@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 
 const { listing } = Astro.props;
 const { Content } = await render(listing);
-const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, photos, amenityPhotos, buyerTestimonial, buyerName } = listing.data;
+const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
 
 const pageTitle = `${acreage} Acres for Sale${price ? ` — ${price}` : ''} | ${county} County, ${state}`;
 const bodyText = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim();
@@ -25,9 +25,17 @@ const pageDescription = `${acreage} acres of land for sale in ${county} County, 
 const canonicalUrl = `https://${siteConfig.domain}/listings/${listing.slug}`;
 const ogImage = photos[0] || '/images/og-image.jpg';
 
+// Days on Market: only calculated when both dates exist and toggle is on
+let daysOnMarket: number | undefined;
+if (showDaysOnMarket && date) {
+  const end = dateSold ?? new Date();
+  daysOnMarket = Math.round((end.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 const details = [
   { label: 'Acreage', value: `${acreage} acres` },
   { label: 'Price', value: price || 'Contact for Price' },
+  { label: 'Days on Market', value: daysOnMarket !== undefined ? `${daysOnMarket} days` : undefined },
   { label: 'County', value: county },
   { label: 'State', value: state },
   { label: 'Zoning', value: zoning },
