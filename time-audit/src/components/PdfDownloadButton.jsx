@@ -1,54 +1,77 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  fetchActivities, fetchEntriesForRange, fetchWeekNote,
+  fetchActivities, fetchEntriesForRange, fetchWeekNote, fetchDayJournalsForRange,
 } from '../lib/queries';
 import { addDays, format, toISODate, weekStart as wkStart } from '../lib/dates';
 
-export default function PdfDownloadButton({ weekStart, label = 'Download PDF', className = '' }) {
+/**
+ * @param {Date}   date    Anchor date. For week mode, any day in the target week.
+ * @param {string} mode    'week' (default) or 'day'
+ */
+export default function PdfDownloadButton({
+  date,
+  weekStart,           // legacy prop name still supported
+  mode = 'week',
+  label = 'Download PDF',
+  className = '',
+}) {
   const qc = useQueryClient();
   const [busy, setBusy] = useState(false);
+  const anchor = new Date(date ?? weekStart ?? new Date());
 
   async function downloadPdf() {
     setBusy(true);
     try {
-      // Lazy-load @react-pdf — keeps it out of the initial bundle.
       const [{ pdf }, { default: ReportDocument }, { buildReportData }] = await Promise.all([
         import('@react-pdf/renderer'),
         import('../pdf/ReportDocument.jsx'),
         import('../pdf/reportData.js'),
       ]);
 
-      const start = wkStart(new Date(weekStart));
-      const end = addDays(start, 6);
-      const prevStart = addDays(start, -7);
-      const prevEnd = addDays(start, -1);
+      let rangeStart, rangeEnd, prevStart, prevEnd, fileLabel;
+      if (mode === 'day') {
+        rangeStart = anchor;
+        rangeEnd = anchor;
+        prevStart = addDays(anchor, -1);
+        prevEnd = addDays(anchor, -1);
+        fileLabel = format(anchor, 'yyyy-MM-dd');
+      } else {
+        rangeStart = wkStart(anchor);
+        rangeEnd = addDays(rangeStart, 6);
+        prevStart = addDays(rangeStart, -7);
+        prevEnd = addDays(rangeStart, -1);
+        fileLabel = format(rangeStart, 'yyyy-MM-dd');
+      }
 
-      const [activities, entries, prevEntries, weekNote] = await Promise.all([
+      const [activities, entries, prevEntries, note, journals] = await Promise.all([
         qc.fetchQuery({ queryKey: ['activities-all-incl-archived'], queryFn: fetchActivities }),
         qc.fetchQuery({
-          queryKey: ['entries', toISODate(start)],
-          queryFn: () => fetchEntriesForRange(start, end),
+          queryKey: ['entries', toISODate(rangeStart), toISODate(rangeEnd)],
+          queryFn: () => fetchEntriesForRange(rangeStart, rangeEnd),
         }),
         qc.fetchQuery({
-          queryKey: ['entries', toISODate(prevStart)],
+          queryKey: ['entries', toISODate(prevStart), toISODate(prevEnd)],
           queryFn: () => fetchEntriesForRange(prevStart, prevEnd),
         }),
+        mode === 'week'
+          ? qc.fetchQuery({ queryKey: ['week-note', toISODate(rangeStart)], queryFn: () => fetchWeekNote(rangeStart) })
+          : Promise.resolve(null),
         qc.fetchQuery({
-          queryKey: ['week-note', toISODate(start)],
-          queryFn: () => fetchWeekNote(start),
+          queryKey: ['day-journals', toISODate(rangeStart), toISODate(rangeEnd)],
+          queryFn: () => fetchDayJournalsForRange(rangeStart, rangeEnd),
         }),
       ]);
 
-      const data = buildReportData({ weekStart: start, entries, prevEntries, activities });
+      const data = buildReportData({ rangeStart, rangeEnd, entries, prevEntries, activities, journals });
       const blob = await pdf(
-        <ReportDocument weekStart={start} data={data} weekNote={weekNote} />,
+        <ReportDocument mode={mode} rangeStart={rangeStart} rangeEnd={rangeEnd} data={data} note={note} />,
       ).toBlob();
 
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `time-audit-${format(start, 'yyyy-MM-dd')}.pdf`;
+      a.download = `time-audit-${mode}-${fileLabel}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
