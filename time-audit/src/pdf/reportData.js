@@ -1,19 +1,23 @@
 import { TIERS, tierByKey } from '../lib/tiers';
-import { weekDays, toISODate, format } from '../lib/dates';
+import { daysInRange, toISODate, format } from '../lib/dates';
 
 /**
  * Aggregate raw entries into structured data for the PDF report.
+ * Works for any date range (a single day or a full Thu–Wed week).
  *
- * Returns:
- * - totalMinutes
- * - tier: { key, hours, pct, deltaHours }[]
- * - topActivities: { name, tier, hours }[]
- * - dayBars: { date, label, tierMinutes[] }[] (7 days)
- * - tenKShare, tenKShareDelta
+ * Params:
+ * - rangeStart, rangeEnd: Date — inclusive range covered by the report
+ * - entries: time_entries rows within the range
+ * - prevEntries: time_entries rows for the comparison period (prior week/day)
+ * - activities: all activities (incl. archived) for name/tier lookup
+ * - journals: { [iso]: day_journal row } for wake-up times (optional)
+ *
+ * Returns snapshot aggregates plus `dayDetails` — a per-day itemized list
+ * (every logged activity with start time, duration, and notes).
  */
-export function buildReportData({ weekStart, entries, prevEntries, activities }) {
+export function buildReportData({ rangeStart, rangeEnd, entries, prevEntries = [], activities, journals = {} }) {
   const byId = Object.fromEntries(activities.map((a) => [a.id, a]));
-  const days = weekDays(weekStart);
+  const days = daysInRange(rangeStart, rangeEnd);
 
   let totalMinutes = 0;
   const tierMin = Object.fromEntries(TIERS.map((t) => [t.key, 0]));
@@ -59,30 +63,55 @@ export function buildReportData({ weekStart, entries, prevEntries, activities })
       };
     })
     .sort((a, b) => b.minutes - a.minutes)
-    .slice(0, 7);
+    .slice(0, 10);
 
-  const dayBars = days.map((d) => {
+  // Per-day aggregates (for the snapshot bar chart) AND itemized lists (detail pages).
+  const dayDetails = days.map((d) => {
     const iso = toISODate(d);
     const tierTotals = Object.fromEntries(TIERS.map((t) => [t.key, 0]));
     let total = 0;
-    for (const e of entries) {
-      if (e.occurred_on !== iso) continue;
-      const a = byId[e.activity_id];
-      if (!a) continue;
-      tierTotals[a.tier] += e.minutes;
-      total += e.minutes;
-    }
+
+    const items = entries
+      .filter((e) => e.occurred_on === iso)
+      .map((e) => {
+        const a = byId[e.activity_id];
+        if (a) {
+          tierTotals[a.tier] += e.minutes;
+          total += e.minutes;
+        }
+        return {
+          name: a?.name || 'Unknown activity',
+          tier: a?.tier,
+          color: tierByKey[a?.tier]?.color || '#888',
+          short: tierByKey[a?.tier]?.short || '',
+          minutes: e.minutes,
+          startedAt: e.started_at,
+          endedAt: e.ended_at,
+          notes: e.notes,
+          source: e.source,
+        };
+      })
+      .sort((a, b) => {
+        if (a.startedAt && b.startedAt) return new Date(a.startedAt) - new Date(b.startedAt);
+        if (a.startedAt) return -1;
+        if (b.startedAt) return 1;
+        return 0;
+      });
+
     return {
       iso,
+      dateLong: format(d, 'EEEE, MMM d'),
       label: format(d, 'EEE'),
       sub: format(d, 'M/d'),
+      wakeAt: journals[iso]?.wake_at || null,
+      items,
       tierTotals,
       total,
       totalHours: total / 60,
     };
   });
 
-  const maxDayMin = Math.max(1, ...dayBars.map((d) => d.total));
+  const maxDayMin = Math.max(1, ...dayDetails.map((d) => d.total));
   const tenKShare = totalMinutes ? (tierMin.tier_10k / totalMinutes) * 100 : 0;
   const prevTenK = prevTotal ? (prevTier.tier_10k / prevTotal) * 100 : 0;
   const tenKShareDelta = tenKShare - prevTenK;
@@ -93,7 +122,8 @@ export function buildReportData({ weekStart, entries, prevEntries, activities })
     prevTotalHours: prevTotal / 60,
     tier,
     topActivities,
-    dayBars,
+    dayBars: dayDetails, // same source; dayDetails carries the bar totals too
+    dayDetails,
     maxDayMin,
     tenKShare,
     tenKShareDelta,

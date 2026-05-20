@@ -178,6 +178,16 @@ export async function upsertDayJournal(date, patch) {
   return data;
 }
 
+export async function fetchDayJournalsForRange(startDate, endDate) {
+  const { data, error } = await supabase
+    .from('day_journal')
+    .select('*')
+    .gte('day', toISODate(startDate))
+    .lte('day', toISODate(endDate));
+  if (error) throw error;
+  return Object.fromEntries((data || []).map((r) => [r.day, r]));
+}
+
 // Timeline entries — manual time-block entries with started_at/ended_at
 export async function addTimelineBlock({ activityId, startedAt, minutes, notes = null }) {
   const { data: userData } = await supabase.auth.getUser();

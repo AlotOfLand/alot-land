@@ -18,6 +18,18 @@ export function weekDays(date = new Date()) {
   return Array.from({ length: 7 }, (_, i) => addDays(start, i));
 }
 
+// Inclusive list of Date objects from start to end.
+export function daysInRange(start, end) {
+  const days = [];
+  let d = startOfDay(start);
+  const last = startOfDay(end);
+  while (d <= last) {
+    days.push(d);
+    d = addDays(d, 1);
+  }
+  return days;
+}
+
 export function toISODate(d) {
   return format(d, 'yyyy-MM-dd');
 }
