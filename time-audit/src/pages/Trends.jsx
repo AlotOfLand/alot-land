@@ -11,9 +11,14 @@ import PageHeader from '../components/PageHeader.jsx';
 
 export default function Trends() {
   const [weeks, setWeeks] = useState(8);
+  const [days, setDays] = useState(14);
 
   const rangeStart = useMemo(() => addDays(weekStart(new Date()), -(weeks - 1) * 7), [weeks]);
   const rangeEnd = useMemo(() => addDays(weekStart(new Date()), 6), []);
+
+  // Separate range for the daily chart (last N calendar days, ending today).
+  const dailyStart = useMemo(() => addDays(new Date(), -(days - 1)), [days]);
+  const dailyEndIso = toISODate(new Date());
 
   const { data: activities = [] } = useQuery({
     queryKey: ['activities-all'],
@@ -22,6 +27,10 @@ export default function Trends() {
   const { data: entries = [] } = useQuery({
     queryKey: ['entries-range', toISODate(rangeStart), toISODate(rangeEnd)],
     queryFn: () => fetchEntriesForRange(rangeStart, rangeEnd),
+  });
+  const { data: dailyEntries = [] } = useQuery({
+    queryKey: ['entries-range', toISODate(dailyStart), dailyEndIso],
+    queryFn: () => fetchEntriesForRange(dailyStart, new Date()),
   });
 
   const data = useMemo(() => {
@@ -56,6 +65,35 @@ export default function Trends() {
       pct10k: b.total ? +((b.tier_10k / b.total) * 100).toFixed(1) : 0,
     }));
   }, [entries, activities, weeks, rangeStart]);
+
+  const dailyData = useMemo(() => {
+    const aIdToTier = Object.fromEntries(activities.map((a) => [a.id, a.tier]));
+    const buckets = Array.from({ length: days }, (_, i) => {
+      const d = addDays(dailyStart, i);
+      return {
+        iso: toISODate(d),
+        label: format(d, 'M/d'),
+        tier_10k: 0, tier_1k: 0, tier_mid: 0, tier_zero: 0, total: 0,
+      };
+    });
+    const idxByIso = Object.fromEntries(buckets.map((b, i) => [b.iso, i]));
+    for (const ent of dailyEntries) {
+      const idx = idxByIso[ent.occurred_on];
+      if (idx === undefined) continue;
+      const tier = aIdToTier[ent.activity_id];
+      if (!tier) continue;
+      buckets[idx][tier] += ent.minutes;
+      buckets[idx].total += ent.minutes;
+    }
+    return buckets.map((b) => ({
+      ...b,
+      tier_10k: +(b.tier_10k / 60).toFixed(1),
+      tier_1k: +(b.tier_1k / 60).toFixed(1),
+      tier_mid: +(b.tier_mid / 60).toFixed(1),
+      tier_zero: +(b.tier_zero / 60).toFixed(1),
+      total: +(b.total / 60).toFixed(1),
+    }));
+  }, [dailyEntries, activities, days, dailyStart]);
 
   const avg10kPct = useMemo(() => {
     const valid = data.filter((d) => d.total > 0);
@@ -219,6 +257,48 @@ export default function Trends() {
         </section>
 
         <section className="rounded-2xl border border-border bg-panel p-5">
+          <div className="flex items-center justify-between mb-3 gap-3 flex-wrap">
+            <div className="text-[11px] uppercase tracking-widest text-muted">
+              Hours per day by tier (stacked)
+            </div>
+            <div className="flex items-center gap-1 bg-bg border border-border rounded-xl p-1">
+              {[7, 14, 30].map((n) => (
+                <button
+                  key={n}
+                  onClick={() => setDays(n)}
+                  className={`px-2.5 py-1 rounded-lg text-xs transition ${
+                    days === n ? 'bg-panel-2 text-text' : 'text-muted hover:text-text'
+                  }`}
+                >
+                  {n}d
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer>
+              <BarChart data={dailyData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#222" />
+                <XAxis dataKey="label" stroke="#666" fontSize={11} interval="preserveStartEnd" minTickGap={12} />
+                <YAxis stroke="#666" fontSize={12} unit="h" />
+                <Tooltip content={<ChartTooltip daily />} />
+                <Legend wrapperStyle={{ fontSize: 12, color: '#888' }} />
+                {TIERS.map((t) => (
+                  <Bar
+                    key={t.key}
+                    dataKey={t.key}
+                    name={t.short}
+                    stackId="d"
+                    fill={t.color}
+                    radius={t.key === 'tier_10k' ? [4, 4, 0, 0] : 0}
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        <section className="rounded-2xl border border-border bg-panel p-5">
           <div className="text-[11px] uppercase tracking-widest text-muted mb-3">
             $10,000/hour share of tracked time
           </div>
@@ -256,11 +336,11 @@ function StatCard({ label, value, accent }) {
   );
 }
 
-function ChartTooltip({ active, payload, label, suffix }) {
+function ChartTooltip({ active, payload, label, suffix, daily }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-xl border border-border-hi bg-bg/95 px-3 py-2 text-xs shadow-xl">
-      <div className="text-muted mb-1">Week of {label}</div>
+      <div className="text-muted mb-1">{daily ? label : `Week of ${label}`}</div>
       {payload.map((p) => {
         const tier = tierByKey[p.dataKey];
         const name = tier ? tier.short : p.name;
