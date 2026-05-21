@@ -8,7 +8,14 @@ import './index.css';
 
 const qc = new QueryClient({
   defaultOptions: {
-    queries: { refetchOnWindowFocus: false, staleTime: 30_000, retry: 1 },
+    queries: {
+      // Refetch the moment you return to the app on any device, so changes
+      // made on another device show up live without a manual reload.
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      staleTime: 10_000,
+      retry: 1,
+    },
   },
 });
 
