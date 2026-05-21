@@ -1,11 +1,11 @@
 export const siteConfig = {
-  name: "A Lot of Land LLC",
+  name: "Alot of Land LLC",
   domain: "alot.land",
   phone: "(423) 370-9888",
   phoneRaw: "4233709888",
   email: "David@alot.land",
   tagline: "Buy Land, Sell Land & Build Wealth With Land.",
-  description: "A Lot of Land LLC buys and sells land across Middle Tennessee and Arizona. Browse available properties or get a fast cash offer on your land.",
+  description: "Alot of Land LLC buys and sells land across Middle Tennessee and Arizona. Browse available properties or get a fast cash offer on your land.",
   address: {
     street: "4539 N 22nd St Ste R",
     city: "Phoenix",
