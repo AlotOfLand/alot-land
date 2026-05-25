@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Alot of Land LLC",
   domain: "alot.land",
-  phone: "(423) 370-9888",
-  phoneRaw: "4233709888",
+  phone: "(615) 538-6878",
+  phoneRaw: "6155386878",
   email: "David@alot.land",
   tagline: "Buy Land, Sell Land & Build Wealth With Land.",
   description: "Alot of Land LLC buys and sells land across Middle Tennessee and Arizona. Browse available properties or get a fast cash offer on your land.",
