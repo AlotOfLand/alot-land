@@ -289,22 +289,3 @@ const featuredListings = allListings
   </section>
 </BaseLayout>
 
-<script>
-  const nlForm = document.getElementById('newsletter-form') as HTMLFormElement;
-  const nlThanks = document.getElementById('newsletter-thanks');
-  const nlBtn = nlForm?.querySelector('button[type="submit"]') as HTMLButtonElement;
-  nlForm?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (nlBtn) { nlBtn.disabled = true; nlBtn.textContent = 'Subscribing…'; }
-    try {
-      const res = await fetch('/', { method: 'POST', body: new FormData(nlForm) });
-      if (!res.ok) throw new Error();
-      nlForm.classList.add('hidden');
-      nlThanks?.classList.remove('hidden');
-      nlThanks?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch {
-      if (nlBtn) { nlBtn.disabled = false; nlBtn.textContent = 'Notify Me'; }
-      alert('Something went wrong. Please try again or call us directly.');
-    }
-  });
-</script>

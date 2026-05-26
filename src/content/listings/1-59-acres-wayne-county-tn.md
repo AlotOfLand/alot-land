@@ -24,7 +24,7 @@ showDaysOnMarket: true
 buyerTestimonial: "I got a great deal on this property. What I love most is the
   year round flowing creek in the back of the lot. This is a beautiful piece of
   property. "
-buyerName: SOLD
+buyerName: Verified Buyer
 lat: 35.3387
 lng: -87.9762
 ---

@@ -277,25 +277,6 @@ const mapListings = sorted
       initMap();
       applyFilters();
 
-      // ── Get Notified form ─────────────────────────────────
-      var notifyForm  = document.getElementById('notify-form');
-      var notifyBtn   = document.getElementById('notify-btn');
-      var notifyThanks = document.getElementById('notify-thanks');
-      if (notifyForm) {
-        notifyForm.addEventListener('submit', async function (e) {
-          e.preventDefault();
-          if (notifyBtn) { notifyBtn.textContent = 'Saving…'; notifyBtn.disabled = true; }
-          try {
-            var res = await fetch('/', { method: 'POST', body: new FormData(notifyForm) });
-            if (!res.ok) throw new Error('Network error');
-            notifyForm.style.display = 'none';
-            if (notifyThanks) notifyThanks.classList.remove('hidden');
-          } catch (err) {
-            if (notifyBtn) { notifyBtn.textContent = 'Notify Me'; notifyBtn.disabled = false; }
-            alert('Something went wrong. Please try again.');
-          }
-        });
-      }
     });
   </script>
 </BaseLayout>

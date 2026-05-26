@@ -24,11 +24,11 @@ If you’ve been waiting for the right Arizona land deal, this is it.
 
 This 160-acre parcel in Yavapai County sits just 6.5 miles off I-40 and 12 miles west of Seligman. The land is flat, usable, and easy to access with 2,647 feet of dirt road frontage along the east property line.
 
-At $79,000 — just $494 per acre — this is one of the lowest-priced 160-acre parcels in the area.
+At $79,900 — just $499 per acre — this is one of the lowest-priced 160-acre parcels in the area.
 
 No HOA. No timelines. Just 160 acres of Arizona for recreation, off-grid living, or long-term investment.
 
-APN 301-17-008 · Yavapai County, AZ · 160 Acres · $79,000
+APN 301-17-008 · Yavapai County, AZ · 160 Acres · $79,900
 
 **For More Information call the listing agent:**
 
