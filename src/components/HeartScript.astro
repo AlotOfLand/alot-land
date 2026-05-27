@@ -4,31 +4,62 @@
 ---
 
 <script>
-  const STORAGE_KEY = 'alot-favorites';
-  const EMAIL_SHOWN_KEY = 'alot-heart-email-shown';
+  const STORAGE_KEY      = 'alot-favorites';
+  const TITLES_KEY       = 'alot-fav-titles';   // {slug: title} map
+  const EMAIL_SHOWN_KEY  = 'alot-heart-email-shown';
 
+  // ── Storage helpers ───────────────────────────────────────────────────────
   function getFavorites(): string[] {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
   }
   function saveFavorites(slugs: string[]) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(slugs));
   }
-  function isFav(slug: string) { return getFavorites().includes(slug); }
-  function toggleFav(slug: string): boolean {
+  function getTitlesMap(): Record<string, string> {
+    try { return JSON.parse(localStorage.getItem(TITLES_KEY) || '{}'); } catch { return {}; }
+  }
+  function saveTitle(slug: string, title: string) {
+    const map = getTitlesMap();
+    map[slug] = title;
+    localStorage.setItem(TITLES_KEY, JSON.stringify(map));
+  }
+  function removeTitle(slug: string) {
+    const map = getTitlesMap();
+    delete map[slug];
+    localStorage.setItem(TITLES_KEY, JSON.stringify(map));
+  }
+  function getAllHeartedTitles(): string {
     const favs = getFavorites();
-    const idx = favs.indexOf(slug);
-    if (idx === -1) { favs.push(slug); saveFavorites(favs); return true; }
-    else { favs.splice(idx, 1); saveFavorites(favs); return false; }
+    const map  = getTitlesMap();
+    return favs.map(s => map[s]).filter(Boolean).join(', ');
   }
 
+  function isFav(slug: string) { return getFavorites().includes(slug); }
+  function toggleFav(slug: string, title: string): boolean {
+    const favs = getFavorites();
+    const idx  = favs.indexOf(slug);
+    if (idx === -1) {
+      favs.push(slug);
+      saveFavorites(favs);
+      saveTitle(slug, title);
+      return true;
+    } else {
+      favs.splice(idx, 1);
+      saveFavorites(favs);
+      removeTitle(slug);
+      return false;
+    }
+  }
+
+  // ── UI helpers ────────────────────────────────────────────────────────────
   function paintHeart(btn: HTMLButtonElement, active: boolean) {
     const icon = btn.querySelector<SVGElement>('.heart-icon');
     if (!icon) return;
     if (active) {
-      icon.style.fill = '#ef4444';
+      icon.style.fill   = '#ef4444';
       icon.style.stroke = '#ef4444';
     } else {
-      icon.style.fill = 'none';
+      icon.style.fill   = 'none';
       icon.style.stroke = '#9ca3af';
     }
     btn.setAttribute('aria-label', active ? 'Remove from favorites' : 'Save to favorites');
@@ -44,7 +75,7 @@
   function refreshBadge() {
     const count = getFavorites().length;
     document.querySelectorAll<HTMLElement>('[data-fav-count]').forEach(el => {
-      el.textContent = count > 0 ? `❤️ Saved (${count})` : '❤️ Saved';
+      el.textContent  = count > 0 ? `❤️ Saved (${count})` : '❤️ Saved';
       el.style.fontWeight = count > 0 ? '700' : '500';
     });
   }
@@ -80,40 +111,76 @@
           <div style="font-size:32px;margin-bottom:6px">❤️</div>
           <h2 style="font-family:serif;font-weight:900;font-size:20px;color:#0A0A0A;margin:0 0 6px">Save Your Favorites</h2>
           <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0">
-            Drop your email and we'll send you this property + alert you when new listings drop.
+            Drop your email and we'll send you your saved properties + notify you when new listings drop.
           </p>
         </div>
-        <div style="padding:4px 28px 24px">
+        <div style="padding:4px 28px 8px">
           <iframe
             id="fav-modal-iframe"
             style="width:100%;height:720px;border:none;border-radius:8px"
             title="Save Favorites"
           ></iframe>
         </div>
+        <div style="padding:0 28px 20px;text-align:center">
+          <button id="fav-modal-skip"
+            style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:13px;text-decoration:underline;padding:4px">
+            No thanks, just save locally
+          </button>
+        </div>
       </div>`;
 
     document.body.appendChild(el);
-    document.getElementById('fav-modal-close')?.addEventListener('click', closeModal);
-    el.addEventListener('click', e => { if (e.target === el) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    document.getElementById('fav-modal-close')?.addEventListener('click', dismissModal);
+    document.getElementById('fav-modal-skip')?.addEventListener('click',  skipForever);
+    el.addEventListener('click', e => { if (e.target === el) dismissModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') dismissModal(); });
+
+    // Detect GHL form submission via postMessage → mark email as captured
+    window.addEventListener('message', e => {
+      if (!e.data) return;
+      const d = typeof e.data === 'string' ? (() => { try { return JSON.parse(e.data); } catch { return {}; } })() : e.data;
+      // GHL fires various events; treat any successful submission signal as captured
+      if (d.type === 'form_submitted' || d.event === 'form_submitted' || d.type === 'FORM_SUBMITTED') {
+        markEmailCaptured();
+        setTimeout(closeModal, 1200); // brief pause so thank-you message shows
+      }
+    });
   }
 
-  function openModal(listingTitle: string = '') {
+  function openModal(titlesStr: string = '') {
     buildModal();
-    const m = document.getElementById('fav-modal')!;
+    const m      = document.getElementById('fav-modal')!;
     const iframe = document.getElementById('fav-modal-iframe') as HTMLIFrameElement | null;
     if (iframe) {
-      const encoded = encodeURIComponent(listingTitle);
+      const encoded = encodeURIComponent(titlesStr);
       iframe.src = `https://brand.alot.land/widget/form/DwqAGnDx2tGPhDvzpWP9?single_line_23n4x=${encoded}`;
     }
     m.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
+
+  // Close but keep asking on future hearts (just dismissed, not opted out)
+  function dismissModal() {
+    const m = document.getElementById('fav-modal');
+    if (m) m.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // "No thanks" — stop asking forever
+  function skipForever() {
+    markEmailCaptured();
+    closeModal();
+  }
+
+  // GHL form submitted — stop asking, close modal
+  function markEmailCaptured() {
+    localStorage.setItem(EMAIL_SHOWN_KEY, '1');
+  }
+
   function closeModal() {
     const m = document.getElementById('fav-modal');
     if (m) m.style.display = 'none';
     document.body.style.overflow = '';
-    localStorage.setItem(EMAIL_SHOWN_KEY, '1');
   }
 
   // ── Click handler ─────────────────────────────────────────────────────────
@@ -123,19 +190,19 @@
     e.preventDefault();
     e.stopPropagation();
 
-    const slug = btn.dataset.slug || '';
-    const wasEmpty = getFavorites().length === 0;
-    const nowFav = toggleFav(slug);
+    const slug  = btn.dataset.slug  || '';
+    const title = btn.dataset.title || '';
+    const nowFav = toggleFav(slug, title);
 
     // Update every heart button for this slug (card + detail page)
     document.querySelectorAll<HTMLButtonElement>(`.heart-btn[data-slug="${CSS.escape(slug)}"]`)
       .forEach(b => paintHeart(b, nowFav));
     refreshBadge();
 
-    // Show email-capture modal on very first heart (once per device)
-    if (nowFav && wasEmpty && !localStorage.getItem(EMAIL_SHOWN_KEY)) {
-      const title = btn.dataset.title || '';
-      setTimeout(() => openModal(title), 350);
+    // Show modal on every heart-ADD until email captured or user skips
+    if (nowFav && !localStorage.getItem(EMAIL_SHOWN_KEY)) {
+      const allTitles = getAllHeartedTitles();
+      setTimeout(() => openModal(allTitles), 350);
     }
   });
 
