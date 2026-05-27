@@ -1,0 +1,142 @@
+---
+// Global heart/favorites logic — injected once via BaseLayout.
+// Handles: localStorage toggle, UI sync, fav count badge, email-capture modal.
+---
+
+<script>
+  const STORAGE_KEY = 'alot-favorites';
+  const EMAIL_SHOWN_KEY = 'alot-heart-email-shown';
+
+  function getFavorites(): string[] {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+  }
+  function saveFavorites(slugs: string[]) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(slugs));
+  }
+  function isFav(slug: string) { return getFavorites().includes(slug); }
+  function toggleFav(slug: string): boolean {
+    const favs = getFavorites();
+    const idx = favs.indexOf(slug);
+    if (idx === -1) { favs.push(slug); saveFavorites(favs); return true; }
+    else { favs.splice(idx, 1); saveFavorites(favs); return false; }
+  }
+
+  function paintHeart(btn: HTMLButtonElement, active: boolean) {
+    const icon = btn.querySelector<SVGElement>('.heart-icon');
+    if (!icon) return;
+    if (active) {
+      icon.style.fill = '#ef4444';
+      icon.style.stroke = '#ef4444';
+    } else {
+      icon.style.fill = 'none';
+      icon.style.stroke = '#9ca3af';
+    }
+    btn.setAttribute('aria-label', active ? 'Remove from favorites' : 'Save to favorites');
+  }
+
+  function syncAllHearts() {
+    document.querySelectorAll<HTMLButtonElement>('.heart-btn').forEach(btn => {
+      paintHeart(btn, isFav(btn.dataset.slug || ''));
+    });
+    refreshBadge();
+  }
+
+  function refreshBadge() {
+    const count = getFavorites().length;
+    document.querySelectorAll<HTMLElement>('[data-fav-count]').forEach(el => {
+      el.textContent = count > 0 ? `❤️ Saved (${count})` : '❤️ Saved';
+      el.style.fontWeight = count > 0 ? '700' : '500';
+    });
+  }
+
+  // ── Modal ─────────────────────────────────────────────────────────────────
+  let modalReady = false;
+
+  function buildModal() {
+    if (modalReady) return;
+    modalReady = true;
+    const el = document.createElement('div');
+    el.id = 'fav-modal';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.setAttribute('aria-label', 'Save your favorites');
+    el.style.cssText = [
+      'display:none',
+      'position:fixed',
+      'inset:0',
+      'z-index:9999',
+      'background:rgba(0,0,0,.6)',
+      'backdrop-filter:blur(4px)',
+      'align-items:center',
+      'justify-content:center',
+      'padding:16px',
+    ].join(';');
+
+    el.innerHTML = `
+      <div style="background:#fff;border-radius:20px;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;position:relative">
+        <button id="fav-modal-close" aria-label="Close"
+          style="position:absolute;top:14px;right:16px;background:none;border:none;cursor:pointer;font-size:22px;line-height:1;color:#9ca3af;z-index:1;padding:4px">✕</button>
+        <div style="padding:28px 28px 4px">
+          <div style="font-size:32px;margin-bottom:6px">❤️</div>
+          <h2 style="font-family:serif;font-weight:900;font-size:20px;color:#0A0A0A;margin:0 0 6px">Save Your Favorites</h2>
+          <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0">
+            Drop your email and we'll send you this property + alert you when new listings drop.
+          </p>
+        </div>
+        <div style="padding:4px 28px 24px">
+          <iframe
+            src="https://brand.alot.land/widget/form/VKnNPxURCKeLD6wNRALs"
+            style="width:100%;height:580px;border:none;border-radius:8px"
+            title="Save Favorites"
+          ></iframe>
+        </div>
+      </div>`;
+
+    document.body.appendChild(el);
+    document.getElementById('fav-modal-close')?.addEventListener('click', closeModal);
+    el.addEventListener('click', e => { if (e.target === el) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  }
+
+  function openModal() {
+    buildModal();
+    const m = document.getElementById('fav-modal')!;
+    m.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    const m = document.getElementById('fav-modal');
+    if (m) m.style.display = 'none';
+    document.body.style.overflow = '';
+    localStorage.setItem(EMAIL_SHOWN_KEY, '1');
+  }
+
+  // ── Click handler ─────────────────────────────────────────────────────────
+  document.addEventListener('click', e => {
+    const btn = (e.target as Element).closest<HTMLButtonElement>('.heart-btn');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const slug = btn.dataset.slug || '';
+    const wasEmpty = getFavorites().length === 0;
+    const nowFav = toggleFav(slug);
+
+    // Update every heart button for this slug (card + detail page)
+    document.querySelectorAll<HTMLButtonElement>(`.heart-btn[data-slug="${CSS.escape(slug)}"]`)
+      .forEach(b => paintHeart(b, nowFav));
+    refreshBadge();
+
+    // Show email-capture modal on very first heart (once per device)
+    if (nowFav && wasEmpty && !localStorage.getItem(EMAIL_SHOWN_KEY)) {
+      setTimeout(openModal, 350);
+    }
+  });
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', syncAllHearts);
+  } else {
+    syncAllHearts();
+  }
+</script>

@@ -23,6 +23,18 @@ const excerpt = description.slice(0, 120) + (description.length > 120 ? '…' : 
       alt={`${acreage} acres for sale in ${county}, ${state}`}
       class={`w-full h-48 object-cover ${status === 'sold' || status === 'coming-soon' ? 'brightness-50' : ''}`}
     />
+    <!-- Heart / favorite button -->
+    <button
+      class="heart-btn absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 shadow hover:bg-white transition-colors z-10"
+      data-slug={slug}
+      data-title={title}
+      aria-label="Save to favorites"
+    >
+      <svg class="heart-icon w-4 h-4 transition-colors" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </button>
+
     {status === 'available' ? (
       <span class="absolute top-3 left-3 text-xs font-bold px-2.5 py-1 rounded-full bg-green-brand text-white">
         Available

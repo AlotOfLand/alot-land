@@ -64,7 +64,7 @@ if (gps) {
       ← All Listings
     </a>
 
-    <!-- Status badge + Title -->
+    <!-- Status badge + Title + Heart -->
     <div class="flex items-start gap-4 flex-wrap mb-6">
       <span class={`text-sm font-bold px-3 py-1.5 rounded-full flex-shrink-0 ${
         status === 'available' ? 'bg-green-brand text-white' :
@@ -73,9 +73,19 @@ if (gps) {
       }`}>
         {status === 'available' ? 'Available' : status === 'coming-soon' ? 'Coming Soon' : '🔴 Sold'}
       </span>
-      <h1 class="font-display font-black text-3xl sm:text-4xl text-bg-dark leading-tight">
+      <h1 class="font-display font-black text-3xl sm:text-4xl text-bg-dark leading-tight flex-1">
         {title}
       </h1>
+      <button
+        class="heart-btn w-11 h-11 flex items-center justify-center rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex-shrink-0"
+        data-slug={listing.slug}
+        data-title={title}
+        aria-label="Save to favorites"
+      >
+        <svg class="heart-icon w-5 h-5 transition-colors" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
     </div>
 
     <div class="grid lg:grid-cols-3 gap-10">

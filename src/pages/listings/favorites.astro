@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ListingCard from '../../components/ListingCard.astro';
+import { getCollection } from 'astro:content';
+
+const allListings = await getCollection('listings');
+const sorted = allListings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout
+  title="My Saved Listings"
+  description="Your saved land listings on alot.land."
+>
+  <div class="bg-bg-dark text-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href="/listings" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mb-4">
+        ← All Listings
+      </a>
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-2">❤️ Saved Listings</h1>
+      <p class="text-gray-400 text-lg">Properties you've hearted on this device.</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- Empty state (shown when no favorites in localStorage) -->
+    <div id="fav-empty" class="hidden text-center py-20 bg-white rounded-2xl border border-gray-100">
+      <p class="text-4xl mb-4">🏡</p>
+      <h2 class="font-display font-bold text-xl text-bg-dark mb-2">No saved listings yet</h2>
+      <p class="text-gray-500 mb-6">Heart a property to save it here for easy reference.</p>
+      <a href="/listings" class="bg-bg-dark text-white font-bold px-6 py-3 rounded-xl hover:bg-gray-800 transition-colors inline-block">
+        Browse Listings
+      </a>
+    </div>
+
+    <!-- Grid — all listings rendered, JS shows only saved ones -->
+    <div id="fav-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sorted.map(listing => (
+        <div class="fav-item hidden" data-slug={listing.slug}>
+          <ListingCard
+            slug={listing.slug}
+            title={listing.data.title}
+            status={listing.data.status}
+            acreage={listing.data.acreage}
+            county={listing.data.county}
+            state={listing.data.state}
+            price={listing.data.price}
+            photos={listing.data.photos}
+            description={listing.body}
+          />
+        </div>
+      ))}
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script>
+  function getFavorites(): string[] {
+    try { return JSON.parse(localStorage.getItem('alot-favorites') || '[]'); } catch { return []; }
+  }
+
+  function renderFavorites() {
+    const favs = getFavorites();
+    const items = document.querySelectorAll<HTMLElement>('.fav-item');
+    let shown = 0;
+    items.forEach(item => {
+      const slug = item.dataset.slug || '';
+      if (favs.includes(slug)) {
+        item.classList.remove('hidden');
+        shown++;
+      } else {
+        item.classList.add('hidden');
+      }
+    });
+    const empty = document.getElementById('fav-empty');
+    const grid  = document.getElementById('fav-grid');
+    if (empty) empty.classList.toggle('hidden', shown > 0);
+    if (grid)  grid.classList.toggle('hidden', shown === 0);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderFavorites);
+  } else {
+    renderFavorites();
+  }
+
+  // Re-render when hearts are toggled on this same page
+  window.addEventListener('storage', e => {
+    if (e.key === 'alot-favorites') renderFavorites();
+  });
+</script>
