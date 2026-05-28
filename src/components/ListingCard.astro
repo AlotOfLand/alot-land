@@ -16,10 +16,7 @@ const firstPhoto = photos[0] || '/images/hero-land.jpg';
 const excerpt = description.slice(0, 120) + (description.length > 120 ? '…' : '');
 ---
 
-<article class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col relative cursor-pointer">
-  <!-- Full-card click target — sits behind all interactive elements -->
-  <a href={`/listings/${slug}`} class="absolute inset-0 z-0" aria-hidden="true" tabindex="-1"></a>
-
+<a href={`/listings/${slug}`} class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col group">
   <div class="relative">
     <img
       src={firstPhoto}
@@ -68,11 +65,8 @@ const excerpt = description.slice(0, 120) + (description.length > 120 ? '…' : 
 
     <p class="text-sm text-gray-600 leading-relaxed flex-1 mb-4">{excerpt}</p>
 
-    <a
-      href={`/listings/${slug}`}
-      class="relative z-10 block text-center bg-bg-dark text-white text-sm font-bold py-2.5 rounded-xl hover:bg-gray-800 transition-colors"
-    >
+    <span class="block text-center bg-bg-dark text-white text-sm font-bold py-2.5 rounded-xl group-hover:bg-gray-800 transition-colors">
       View Details
-    </a>
+    </span>
   </div>
-</article>
+</a>
