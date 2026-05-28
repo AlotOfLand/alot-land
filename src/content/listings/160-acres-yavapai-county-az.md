@@ -11,6 +11,8 @@ roadAccess: 2647ft of Dirt road access along the eastern property line
 water: No
 power: No
 gps: 35.2953,-113.174
+zillowUrl: https://www.zillow.com/homedetails/301-17-N-Sandy-Faye-Way-8-Seligman-AZ-86337/462443964_zpid/
+showZillow: true
 photos:
   - /images/screenshot-2026-05-07-at-17.22.44.png
   - /images/screenshot-2026-05-07-at-17.23.30.png
