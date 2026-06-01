@@ -5,7 +5,7 @@ featured: true
 state: Tennessee
 county: Marshall
 acreage: "5.5"
-price: 199,900
+price: "$199,900"
 zoning: Residential
 roadAccess: 457 ft
 water: Available
@@ -22,7 +22,7 @@ photos:
   - /images/img_9223.jpg
 date: 2026-03-30T11:01:00.000-05:00
 showDaysOnMarket: false
-lat: 35.6734,
+lat: 35.6734
 lng: "-86.7715"
 ---
 Situated in northern Marshall County, just minutes from the Williamson and Maury County lines, this gently sloping property provides the perfect blend of privacy and accessibility. 
