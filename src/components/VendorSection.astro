@@ -1,0 +1,110 @@
+---
+import { getCollection, render } from 'astro:content';
+
+interface Props {
+  state: string;
+  heading?: string;
+}
+
+const { state, heading = 'Preferred Vendors' } = Astro.props;
+
+const allVendors = await getCollection('vendors').catch(() => []);
+const vendors = allVendors
+  .filter(v => v.data.active && (v.data.state === state || v.data.state === 'Both'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+// Don't render at all if no vendors match
+if (vendors.length === 0) return;
+
+const rendered = await Promise.all(
+  vendors.map(async v => ({ ...v, rendered: await render(v) }))
+);
+
+const categories = [
+  { key: 'excavation-septic', label: 'Excavation & Septic', emoji: '🚜' },
+  { key: 'builders',          label: 'Preferred Builders',  emoji: '🏗️' },
+  { key: 'lenders',           label: 'Preferred Lenders',   emoji: '🏦' },
+];
+
+const byCategory = categories
+  .map(cat => ({
+    ...cat,
+    vendors: rendered.filter(v => v.data.category === cat.key),
+  }))
+  .filter(cat => cat.vendors.length > 0);
+---
+
+<section class="py-16 bg-bg-light border-t border-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <p class="text-xs font-bold uppercase tracking-widest text-gold mb-2">Vetted by Alot of Land LLC</p>
+      <h2 class="font-display font-black text-3xl sm:text-4xl text-bg-dark mb-3">{heading}</h2>
+      <p class="text-gray-500 max-w-xl mx-auto text-sm">
+        Professionals we trust and personally recommend for buyers developing their land.
+        <a href="/resources/preferred-vendors" class="text-gold font-semibold hover:underline ml-1">See full directory →</a>
+      </p>
+    </div>
+
+    {byCategory.map(cat => (
+      <div class="mb-10 last:mb-0">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="text-2xl">{cat.emoji}</span>
+          <h3 class="font-display font-bold text-xl text-bg-dark">{cat.label}</h3>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {cat.vendors.map(vendor => (
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-3">
+              <!-- Logo / Name row -->
+              <div class="flex items-center gap-3">
+                {vendor.data.logo ? (
+                  <img src={vendor.data.logo} alt={vendor.data.name} class="w-12 h-12 object-contain rounded-xl border border-gray-100 flex-shrink-0" />
+                ) : (
+                  <div class="w-12 h-12 rounded-xl bg-gold flex items-center justify-center font-display font-black text-bg-dark text-lg flex-shrink-0">
+                    {vendor.data.name.charAt(0)}
+                  </div>
+                )}
+                <div>
+                  <p class="font-display font-bold text-bg-dark text-sm leading-snug">{vendor.data.name}</p>
+                  {vendor.data.serviceArea && (
+                    <p class="text-xs text-text-muted mt-0.5">📍 {vendor.data.serviceArea}</p>
+                  )}
+                </div>
+              </div>
+
+              <!-- Description -->
+              {vendor.body && (
+                <div class="text-sm text-gray-600 leading-relaxed">
+                  <vendor.rendered.Content />
+                </div>
+              )}
+
+              <!-- Contact buttons -->
+              {(vendor.data.phone || vendor.data.website) && (
+                <div class="flex flex-wrap gap-2 mt-auto pt-1">
+                  {vendor.data.phone && (
+                    <a
+                      href={`tel:${vendor.data.phone.replace(/\D/g, '')}`}
+                      class="flex items-center gap-1.5 text-xs font-semibold bg-bg-dark text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                      📞 {vendor.data.phone}
+                    </a>
+                  )}
+                  {vendor.data.website && (
+                    <a
+                      href={vendor.data.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="flex items-center gap-1.5 text-xs font-semibold border border-gray-200 text-bg-dark px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      🌐 Website ↗
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

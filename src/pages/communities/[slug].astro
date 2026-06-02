@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ListingCard from '../../components/ListingCard.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import AmenitySlideshow from '../../components/AmenitySlideshow.astro';
+import VendorSection from '../../components/VendorSection.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 
 const { community } = Astro.props;
 const { Content } = await render(community);
-const { title, location, status, image, videoUrl, showVideo, amenityPhotos } = community.data;
+const { title, location, state: communityState, status, image, videoUrl, showVideo, amenityPhotos } = community.data;
 
 const allListings = await getCollection('listings');
 const lots = allListings
@@ -141,4 +142,7 @@ const statusColor: Record<string, string> = {
   {amenityPhotos && amenityPhotos.length > 0 && (
     <AmenitySlideshow photos={amenityPhotos} heading={`What's Near ${title}`} />
   )}
+
+  <!-- Preferred Vendors for this community's state -->
+  {communityState && <VendorSection state={communityState} heading="Preferred Vendors for This Community" />}
 </BaseLayout>

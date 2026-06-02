@@ -4,6 +4,7 @@ import ListingGallery from '../../components/ListingGallery.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import ShareButtons from '../../components/ShareButtons.astro';
 import AmenitySlideshow from '../../components/AmenitySlideshow.astro';
+import VendorSection from '../../components/VendorSection.astro';
 import { getCollection, render } from 'astro:content';
 import { siteConfig } from '../../config/site.js';
 
@@ -258,5 +259,8 @@ const listingSchema = {
   {amenityPhotos && amenityPhotos.length > 0 && (
     <AmenitySlideshow photos={amenityPhotos} heading={`What's Near ${title}`} />
   )}
+
+  <!-- Preferred Vendors for this property's state -->
+  <VendorSection state={state} heading="Preferred Vendors for This Property" />
 </BaseLayout>
 

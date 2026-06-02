@@ -53,6 +53,7 @@ const communities = defineCollection({
   schema: z.object({
     title: z.string(),
     location: z.string().optional(),
+    state: z.enum(['Arizona', 'Tennessee']).optional(),
     status: z.enum(['coming-soon', 'lots-available', 'sold-out']),
     image: z.string().optional(),
     videoUrl: z.string().optional(),
@@ -140,4 +141,30 @@ const settings = defineCollection({
   }),
 });
 
-export const collections = { listings, testimonials, communities, press, podcasts, books, ebooks, faqs, settings };
+const team = defineCollection({
+  type: 'content',  // body = bio
+  schema: z.object({
+    name:   z.string(),
+    role:   z.string(),
+    photo:  z.string().optional(),
+    order:  z.number().default(99),
+    active: z.boolean().default(true),
+  }),
+});
+
+const vendors = defineCollection({
+  type: 'content',  // body = short description
+  schema: z.object({
+    name:        z.string(),
+    category:    z.enum(['excavation-septic', 'builders', 'lenders']),
+    state:       z.enum(['Arizona', 'Tennessee', 'Both']),
+    logo:        z.string().optional(),
+    serviceArea: z.string().optional(),
+    phone:       z.string().optional(),
+    website:     z.string().optional(),
+    active:      z.boolean().default(true),
+    order:       z.number().default(99),
+  }),
+});
+
+export const collections = { listings, testimonials, communities, press, podcasts, books, ebooks, faqs, settings, team, vendors };

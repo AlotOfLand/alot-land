@@ -1,0 +1,216 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+const allVendors = await getCollection('vendors').catch(() => []);
+const activeVendors = allVendors
+  .filter(v => v.data.active)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const rendered = await Promise.all(
+  activeVendors.map(async v => ({ ...v, rendered: await render(v) }))
+);
+
+const categories = [
+  { key: 'excavation-septic', label: 'Excavation & Septic', emoji: '🚜' },
+  { key: 'builders',          label: 'Preferred Builders',  emoji: '🏗️' },
+  { key: 'lenders',           label: 'Preferred Lenders',   emoji: '🏦' },
+];
+
+const states = ['Arizona', 'Tennessee'];
+---
+
+<BaseLayout
+  title="Preferred Vendors"
+  description="Vetted excavation, builders, and lenders recommended by Alot of Land LLC for buyers developing land in Arizona and Tennessee."
+>
+  <!-- Hero -->
+  <div class="bg-bg-dark text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-4">Preferred Vendors</h1>
+      <p class="text-gray-400 text-lg max-w-2xl">
+        Professionals we've personally vetted and recommend for buyers developing their land — excavation, builders, and lenders across our active markets.
+      </p>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap gap-3 items-center">
+      <!-- State filter -->
+      <div class="flex rounded-xl border border-gray-200 overflow-hidden text-sm font-medium">
+        <button class="vend-state-btn px-4 py-2 bg-bg-dark text-white transition-colors" data-state="all">All States</button>
+        {states.map(s => (
+          <button class="vend-state-btn px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors" data-state={s}>{s}</button>
+        ))}
+      </div>
+
+      <!-- Category filter -->
+      <div class="flex rounded-xl border border-gray-200 overflow-hidden text-sm font-medium">
+        <button class="vend-cat-btn px-4 py-2 bg-bg-dark text-white transition-colors" data-cat="all">All Types</button>
+        {categories.map(c => (
+          <button class="vend-cat-btn px-4 py-2 text-gray-600 hover:bg-gray-50 transition-colors" data-cat={c.key}>{c.label}</button>
+        ))}
+      </div>
+
+      <span id="vend-count" class="text-sm text-text-muted"></span>
+    </div>
+  </div>
+
+  <!-- Vendor grid -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    {rendered.length === 0 ? (
+      <div class="text-center py-20 bg-white rounded-2xl border border-gray-100">
+        <p class="text-4xl mb-4">🔧</p>
+        <h2 class="font-display font-bold text-xl text-bg-dark mb-2">Vendor directory coming soon</h2>
+        <p class="text-gray-500 mb-6">We're building our list of vetted professionals. Check back soon.</p>
+        <a href="/contact" class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors inline-block">
+          Contact Us
+        </a>
+      </div>
+    ) : (
+      <div>
+        {categories.map(cat => {
+          const catVendors = rendered.filter(v => v.data.category === cat.key);
+          if (catVendors.length === 0) return null;
+          return (
+            <div class="vend-category mb-12" data-category={cat.key}>
+              <div class="flex items-center gap-3 mb-6">
+                <span class="text-3xl">{cat.emoji}</span>
+                <h2 class="font-display font-bold text-2xl text-bg-dark">{cat.label}</h2>
+              </div>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {catVendors.map(vendor => (
+                  <div
+                    class="vend-card bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col gap-4"
+                    data-state={vendor.data.state}
+                    data-cat={vendor.data.category}
+                  >
+                    <div class="flex items-center gap-4">
+                      {vendor.data.logo ? (
+                        <img src={vendor.data.logo} alt={vendor.data.name} class="w-14 h-14 object-contain rounded-xl border border-gray-100 flex-shrink-0" />
+                      ) : (
+                        <div class="w-14 h-14 rounded-xl bg-gold flex items-center justify-center font-display font-black text-bg-dark text-2xl flex-shrink-0">
+                          {vendor.data.name.charAt(0)}
+                        </div>
+                      )}
+                      <div>
+                        <h3 class="font-display font-bold text-bg-dark leading-snug">{vendor.data.name}</h3>
+                        <div class="flex items-center gap-2 mt-1 flex-wrap">
+                          <span class={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                            vendor.data.state === 'Arizona'   ? 'bg-orange-100 text-orange-700' :
+                            vendor.data.state === 'Tennessee' ? 'bg-blue-100 text-blue-700' :
+                            'bg-gray-100 text-gray-600'
+                          }`}>
+                            {vendor.data.state === 'Both' ? '🌎 AZ + TN' : vendor.data.state === 'Arizona' ? '🌵 Arizona' : '🏞️ Tennessee'}
+                          </span>
+                          {vendor.data.serviceArea && (
+                            <span class="text-xs text-text-muted">📍 {vendor.data.serviceArea}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {vendor.body && (
+                      <div class="text-sm text-gray-600 leading-relaxed flex-1">
+                        <vendor.rendered.Content />
+                      </div>
+                    )}
+
+                    {(vendor.data.phone || vendor.data.website) && (
+                      <div class="flex flex-wrap gap-2 pt-1 border-t border-gray-100">
+                        {vendor.data.phone && (
+                          <a
+                            href={`tel:${vendor.data.phone.replace(/\D/g, '')}`}
+                            class="flex items-center gap-1.5 text-xs font-semibold bg-bg-dark text-white px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                          >
+                            📞 {vendor.data.phone}
+                          </a>
+                        )}
+                        {vendor.data.website && (
+                          <a
+                            href={vendor.data.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center gap-1.5 text-xs font-semibold border border-gray-200 text-bg-dark px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                          >
+                            🌐 Website ↗
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
+        <div id="vend-no-results" class="hidden text-center py-20 bg-white rounded-2xl border border-gray-100">
+          <p class="text-2xl mb-3">🔍</p>
+          <h3 class="font-display font-bold text-xl text-bg-dark mb-2">No vendors match this filter</h3>
+          <p class="text-gray-500">Try a different state or category.</p>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <!-- CTA -->
+  <div class="bg-bg-dark py-16 text-center">
+    <div class="max-w-2xl mx-auto px-4">
+      <h2 class="font-display font-bold text-3xl text-white mb-3">Know a great vendor?</h2>
+      <p class="text-gray-400 mb-8">If you work with a contractor, lender, or builder you'd recommend to land buyers, let us know.</p>
+      <a href="/contact" class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors inline-block">
+        Get In Touch
+      </a>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function () {
+      var activeState = 'all';
+      var activeCat   = 'all';
+
+      var stateBtns = document.querySelectorAll('.vend-state-btn');
+      var catBtns   = document.querySelectorAll('.vend-cat-btn');
+      var cards     = document.querySelectorAll('.vend-card');
+      var countEl   = document.getElementById('vend-count');
+      var noResults = document.getElementById('vend-no-results');
+
+      function applyFilters() {
+        var visible = 0;
+        cards.forEach(function (card) {
+          var stateOk = activeState === 'all' || card.getAttribute('data-state') === activeState || card.getAttribute('data-state') === 'Both';
+          var catOk   = activeCat   === 'all' || card.getAttribute('data-cat')   === activeCat;
+          var show    = stateOk && catOk;
+          card.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+
+        // Hide empty category headings
+        document.querySelectorAll('.vend-category').forEach(function (sec) {
+          var hasVisible = Array.from(sec.querySelectorAll('.vend-card')).some(function (c) { return c.style.display !== 'none'; });
+          sec.style.display = hasVisible ? '' : 'none';
+        });
+
+        if (noResults) noResults.classList.toggle('hidden', visible > 0);
+        if (countEl) countEl.textContent = visible + ' vendor' + (visible !== 1 ? 's' : '');
+
+        stateBtns.forEach(function (b) {
+          b.className = 'vend-state-btn px-4 py-2 transition-colors ' +
+            (b.getAttribute('data-state') === activeState ? 'bg-bg-dark text-white' : 'text-gray-600 hover:bg-gray-50');
+        });
+        catBtns.forEach(function (b) {
+          b.className = 'vend-cat-btn px-4 py-2 transition-colors ' +
+            (b.getAttribute('data-cat') === activeCat ? 'bg-bg-dark text-white' : 'text-gray-600 hover:bg-gray-50');
+        });
+      }
+
+      stateBtns.forEach(function (b) { b.addEventListener('click', function () { activeState = b.getAttribute('data-state'); applyFilters(); }); });
+      catBtns.forEach(function (b)   { b.addEventListener('click', function () { activeCat   = b.getAttribute('data-cat');   applyFilters(); }); });
+
+      applyFilters();
+    });
+  </script>
+</BaseLayout>

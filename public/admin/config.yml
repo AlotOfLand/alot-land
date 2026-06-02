@@ -70,6 +70,7 @@ collections:
     fields:
       - { label: "Community Name", name: "title", widget: "string", hint: "e.g. Desert Ridge Estates" }
       - { label: "Location", name: "location", widget: "string", required: false, hint: "e.g. Yavapai County, AZ" }
+      - { label: "State", name: "state", widget: "select", required: false, options: [{label: "Arizona", value: "Arizona"}, {label: "Tennessee", value: "Tennessee"}], hint: "Used to match preferred vendors for this community" }
       - { label: "Status", name: "status", widget: "select", options: [{label: "Coming Soon", value: "coming-soon"}, {label: "Lots Available", value: "lots-available"}, {label: "Sold Out", value: "sold-out"}] }
       - { label: "Community Image", name: "image", widget: "image", required: false }
       - { label: "Video URL (YouTube or Vimeo)", name: "videoUrl", widget: "string", required: false, hint: "Paste a YouTube or Vimeo link to embed a community overview video" }
@@ -155,6 +156,36 @@ collections:
       - { label: "Display Order", name: "order", widget: "number", default: 99, hint: "Lower number = shows first. Buying and Selling are sorted separately." }
       - { label: "Show on Site", name: "active", widget: "boolean", default: true, hint: "Toggle off to hide this FAQ without deleting it" }
       - { label: "Answer", name: "body", widget: "markdown", hint: "Full answer — supports bold, lists, and links" }
+
+  - name: "team"
+    label: "Team Members"
+    folder: "src/content/team"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Full Name", name: "name", widget: "string" }
+      - { label: "Role / Title", name: "role", widget: "string", hint: "e.g. Founder & CEO, Operations, Transaction Coordinator" }
+      - { label: "Photo", name: "photo", widget: "image", required: false, hint: "Headshot or professional photo" }
+      - { label: "Display Order", name: "order", widget: "number", default: 99, hint: "Lower number = shows first" }
+      - { label: "Show on Team Page", name: "active", widget: "boolean", default: true }
+      - { label: "Bio", name: "body", widget: "markdown", hint: "2–4 sentences about this person's background and role" }
+
+  - name: "vendors"
+    label: "Preferred Vendors"
+    folder: "src/content/vendors"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Business Name", name: "name", widget: "string" }
+      - { label: "Category", name: "category", widget: "select", options: [{label: "Excavation & Septic", value: "excavation-septic"}, {label: "Preferred Builders", value: "builders"}, {label: "Preferred Lenders", value: "lenders"}] }
+      - { label: "State", name: "state", widget: "select", options: [{label: "Arizona", value: "Arizona"}, {label: "Tennessee", value: "Tennessee"}, {label: "Both (AZ + TN)", value: "Both"}] }
+      - { label: "Logo", name: "logo", widget: "image", required: false }
+      - { label: "Service Area", name: "serviceArea", widget: "string", required: false, hint: "e.g. Yavapai County, AZ or Statewide TN" }
+      - { label: "Phone", name: "phone", widget: "string", required: false, hint: "e.g. (615) 555-1234" }
+      - { label: "Website URL", name: "website", widget: "string", required: false, hint: "e.g. https://theirsite.com" }
+      - { label: "Show on Site", name: "active", widget: "boolean", default: true }
+      - { label: "Display Order", name: "order", widget: "number", default: 99, hint: "Lower number = shows first" }
+      - { label: "Description", name: "body", widget: "markdown", hint: "1–2 sentences about why you recommend them" }
 
   - name: "settings"
     label: "Site Settings"
