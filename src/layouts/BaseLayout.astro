@@ -25,6 +25,53 @@ const siteOrigin = `https://${siteConfig.domain}`;
 const canonicalUrl = new URL(Astro.url.pathname, siteOrigin).href;
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteOrigin}${ogImage}`;
 const { gaMeasurementId } = siteConfig.analytics;
+
+// ── Global structured data (every page) ──────────────────────────────────────
+const globalSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteOrigin}/#website`,
+      url: siteOrigin,
+      name: siteConfig.name,
+      description: siteConfig.description,
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${siteOrigin}/#organization`,
+      name: siteConfig.name,
+      url: siteOrigin,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteOrigin}/images/alotdotland_hzLogo.png`,
+      },
+      sameAs: Object.values(siteConfig.social).filter(Boolean),
+    },
+    {
+      '@type': 'RealEstateAgent',
+      '@id': `${siteOrigin}/#business`,
+      name: siteConfig.name,
+      url: siteOrigin,
+      telephone: `+1${siteConfig.phoneRaw}`,
+      email: siteConfig.email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: siteConfig.address.street,
+        addressLocality: siteConfig.address.city,
+        addressRegion: siteConfig.address.state,
+        postalCode: siteConfig.address.zip,
+        addressCountry: 'US',
+      },
+      areaServed: [
+        { '@type': 'State', name: 'Arizona' },
+        { '@type': 'State', name: 'Tennessee' },
+      ],
+      description: siteConfig.description,
+      priceRange: '$$',
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -36,6 +83,8 @@ const { gaMeasurementId } = siteConfig.analytics;
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
+    <meta property="og:site_name" content="Alot of Land LLC" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageUrl} />
@@ -61,6 +110,9 @@ const { gaMeasurementId } = siteConfig.analytics;
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Global structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify(globalSchema)} />
 
     <!-- Page-specific head content (e.g. Leaflet CSS) -->
     <slot name="head" />

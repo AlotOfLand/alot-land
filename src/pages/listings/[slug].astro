@@ -49,6 +49,51 @@ if (gps) {
   const [lat, lng] = gps.split(',').map(s => s.trim());
   mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
 }
+
+// ── Structured data for this listing ─────────────────────────────────────────
+const siteOrigin = `https://${siteConfig.domain}`;
+const priceNumeric = price ? Number(price.replace(/[^0-9.]/g, '')) || undefined : undefined;
+const schemaAvailability =
+  status === 'available'   ? 'https://schema.org/InStock'  :
+  status === 'coming-soon' ? 'https://schema.org/PreOrder' :
+                             'https://schema.org/SoldOut';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home',     item: siteOrigin },
+    { '@type': 'ListItem', position: 2, name: 'Listings', item: `${siteOrigin}/listings` },
+    { '@type': 'ListItem', position: 3, name: title },
+  ],
+};
+
+const listingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: title,
+  description: pageDescription,
+  image: photos.map(p => p.startsWith('http') ? p : `${siteOrigin}${p}`),
+  url: canonicalUrl,
+  brand: { '@type': 'Organization', name: 'Alot of Land LLC' },
+  offers: {
+    '@type': 'Offer',
+    priceCurrency: 'USD',
+    ...(priceNumeric ? { price: priceNumeric } : { priceSpecification: { '@type': 'UnitPriceSpecification', description: 'Contact for Price' } }),
+    availability: schemaAvailability,
+    url: canonicalUrl,
+    seller: { '@type': 'Organization', name: 'Alot of Land LLC' },
+  },
+  additionalProperty: [
+    { '@type': 'PropertyValue', name: 'Acreage',     value: `${acreage} acres` },
+    { '@type': 'PropertyValue', name: 'County',      value: county },
+    { '@type': 'PropertyValue', name: 'State',       value: state },
+    ...(zoning     ? [{ '@type': 'PropertyValue', name: 'Zoning',      value: zoning }]     : []),
+    ...(roadAccess ? [{ '@type': 'PropertyValue', name: 'Road Access', value: roadAccess }] : []),
+    ...(water      ? [{ '@type': 'PropertyValue', name: 'Water',       value: water }]      : []),
+    ...(power      ? [{ '@type': 'PropertyValue', name: 'Utilities',   value: power }]      : []),
+  ],
+};
 ---
 
 <BaseLayout
@@ -58,6 +103,9 @@ if (gps) {
   ogType="article"
   noChat={true}
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(listingSchema)} />
+
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Back link -->
     <a href="/listings" class="inline-flex items-center gap-2 text-sm text-text-muted hover:text-bg-dark transition-colors mb-6">

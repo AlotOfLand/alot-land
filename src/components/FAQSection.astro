@@ -19,7 +19,34 @@ const sellingR = rendered.filter(f => f.data.category === 'selling');
 const generalR = rendered.filter(f => f.data.category === 'general');
 
 if (faqs.length === 0) return;
+
+// Strip markdown for plain-text schema answers
+function stripMd(text: string): string {
+  return text
+    .replace(/#{1,6}\s+/g, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/\n+/g, ' ')
+    .trim();
+}
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.data.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: stripMd(f.body),
+    },
+  })),
+};
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
 <section class="py-20 bg-white">
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
