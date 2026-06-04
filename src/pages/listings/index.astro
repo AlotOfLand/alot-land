@@ -7,19 +7,34 @@ const allListings = await getCollection('listings');
 const sorted = allListings.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const states = ['Arizona', 'Tennessee'];
 
+// Parse "lat,lng" out of the single GPS field. Tolerates extra spaces and
+// trailing commas, so a malformed coordinate can never break the build.
+function parseGps(gps?: string): { lat: number; lng: number } | null {
+  if (!gps) return null;
+  const [latStr, lngStr] = gps.split(',').map(s => s.trim());
+  const lat = parseFloat(latStr);
+  const lng = parseFloat(lngStr);
+  if (Number.isNaN(lat) || Number.isNaN(lng)) return null;
+  return { lat, lng };
+}
+
 const mapListings = sorted
-  .filter(l => l.data.lat && l.data.lng)
-  .map(l => ({
-    slug: l.slug,
-    title: l.data.title,
-    status: l.data.status,
-    state: l.data.state,
-    acreage: l.data.acreage,
-    price: l.data.price || 'Contact for Price',
-    lat: l.data.lat,
-    lng: l.data.lng,
-    photo: l.data.photos[0] || '',
-  }));
+  .map(l => {
+    const coords = parseGps(l.data.gps);
+    if (!coords) return null;
+    return {
+      slug: l.slug,
+      title: l.data.title,
+      status: l.data.status,
+      state: l.data.state,
+      acreage: l.data.acreage,
+      price: l.data.price || 'Contact for Price',
+      lat: coords.lat,
+      lng: coords.lng,
+      photo: l.data.photos[0] || '',
+    };
+  })
+  .filter(Boolean);
 ---
 
 <BaseLayout title="Available Land" description="Browse available land for sale in Arizona and Tennessee. Off-market deals direct from Alot of Land LLC.">

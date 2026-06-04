@@ -29,8 +29,6 @@ const listings = defineCollection({
     showDaysOnMarket: z.boolean().default(false),
     buyerTestimonial: z.string().optional(),
     buyerName: z.string().optional(),
-    lat: z.coerce.number().optional(),
-    lng: z.coerce.number().optional(),
     community: z.string().optional(),
     date: z.coerce.date(),
   }),

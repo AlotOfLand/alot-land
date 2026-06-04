@@ -23,7 +23,7 @@ collections:
       - { label: "Road Access", name: "roadAccess", widget: "string", required: false }
       - { label: "Water", name: "water", widget: "string", required: false }
       - { label: "Power/Utilities", name: "power", widget: "string", required: false }
-      - { label: "GPS Coordinates", name: "gps", widget: "string", required: false }
+      - { label: "GPS Coordinates", name: "gps", widget: "string", required: false, hint: "Paste both coordinates from Google Maps as lat,lng — e.g. 35.6734,-86.7715. This places the map pin automatically." }
       - { label: "Video URL (YouTube or Vimeo)", name: "videoUrl", widget: "string", required: false }
       - { label: "Show Video on Listing Page", name: "showVideo", widget: "boolean", default: true, required: false, hint: "Toggle off to hide the video without deleting the URL" }
       - { label: "Zillow Listing URL", name: "zillowUrl", widget: "string", required: false, hint: "Paste the full Zillow listing URL — e.g. https://www.zillow.com/homedetails/..." }
@@ -35,8 +35,6 @@ collections:
       - { label: "Show Days on Market", name: "showDaysOnMarket", widget: "boolean", default: false, required: false, hint: "When both Date Listed and Date Sold are filled in, this displays the calculated days on market on the listing page" }
       - { label: "Buyer Testimonial", name: "buyerTestimonial", widget: "text", required: false, hint: "Add when sold — appears as a quote on the listing page" }
       - { label: "Buyer Name", name: "buyerName", widget: "string", required: false, hint: "e.g. John D. or Allan R. Koepsell" }
-      - { label: "Latitude", name: "lat", widget: "string", required: false, hint: "e.g. 36.3789 — find at maps.google.com (right-click any spot → copy coordinates)" }
-      - { label: "Longitude", name: "lng", widget: "string", required: false, hint: "e.g. -84.9123 — must be negative for US locations" }
       - { label: "Community (optional)", name: "community", widget: "relation", collection: "communities", search_fields: ["title"], value_field: "{{slug}}", display_fields: ["title"], required: false, hint: "Link this listing to a community subdivision if applicable" }
       - label: "Nearby Amenities Photos"
         name: "amenityPhotos"
