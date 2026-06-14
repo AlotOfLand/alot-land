@@ -2,8 +2,22 @@ backend:
   name: git-gateway
   branch: main
 
+# Fallback (default) media library — used only if Cloudinary fails to load
 media_folder: "public/images"
 public_folder: "/images"
+
+# Cloudinary media library: multi-select bulk upload + auto WebP/AVIF + auto
+# quality, served from Cloudinary's CDN. cloud_name & api_key are safe to expose;
+# the API secret is NOT here and must stay private.
+media_library:
+  name: cloudinary
+  output_filename_only: false
+  config:
+    cloud_name: doex0egtl
+    api_key: "782436327598791"
+    default_transformations:
+      - - fetch_format: auto
+          quality: auto
 
 collections:
   - name: "listings"
