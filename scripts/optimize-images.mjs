@@ -4,8 +4,8 @@
  * Resizes any image in public/images/ that exceeds MAX_WIDTH to MAX_WIDTH px,
  * re-saves as JPEG at QUALITY%, and logs what it did.
  *
- * PNG files with no transparency are converted to JPEG.
- * PNG files WITH transparency are resized but kept as PNG (preserves logos, etc.).
+ * Each image is re-encoded in its OWN format (extension never changes), so the
+ * optimized file is safe to commit back without breaking any /images/ reference.
  * Files already within the size limit are skipped instantly.
  */
 
@@ -35,14 +35,12 @@ async function walk(dir) {
 }
 
 async function processImage(filePath) {
+  const ext = extname(filePath).toLowerCase();
   const img = sharp(filePath);
   const meta = await img.metadata();
-  const { width, height, hasAlpha, format } = meta;
+  const { width, height } = meta;
 
   const needsResize = (width > MAX_WIDTH) || (height > MAX_HEIGHT);
-
-  // Nothing to do?
-  if (!needsResize && format === 'jpeg') return { skipped: true, filePath };
 
   let pipeline = img;
 
@@ -55,9 +53,12 @@ async function processImage(filePath) {
     });
   }
 
-  // Convert to JPEG unless PNG with transparency
-  if (format === 'png' && hasAlpha) {
-    pipeline = pipeline.png({ quality: QUALITY, compressionLevel: 8 });
+  // Re-encode in the SAME format as the source extension — never rename a file,
+  // so committing the result back can't break any /images/ reference.
+  if (ext === '.png') {
+    pipeline = pipeline.png({ compressionLevel: 9, palette: true });
+  } else if (ext === '.webp') {
+    pipeline = pipeline.webp({ quality: QUALITY });
   } else {
     pipeline = pipeline.jpeg({ quality: QUALITY, mozjpeg: true });
   }
@@ -66,8 +67,11 @@ async function processImage(filePath) {
   const buf = await pipeline.toBuffer();
   const after = buf.length;
 
-  // Only write back if we actually saved space (skip already-tiny PNGs, etc.)
+  // Only write back if we actually saved space (skip already-optimal files)
   if (after >= before && !needsResize) return { skipped: true, filePath };
+  // If a resize was needed but re-encode somehow grew the file, still keep the
+  // resized result only when it's genuinely smaller.
+  if (after >= before) return { skipped: true, filePath };
 
   await sharp(buf).toFile(filePath);
 
