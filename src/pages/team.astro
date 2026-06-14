@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import { siteConfig } from '../config/site.js';
 
 const allMembers = await getCollection('team');
 const members = allMembers
@@ -10,12 +11,25 @@ const members = allMembers
 const rendered = await Promise.all(
   members.map(async m => ({ ...m, rendered: await render(m) }))
 );
+
+const siteOrigin = `https://${siteConfig.domain}`;
+const teamSchema = members.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@graph': members.map(m => ({
+    '@type': 'Person',
+    name: m.data.name,
+    jobTitle: m.data.role,
+    worksFor: { '@type': 'Organization', name: siteConfig.name, url: siteOrigin },
+    ...(m.data.photo ? { image: m.data.photo.startsWith('http') ? m.data.photo : `${siteOrigin}${m.data.photo}` } : {}),
+  })),
+} : null;
 ---
 
 <BaseLayout
   title="Our Team"
   description="Meet the team behind Alot of Land LLC — buying and selling land across Arizona and Tennessee."
 >
+  {teamSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(teamSchema)} />}
   <!-- Hero -->
   <div class="bg-bg-dark text-white py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -31,19 +45,18 @@ const rendered = await Promise.all(
         <div class="grid sm:grid-cols-2 gap-10 max-w-3xl mx-auto">
           {rendered.map(member => (
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-              <!-- Photo -->
-              <div class="bg-gradient-to-br from-bg-dark to-gray-700 h-64 flex items-center justify-center">
-                {member.data.photo ? (
+              <!-- Photo (always-present initial avatar; photo covers it and hides itself on error) -->
+              <div class="relative bg-gradient-to-br from-bg-dark to-gray-700 h-64 flex items-center justify-center">
+                <div class="w-24 h-24 rounded-full bg-gold flex items-center justify-center font-display font-black text-bg-dark text-4xl">
+                  {member.data.name.charAt(0)}
+                </div>
+                {member.data.photo && (
                   <img
                     src={member.data.photo}
                     alt={member.data.name}
-                    class="w-full h-full object-cover object-top"
-                    onerror="this.parentElement.innerHTML='<div class=\'w-24 h-24 rounded-full bg-gold flex items-center justify-center font-display font-black text-bg-dark text-4xl\'>' + this.alt.charAt(0) + '</div>'"
+                    class="absolute inset-0 w-full h-full object-cover object-top"
+                    onerror="this.style.display='none'"
                   />
-                ) : (
-                  <div class="w-24 h-24 rounded-full bg-gold flex items-center justify-center font-display font-black text-bg-dark text-4xl">
-                    {member.data.name.charAt(0)}
-                  </div>
                 )}
               </div>
 

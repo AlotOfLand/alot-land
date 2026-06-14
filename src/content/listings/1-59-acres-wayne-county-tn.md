@@ -25,8 +25,6 @@ buyerTestimonial: "I got a great deal on this property. What I love most is the
   year round flowing creek in the back of the lot. This is a beautiful piece of
   property. "
 buyerName: Verified Buyer
-lat: 35.3387
-lng: -87.9762
 ---
 Unrestricted 1.59-acre tract in Clifton featuring over 100 feet of road frontage on David Brown Road. 
 

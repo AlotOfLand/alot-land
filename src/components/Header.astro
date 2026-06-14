@@ -38,9 +38,11 @@ const standaloneLinks = [
   { label: 'Contact', href: '/contact' },
 ];
 
-// Determine if a dropdown is "active" (any child matches current path)
+// Determine if a dropdown is "active" (any child matches current path).
+// Exact match, or a true sub-path (so /listings doesn't light up on /listings/favorites
+// while still matching /listings/<slug>). Compares the closest (longest) matching link.
 function dropdownActive(links: { href: string }[]) {
-  return links.some(l => currentPath.startsWith(l.href));
+  return links.some(l => currentPath === l.href || currentPath.startsWith(l.href + '/'));
 }
 ---
 

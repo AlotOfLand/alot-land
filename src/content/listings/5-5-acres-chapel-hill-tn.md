@@ -18,7 +18,7 @@ photos:
   - /images/img_9221.jpg
   - /images/img_9222.jpg
   - /images/img_9231.jpg
-  - /images/screenshot-2026-03-12-at-11.47.24.png
+  - /images/screenshot-2026-03-12-at-11.47.24.jpg
   - /images/img_9223.jpg
 date: 2026-03-30T11:01:00.000-05:00
 showDaysOnMarket: false

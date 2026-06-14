@@ -14,13 +14,11 @@ gps: 35.2953,-113.174
 zillowUrl: https://www.zillow.com/homedetails/301-17-N-Sandy-Faye-Way-8-Seligman-AZ-86337/462443964_zpid/
 showZillow: true
 photos:
-  - /images/screenshot-2026-05-07-at-17.22.44.png
-  - /images/screenshot-2026-05-07-at-17.23.30.png
-  - /images/screenshot-2026-05-07-at-17.22.33.png
-  - /images/screenshot-2026-05-07-at-17.32.10.png
+  - /images/screenshot-2026-05-07-at-17.22.44.jpg
+  - /images/screenshot-2026-05-07-at-17.23.30.jpg
+  - /images/screenshot-2026-05-07-at-17.22.33.jpg
+  - /images/screenshot-2026-05-07-at-17.32.10.jpg
 date: 2026-05-15T18:00:00.000-07:00
-lat: 35.2953
-lng: -113.174
 ---
 If you’ve been waiting for the right Arizona land deal, this is it.
 

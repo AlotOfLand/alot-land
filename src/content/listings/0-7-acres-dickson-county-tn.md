@@ -19,8 +19,6 @@ date: 2025-03-25T17:00:00.000-07:00
 dateSold: 2026-04-15T06:00:00.000-07:00
 buyerTestimonial: We are lucky to have found this property at this price. It is
   a great property to build on in a great area in Dickson
-lat: 36.0755
-lng: -87.3584
 ---
 One of the last available lots, in a well-established neighborhood. This property offers water, sewer and electric at the road.
 

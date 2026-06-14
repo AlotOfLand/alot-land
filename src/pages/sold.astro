@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ListingCard from '../components/ListingCard.astro';
 import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site.js';
 
 const allListings = await getCollection('listings');
 const soldListings = allListings
@@ -10,12 +11,38 @@ const soldListings = allListings
 
 const soldCount = soldListings.length;
 const withTestimonials = soldListings.filter(l => l.data.buyerTestimonial);
+
+const siteOrigin = `https://${siteConfig.domain}`;
+const soldSchema = soldCount > 0 ? {
+  '@context': 'https://schema.org',
+  '@graph': soldListings.map(l => ({
+    '@type': 'Product',
+    name: l.data.title,
+    url: `${siteOrigin}/listings/${l.slug}`,
+    ...(l.data.photos[0] ? { image: l.data.photos[0].startsWith('http') ? l.data.photos[0] : `${siteOrigin}${l.data.photos[0]}` } : {}),
+    category: 'Land',
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/SoldOut',
+      seller: { '@type': 'Organization', name: siteConfig.name },
+    },
+    ...(l.data.buyerTestimonial ? {
+      review: {
+        '@type': 'Review',
+        reviewBody: l.data.buyerTestimonial,
+        author: { '@type': 'Person', name: l.data.buyerName || 'Verified Buyer' },
+      },
+    } : {}),
+  })),
+} : null;
 ---
 
 <BaseLayout
   title="Sold Properties"
   description="Browse our closed land deals in Arizona and Tennessee. Real transactions, real buyers, real results."
 >
+  {soldSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(soldSchema)} />}
   <!-- Hero -->
   <div class="bg-bg-dark text-white py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,5 +1,10 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
+import { siteConfig } from '../config/site.js';
+
+const contactSettings = await getEntry('settings', 'contact');
+const phone    = contactSettings?.data.phone    ?? siteConfig.phone;
+const phoneRaw = contactSettings?.data.phoneRaw ?? siteConfig.phoneRaw;
 
 const allFaqs = await getCollection('faqs').catch(() => []);
 const faqs = allFaqs
@@ -72,7 +77,7 @@ const faqSchema = {
             {buyingR.map((faq, i) => (
               <div class="faq-item border border-gray-100 rounded-2xl overflow-hidden bg-bg-light" data-faq={`buying-${i}`}>
                 <button
-                  class="faq-trigger w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+                  class="faq-trigger w-full flex items-center justify-between gap-4 px-5 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset rounded-2xl"
                   aria-expanded="false"
                 >
                   <span class="font-semibold text-bg-dark text-sm leading-snug">{faq.data.question}</span>
@@ -104,7 +109,7 @@ const faqSchema = {
             {sellingR.map((faq, i) => (
               <div class="faq-item border border-gray-100 rounded-2xl overflow-hidden bg-bg-light" data-faq={`selling-${i}`}>
                 <button
-                  class="faq-trigger w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+                  class="faq-trigger w-full flex items-center justify-between gap-4 px-5 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-inset rounded-2xl"
                   aria-expanded="false"
                 >
                   <span class="font-semibold text-bg-dark text-sm leading-snug">{faq.data.question}</span>
@@ -166,8 +171,8 @@ const faqSchema = {
         <a href="/contact" class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors text-sm">
           Contact Us
         </a>
-        <a href="tel:6155386878" class="border border-bg-dark text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-bg-dark hover:text-white transition-colors text-sm">
-          📞 (615) 538-6878
+        <a href={`tel:${phoneRaw}`} class="border border-bg-dark text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-bg-dark hover:text-white transition-colors text-sm">
+          📞 {phone}
         </a>
       </div>
     </div>

@@ -1,9 +1,25 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { siteConfig } from '../../config/site.js';
 
 const allCommunities = await getCollection('communities');
 const sorted = allCommunities.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const siteOrigin = `https://${siteConfig.domain}`;
+const communitiesSchema = sorted.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Communities',
+  description: 'Curated land communities and subdivisions from Alot of Land LLC.',
+  url: `${siteOrigin}/communities`,
+  hasPart: sorted.map(c => ({
+    '@type': 'Place',
+    name: c.data.title,
+    url: `${siteOrigin}/communities/${c.slug}`,
+    ...(c.data.location ? { address: c.data.location } : {}),
+  })),
+} : null;
 
 const allListings = await getCollection('listings');
 
@@ -30,6 +46,7 @@ const statusColor: Record<string, string> = {
 ---
 
 <BaseLayout title="Communities" description="Browse land communities and subdivisions from Alot of Land LLC. Find your lot in one of our curated communities across Arizona, Tennessee, and Arkansas.">
+  {communitiesSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(communitiesSchema)} />}
   <div class="bg-bg-dark text-white py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Communities</h1>
