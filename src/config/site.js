@@ -13,10 +13,10 @@ export const siteConfig = {
     zip: "85016",
   },
   social: {
-    facebook: "https://www.facebook.com/davidthelandguy",
+    facebook: "https://www.facebook.com/share/189qLCsxS8/?mibextid=wwXIfr",
     instagram: "https://www.instagram.com/davidthelandguy/",
     youtube: "https://www.youtube.com/@davidthelandguy",
-    linkedin: "https://www.linkedin.com/in/davidthelandguy/",
+    linkedin: "https://www.linkedin.com/in/davidbuysland/",
     tiktok: "https://www.tiktok.com/@davidthelandguy",
   },
   analytics: {
