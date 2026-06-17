@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TestimonialSection from '../components/TestimonialSection.astro';
 ---
 
 <BaseLayout
@@ -18,6 +19,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </p>
     </div>
   </div>
+
+  <!-- How it works / reassurance -->
+  <div class="bg-bg-light border-b border-gray-100">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-3 gap-8 text-center">
+        {[
+          { icon: '📝', title: 'Tell Us What You Want', desc: 'Your target area, budget, acreage, and how you plan to use the land.' },
+          { icon: '📬', title: 'We Source It Off-Market', desc: 'We reach out to landowners directly to find parcels that match — before they hit the market.' },
+          { icon: '✅', title: 'Free & No Obligation', desc: "There's no cost to use this. If we find the right deal, we bring it to you." },
+        ].map(item => (
+          <div>
+            <div class="text-3xl mb-3">{item.icon}</div>
+            <h3 class="font-display font-bold text-bg-dark mb-2">{item.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonial -->
+  <TestimonialSection variant="light" max={1} />
 
   <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">

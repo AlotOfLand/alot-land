@@ -5,7 +5,7 @@ featured: true
 state: Tennessee
 county: Wayne
 acreage: "1.59"
-price: $21,000
+price: "$21,000"
 zoning: Residential
 roadAccess: 191 ft of Road Frontage
 water: "-"

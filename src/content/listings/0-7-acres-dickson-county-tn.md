@@ -5,7 +5,7 @@ featured: true
 state: Tennessee
 county: Dickson
 acreage: ".7"
-price: $72,000
+price: "$72,000"
 zoning: Residential
 roadAccess: 168 ft Road Frontage - Corner Lot
 water: City Water

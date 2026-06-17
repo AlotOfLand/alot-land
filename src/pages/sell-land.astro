@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TestimonialSection from '../components/TestimonialSection.astro';
 ---
 
 <BaseLayout
@@ -23,8 +24,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 
+  <!-- Reassurance band -->
+  <div class="bg-bg-light border-b border-gray-100">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid sm:grid-cols-3 gap-8 text-center">
+        {[
+          { icon: '📊', title: 'A Fair Offer — Not a Lowball', desc: 'Every offer is based on recent comparable sales in your area. We tell you how we got there.' },
+          { icon: '🤝', title: 'David Reviews It Personally', desc: 'You deal directly with David — no call centers, no middlemen, no pressure.' },
+          { icon: '⚡', title: 'Cash, Closed Fast', desc: 'No agent fees, no commissions. We buy as-is and can close in as little as 2 weeks.' },
+        ].map(item => (
+          <div>
+            <div class="text-3xl mb-3">{item.icon}</div>
+            <h3 class="font-display font-bold text-bg-dark mb-2">{item.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonial -->
+  <TestimonialSection variant="light" max={1} />
+
   <!-- Form -->
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <h2 class="font-display font-black text-2xl sm:text-3xl text-bg-dark text-center mb-3">Get Your Free Cash Offer</h2>
+    <p class="text-gray-500 text-center mb-8 max-w-xl mx-auto">Tell us about your land below. There's no obligation — if the offer isn't right for you, no problem.</p>
     <iframe
       src="https://brand.alot.land/widget/form/5nUi108ccuZMBuvv27Zd"
       style="width:100%;height:2316px;border:none;border-radius:8px"

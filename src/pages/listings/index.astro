@@ -227,7 +227,7 @@ const mapListings = sorted
         JSON.parse(raw.textContent || '[]').forEach(function (l) {
           var popup =
             '<div style="min-width:180px;font-family:sans-serif;">' +
-            (l.photo ? '<img src="' + l.photo + '" style="width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:8px;"/>' : '') +
+            (l.photo ? '<img src="' + l.photo + '" alt="' + l.title + '" style="width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:8px;"/>' : '') +
             '<div style="font-weight:700;font-size:14px;margin-bottom:4px;">' + l.title + '</div>' +
             '<div style="font-size:12px;color:#888;margin-bottom:6px;">' + l.acreage + ' acres · ' + l.state + '</div>' +
             '<div style="font-weight:700;color:' + (l.status === 'available' ? '#F5B800' : l.status === 'coming-soon' ? '#3B82F6' : '#888') + ';margin-bottom:10px;">' +
@@ -269,6 +269,8 @@ const mapListings = sorted
 
       // ── Toggle map ────────────────────────────────────────
       function toggleMap() {
+        // Never let both map and grid be hidden — keep at least one visible
+        if (mapVisible && !gridVisible) return;
         mapVisible = !mapVisible;
         mapSection.classList.toggle('hidden', !mapVisible);
         labelMap.textContent = mapVisible ? 'Hide Map' : 'Show Map';
@@ -281,19 +283,37 @@ const mapListings = sorted
 
       // ── Toggle grid ───────────────────────────────────────
       function toggleGrid() {
+        // Never let both map and grid be hidden — keep at least one visible
+        if (gridVisible && !mapVisible) return;
         gridVisible = !gridVisible;
         gridSection.classList.toggle('hidden', !gridVisible);
         labelGrid.textContent = gridVisible ? 'Hide Grid' : 'Show Grid';
         btnToggleGrid.classList.toggle('bg-gray-100', !gridVisible);
       }
 
+      // ── URL sync (so filters survive back/forward + sharing) ──
+      function syncUrl() {
+        var params = new URLSearchParams();
+        if (activeState  !== 'all') params.set('state',  activeState);
+        if (activeStatus !== 'all') params.set('status', activeStatus);
+        var qs = params.toString();
+        history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+      }
+
       // ── Events ────────────────────────────────────────────
-      if (stateSelect) stateSelect.addEventListener('change', function () { activeState = stateSelect.value; applyFilters(); });
-      statusBtns.forEach(function (btn) { btn.addEventListener('click', function () { activeStatus = btn.getAttribute('data-status'); applyFilters(); }); });
+      if (stateSelect) stateSelect.addEventListener('change', function () { activeState = stateSelect.value; applyFilters(); syncUrl(); });
+      statusBtns.forEach(function (btn) { btn.addEventListener('click', function () { activeStatus = btn.getAttribute('data-status'); applyFilters(); syncUrl(); }); });
       if (btnToggleMap)  btnToggleMap.addEventListener('click',  toggleMap);
       if (btnToggleGrid) btnToggleGrid.addEventListener('click', toggleGrid);
 
       // ── Boot ──────────────────────────────────────────────
+      (function readUrl() {
+        var params = new URLSearchParams(location.search);
+        var s  = params.get('state');
+        var st = params.get('status');
+        if (s)  { activeState  = s;  if (stateSelect) stateSelect.value = s; }
+        if (st) { activeStatus = st; }
+      })();
       initMap();
       applyFilters();
 

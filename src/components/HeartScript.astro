@@ -199,10 +199,13 @@
       .forEach(b => paintHeart(b, nowFav));
     refreshBadge();
 
-    // Show modal on every heart-ADD until email captured or user skips
-    if (nowFav && !localStorage.getItem(EMAIL_SHOWN_KEY)) {
+    // Show the email-capture modal ONCE, and only after the 2nd save — so a
+    // single casual heart never interrupts browsing. Mark shown immediately so
+    // it won't pop again whether they submit or dismiss.
+    if (nowFav && getFavorites().length >= 2 && !localStorage.getItem(EMAIL_SHOWN_KEY)) {
+      markEmailCaptured();
       const allTitles = getAllHeartedTitles();
-      setTimeout(() => openModal(allTitles), 350);
+      setTimeout(() => openModal(allTitles), 400);
     }
   });
 
