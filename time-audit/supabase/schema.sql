@@ -36,7 +36,7 @@ create table if not exists public.time_entries (
   occurred_on  date not null,
   minutes      int  not null check (minutes >= 0),
   notes        text,
-  source       text not null default 'manual' check (source in ('manual','timer')),
+  source       text not null default 'manual' check (source in ('manual','timer','block')),
   started_at   timestamptz,
   ended_at     timestamptz,
   created_at   timestamptz not null default now()

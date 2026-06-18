@@ -82,6 +82,26 @@ export function combineDateAndTime(dayDate, hhmm) {
   return d;
 }
 
+// Bedtime "last night" -> a Date relative to the morning you woke (`dayDate`).
+// PM hours (>= noon) are treated as the prior evening (day - 1); AM hours as the
+// early hours of `dayDate` itself. e.g. for a wake day of May 21:
+//   "23:00" -> May 20 23:00   "00:30" -> May 21 00:30
+export function combineBedtime(dayDate, hhmm) {
+  const [h, m] = hhmm.split(':').map(Number);
+  const d = new Date(dayDate);
+  if ((h || 0) >= 12) d.setDate(d.getDate() - 1);
+  d.setHours(h || 0, m || 0, 0, 0);
+  return d;
+}
+
+// Minutes between bedtime and wake. Returns null if either is missing or the
+// result is non-positive (bad data).
+export function sleepMinutes(sleepAt, wakeAt) {
+  if (!sleepAt || !wakeAt) return null;
+  const mins = Math.round((new Date(wakeAt) - new Date(sleepAt)) / 60000);
+  return mins > 0 ? mins : null;
+}
+
 export function fmtElapsed(sec) {
   const h = Math.floor(sec / 3600);
   const m = Math.floor((sec % 3600) / 60);

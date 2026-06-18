@@ -146,13 +146,16 @@ create table public.day_journal (
   user_id     uuid not null references auth.users(id) on delete cascade,
   day         date not null,
   wake_at     timestamptz,
+  sleep_at    timestamptz,   -- prior night's bedtime (migration 005)
   notes       text,
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now(),
   unique (user_id, day)
 );
 ```
-Per-day record. Currently used for `wake_at` (when the user got up). The Timeline view requires a `wake_at` to start.
+Per-day record keyed by `day` = the morning you woke up.
+- `wake_at` — that morning's wake time (a timestamp on `day`). The Timeline view requires a `wake_at` to start.
+- `sleep_at` — the prior night's bedtime. Usually a timestamp on `day - 1` evening (e.g. 23:00) or early `day` after midnight (e.g. 00:30). Sleep **duration** is derived as `wake_at - sleep_at`; the app shows it on the wake card and in the daily PDF header ("Slept 7h 30m"). Nullable — rows without it just omit the sleep figures.
 
 ### 5.6 `hidden_weeks`
 ```sql
@@ -476,7 +479,7 @@ Body:
 ```
 `tier` must be one of the four enum values exactly.
 
-**Set wake-up time for a day** (upsert)
+**Set wake-up time and bedtime for a day** (upsert)
 ```
 POST /rest/v1/day_journal
 Prefer: resolution=merge-duplicates,return=representation
@@ -484,9 +487,14 @@ Body:
 {
   "user_id": "<user_uuid>",
   "day": "2026-05-21",
-  "wake_at": "2026-05-21T07:00:00-07:00"
+  "wake_at":  "2026-05-21T06:00:00-07:00",
+  "sleep_at": "2026-05-20T22:30:00-07:00"
 }
 ```
+- `day` is the morning the user woke up. `wake_at` is a timestamp on that day.
+- `sleep_at` is the **prior night's bedtime** — almost always a timestamp on `day - 1` evening (or early `day` after midnight). The agent should write the explicit full timestamp; do NOT rely on the in-app hour heuristic.
+- Sleep duration is computed downstream as `wake_at - sleep_at`. If `sleep_at >= wake_at` (bad data) the app shows no duration.
+- Either field can be omitted; merge-duplicates means you can set `wake_at` in the morning and `sleep_at` later without overwriting the other.
 
 **Set focus / reflection for a week** (upsert; `week_start` must be Thursday)
 ```
@@ -582,6 +590,7 @@ If you're standing up a fresh Supabase project against this codebase, run the SQ
 3. `supabase/migration_002_timeline.sql` — `day_journal` + `'block'` source on `time_entries`
 4. `supabase/migration_003_hidden_weeks.sql` — `hidden_weeks` table
 5. `supabase/migration_004_allowed_emails.sql` — DB-managed allow-list + RPCs
+6. `supabase/migration_005_sleep.sql` — adds `day_journal.sleep_at` (bedtime)
 
 There's no automated migration runner; these are pasted into the Supabase SQL Editor.
 
@@ -595,4 +604,4 @@ There's no automated migration runner; these are pasted into the Supabase SQL Ed
 
 ---
 
-*Last updated 2026-05-21. The canonical version of this doc lives at `time-audit/docs/AGENT_SCOPE.md` in the `AlotOfLand/alot-land` repo. If you need details that aren't here, the source of truth is the SQL in `time-audit/supabase/` and the query library in `time-audit/src/lib/queries.js`.*
+*Last updated 2026-05-21 (added `day_journal.sleep_at` for sleep-duration; see migration 005). The canonical version of this doc lives at `time-audit/docs/AGENT_SCOPE.md` in the `AlotOfLand/alot-land` repo. If you need details that aren't here, the source of truth is the SQL in `time-audit/supabase/` and the query library in `time-audit/src/lib/queries.js`.*
