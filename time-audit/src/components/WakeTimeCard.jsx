@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchDayJournal, upsertDayJournal } from '../lib/queries';
-import { toISODate, combineDateAndTime, fmtTime, fmtTime24 } from '../lib/dates';
+import {
+  toISODate, combineDateAndTime, combineBedtime, sleepMinutes,
+  fmtTime, fmtTime24, fmtMin,
+} from '../lib/dates';
 
 export default function WakeTimeCard({ day }) {
   const qc = useQueryClient();
@@ -13,16 +16,19 @@ export default function WakeTimeCard({ day }) {
   });
 
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState('07:00');
+  const [wakeVal, setWakeVal] = useState('07:00');
+  const [sleepVal, setSleepVal] = useState('23:00');
 
   useEffect(() => {
-    if (journal?.wake_at) setValue(fmtTime24(journal.wake_at));
+    if (journal?.wake_at) setWakeVal(fmtTime24(journal.wake_at));
+    if (journal?.sleep_at) setSleepVal(fmtTime24(journal.sleep_at));
   }, [journal]);
 
   const save = useMutation({
     mutationFn: () => {
-      const ts = combineDateAndTime(day, value);
-      return upsertDayJournal(day, { wake_at: ts.toISOString() });
+      const patch = { wake_at: combineDateAndTime(day, wakeVal).toISOString() };
+      if (sleepVal) patch.sleep_at = combineBedtime(day, sleepVal).toISOString();
+      return upsertDayJournal(day, patch);
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['day-journal', isoDay] });
@@ -31,54 +37,85 @@ export default function WakeTimeCard({ day }) {
   });
 
   const hasWake = !!journal?.wake_at;
+  const slept = sleepMinutes(journal?.sleep_at, journal?.wake_at);
 
   return (
     <div className="rounded-2xl border border-border bg-panel p-5 flex items-center gap-4">
-      <div className="w-9 h-9 rounded-full bg-gold/15 border border-gold/40 flex items-center justify-center text-gold">
+      <div className="w-9 h-9 rounded-full bg-gold/15 border border-gold/40 flex items-center justify-center text-gold shrink-0">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="13" r="7" /><path d="M12 9v4l2 2M5 3l3 2M19 3l-3 2" />
         </svg>
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="text-[11px] uppercase tracking-widest text-muted">Wake-up</div>
         {editing || !hasWake ? (
           <form
             onSubmit={(e) => { e.preventDefault(); save.mutate(); }}
-            className="mt-1 flex items-center gap-2"
+            className="flex flex-wrap items-end gap-x-4 gap-y-2"
           >
-            <input
-              type="time"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              className="bg-bg border border-border-hi rounded-lg px-3 py-1.5 text-sm outline-none focus:border-gold"
-            />
-            <button
-              type="submit"
-              disabled={save.isPending}
-              className="text-xs px-3 py-1.5 rounded-lg bg-gold text-bg font-medium disabled:opacity-60"
-            >
-              {hasWake ? 'Update' : 'Set'}
-            </button>
-            {hasWake && (
+            <label className="block">
+              <span className="text-[11px] uppercase tracking-widest text-muted">Wake-up</span>
+              <input
+                type="time"
+                value={wakeVal}
+                onChange={(e) => setWakeVal(e.target.value)}
+                className="mt-1 block bg-bg border border-border-hi rounded-lg px-3 py-1.5 text-sm outline-none focus:border-gold"
+              />
+            </label>
+            <label className="block">
+              <span className="text-[11px] uppercase tracking-widest text-muted">Bedtime (last night)</span>
+              <input
+                type="time"
+                value={sleepVal}
+                onChange={(e) => setSleepVal(e.target.value)}
+                className="mt-1 block bg-bg border border-border-hi rounded-lg px-3 py-1.5 text-sm outline-none focus:border-gold"
+              />
+            </label>
+            <div className="flex items-center gap-2 pb-0.5">
               <button
-                type="button"
-                onClick={() => setEditing(false)}
-                className="text-xs text-muted hover:text-text"
+                type="submit"
+                disabled={save.isPending}
+                className="text-xs px-3 py-1.5 rounded-lg bg-gold text-bg font-medium disabled:opacity-60"
               >
-                cancel
+                {hasWake ? 'Update' : 'Set'}
               </button>
-            )}
+              {hasWake && (
+                <button
+                  type="button"
+                  onClick={() => setEditing(false)}
+                  className="text-xs text-muted hover:text-text"
+                >
+                  cancel
+                </button>
+              )}
+            </div>
           </form>
         ) : (
-          <div className="mt-0.5 font-display text-2xl text-gold">{fmtTime(journal.wake_at)}</div>
+          <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+            <div>
+              <div className="text-[11px] uppercase tracking-widest text-muted">Wake-up</div>
+              <div className="mt-0.5 font-display text-2xl text-gold">{fmtTime(journal.wake_at)}</div>
+            </div>
+            {journal.sleep_at && (
+              <div>
+                <div className="text-[11px] uppercase tracking-widest text-muted">Bedtime</div>
+                <div className="mt-0.5 font-display text-2xl">{fmtTime(journal.sleep_at)}</div>
+              </div>
+            )}
+            {slept != null && (
+              <div>
+                <div className="text-[11px] uppercase tracking-widest text-muted">Slept</div>
+                <div className="mt-0.5 font-display text-2xl text-green">{fmtMin(slept)}</div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
       {hasWake && !editing && (
         <button
           onClick={() => setEditing(true)}
-          className="text-xs text-muted hover:text-text underline"
+          className="text-xs text-muted hover:text-text underline shrink-0"
         >
           edit
         </button>

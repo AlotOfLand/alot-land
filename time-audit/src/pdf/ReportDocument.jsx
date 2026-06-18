@@ -267,7 +267,9 @@ export default function ReportDocument({ mode = 'week', rangeStart, rangeEnd, da
               <View style={s.dayHeader} wrap={false}>
                 <Text style={s.dayHeaderTitle}>{day.dateLong}</Text>
                 <Text style={s.dayHeaderMeta}>
-                  {day.wakeAt ? `Woke ${fmtTime(day.wakeAt)} · ` : ''}{fmtMin(day.total)} logged
+                  {day.wakeAt ? `Woke ${fmtTime(day.wakeAt)} · ` : ''}
+                  {day.sleptMinutes ? `Slept ${fmtMin(day.sleptMinutes)} · ` : ''}
+                  {fmtMin(day.total)} logged
                 </Text>
               </View>
 

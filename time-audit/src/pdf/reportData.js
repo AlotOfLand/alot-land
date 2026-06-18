@@ -1,5 +1,5 @@
 import { TIERS, tierByKey } from '../lib/tiers';
-import { daysInRange, toISODate, format } from '../lib/dates';
+import { daysInRange, toISODate, format, sleepMinutes } from '../lib/dates';
 
 /**
  * Aggregate raw entries into structured data for the PDF report.
@@ -98,12 +98,16 @@ export function buildReportData({ rangeStart, rangeEnd, entries, prevEntries = [
         return 0;
       });
 
+    const wakeAt = journals[iso]?.wake_at || null;
+    const sleepAt = journals[iso]?.sleep_at || null;
     return {
       iso,
       dateLong: format(d, 'EEEE, MMM d'),
       label: format(d, 'EEE'),
       sub: format(d, 'M/d'),
-      wakeAt: journals[iso]?.wake_at || null,
+      wakeAt,
+      sleepAt,
+      sleptMinutes: sleepMinutes(sleepAt, wakeAt),
       items,
       tierTotals,
       total,
