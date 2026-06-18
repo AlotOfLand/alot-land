@@ -25,10 +25,22 @@ export default function WakeTimeCard({ day }) {
   }, [journal]);
 
   const save = useMutation({
-    mutationFn: () => {
-      const patch = { wake_at: combineDateAndTime(day, wakeVal).toISOString() };
-      if (sleepVal) patch.sleep_at = combineBedtime(day, sleepVal).toISOString();
-      return upsertDayJournal(day, patch);
+    mutationFn: async () => {
+      const wakeIso = combineDateAndTime(day, wakeVal).toISOString();
+      const sleepIso = sleepVal ? combineBedtime(day, sleepVal).toISOString() : null;
+      try {
+        return await upsertDayJournal(
+          day,
+          sleepIso ? { wake_at: wakeIso, sleep_at: sleepIso } : { wake_at: wakeIso },
+        );
+      } catch (err) {
+        // If the sleep_at column hasn't been migrated yet, still save wake-up
+        // so the Timeline isn't blocked. Sleep will save once migration 005 runs.
+        if (sleepIso && /sleep_at/i.test(err?.message || '')) {
+          return upsertDayJournal(day, { wake_at: wakeIso });
+        }
+        throw err;
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['day-journal', isoDay] });
@@ -54,20 +66,20 @@ export default function WakeTimeCard({ day }) {
             className="flex flex-wrap items-end gap-x-4 gap-y-2"
           >
             <label className="block">
-              <span className="text-[11px] uppercase tracking-widest text-muted">Wake-up</span>
-              <input
-                type="time"
-                value={wakeVal}
-                onChange={(e) => setWakeVal(e.target.value)}
-                className="mt-1 block bg-bg border border-border-hi rounded-lg px-3 py-1.5 text-sm outline-none focus:border-gold"
-              />
-            </label>
-            <label className="block">
               <span className="text-[11px] uppercase tracking-widest text-muted">Bedtime (last night)</span>
               <input
                 type="time"
                 value={sleepVal}
                 onChange={(e) => setSleepVal(e.target.value)}
+                className="mt-1 block bg-bg border border-border-hi rounded-lg px-3 py-1.5 text-sm outline-none focus:border-gold"
+              />
+            </label>
+            <label className="block">
+              <span className="text-[11px] uppercase tracking-widest text-muted">Wake-up</span>
+              <input
+                type="time"
+                value={wakeVal}
+                onChange={(e) => setWakeVal(e.target.value)}
                 className="mt-1 block bg-bg border border-border-hi rounded-lg px-3 py-1.5 text-sm outline-none focus:border-gold"
               />
             </label>
@@ -77,7 +89,7 @@ export default function WakeTimeCard({ day }) {
                 disabled={save.isPending}
                 className="text-xs px-3 py-1.5 rounded-lg bg-gold text-bg font-medium disabled:opacity-60"
               >
-                {hasWake ? 'Update' : 'Set'}
+                {save.isPending ? 'Saving…' : hasWake ? 'Update' : 'Set'}
               </button>
               {hasWake && (
                 <button
@@ -89,19 +101,24 @@ export default function WakeTimeCard({ day }) {
                 </button>
               )}
             </div>
+            {save.isError && (
+              <div className="w-full text-xs text-danger">
+                Couldn't save: {save.error?.message || 'unknown error'}
+              </div>
+            )}
           </form>
         ) : (
           <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
-            <div>
-              <div className="text-[11px] uppercase tracking-widest text-muted">Wake-up</div>
-              <div className="mt-0.5 font-display text-2xl text-gold">{fmtTime(journal.wake_at)}</div>
-            </div>
             {journal.sleep_at && (
               <div>
                 <div className="text-[11px] uppercase tracking-widest text-muted">Bedtime</div>
                 <div className="mt-0.5 font-display text-2xl">{fmtTime(journal.sleep_at)}</div>
               </div>
             )}
+            <div>
+              <div className="text-[11px] uppercase tracking-widest text-muted">Wake-up</div>
+              <div className="mt-0.5 font-display text-2xl text-gold">{fmtTime(journal.wake_at)}</div>
+            </div>
             {slept != null && (
               <div>
                 <div className="text-[11px] uppercase tracking-widest text-muted">Slept</div>
