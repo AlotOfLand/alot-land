@@ -1,6 +1,6 @@
 ---
 title: 160 Acres - Seligman, AZ
-status: sold
+status: under-contract
 featured: true
 state: Arizona
 county: Yavapai
