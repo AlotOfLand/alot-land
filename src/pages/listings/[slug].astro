@@ -20,9 +20,27 @@ const { listing } = Astro.props;
 const { Content } = await render(listing);
 const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, zillowUrl, showZillow, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
 
-const pageTitle = `${acreage} Acres for Sale${price ? ` — ${price}` : ''} | ${county} County, ${state}`;
+const loc = `${county} County, ${state}`;
+const pricePart = price ? ` — ${price}` : '';
+
+// Status-aware title (matches the share-image stamp). "for Sale" only when truly
+// available (best for SEO); sold drops the price.
+const pageTitle =
+  status === 'available'      ? `${acreage} Acres for Sale${pricePart} | ${loc}` :
+  status === 'coming-soon'    ? `${acreage} Acres — Coming Soon${pricePart} | ${loc}` :
+  status === 'under-contract' ? `${acreage} Acres — Under Contract${pricePart} | ${loc}` :
+                                `${acreage} Acres — SOLD | ${loc}`;
+
 const bodyText = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim();
-const pageDescription = `${acreage} acres of land for sale in ${county} County, ${state}${price ? `. Asking ${price}` : ''}. ${bodyText}`.slice(0, 155);
+
+// Status-aware description opener so it never contradicts the title/stamp
+const descLead =
+  status === 'available'      ? `${acreage} acres of land for sale in ${loc}` :
+  status === 'coming-soon'    ? `${acreage} acres in ${loc} — coming soon` :
+  status === 'under-contract' ? `${acreage} acres in ${loc} — under contract` :
+                                `${acreage} acres in ${loc} — sold`;
+const descPrice = status === 'sold' ? '' : (price ? `. Asking ${price}` : '');
+const pageDescription = `${descLead}${descPrice}. ${bodyText}`.slice(0, 155);
 const canonicalUrl = `https://${siteConfig.domain}/listings/${listing.slug}`;
 // Social-share image: the listing's first photo with the status stamped on it
 // (generated at build by src/pages/og/[slug].jpg.ts). The ?v=<status> tag busts
