@@ -24,7 +24,10 @@ const pageTitle = `${acreage} Acres for Sale${price ? ` — ${price}` : ''} | ${
 const bodyText = listing.body.replace(/[#*_`[\]()>~]/g, '').replace(/\s+/g, ' ').trim();
 const pageDescription = `${acreage} acres of land for sale in ${county} County, ${state}${price ? `. Asking ${price}` : ''}. ${bodyText}`.slice(0, 155);
 const canonicalUrl = `https://${siteConfig.domain}/listings/${listing.slug}`;
-const ogImage = photos[0] || '/images/og-image.jpg';
+// Social-share image: the listing's first photo with the status stamped on it
+// (generated at build by src/pages/og/[slug].jpg.ts). The ?v=<status> tag busts
+// social-platform image caches when a listing's status changes.
+const ogImage = `/og/${listing.slug}.jpg?v=${status}`;
 
 // Days on Market: only calculated when both dates exist and toggle is on
 let daysOnMarket: number | undefined;
