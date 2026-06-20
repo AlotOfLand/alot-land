@@ -8,7 +8,7 @@ interface Props {
 }
 const { title, url, price, acreage, state } = Astro.props;
 const encodedUrl   = encodeURIComponent(url);
-const shareText    = `${title}${acreage ? ` — ${acreage} acres` : ''}${price ? ` — ${price}` : ''}${state ? ` in ${state}` : ''} 🌎 Off-market land deal`;
+const shareText    = `${title}${acreage ? ` — ${acreage} acres` : ''}${price ? ` — ${price}` : ''}${state ? ` in ${state}` : ''} 🌎 Great land, great prices`;
 const encodedText  = encodeURIComponent(shareText);
 const smsBody      = encodeURIComponent(`${shareText}\n${url}`);
 const waText       = encodeURIComponent(`${shareText}\n${url}`);
