@@ -23,7 +23,7 @@ const excerpt = plain.slice(0, 120) + (plain.length > 120 ? '…' : '');
     <img
       src={firstPhoto}
       alt={`${acreage} acres for sale in ${county}, ${state}`}
-      class={`w-full h-48 object-cover ${status === 'sold' || status === 'coming-soon' ? 'brightness-50' : ''}`}
+      class={`w-full h-48 object-cover ${status === 'sold' || status === 'coming-soon' || status === 'under-contract' ? 'brightness-50' : ''}`}
     />
     <!-- Heart / favorite button -->
     <button
@@ -45,6 +45,12 @@ const excerpt = plain.slice(0, 120) + (plain.length > 120 ? '…' : '');
       <div class="absolute inset-0 flex items-center justify-center">
         <span class="text-blue-400 font-black text-3xl tracking-widest rotate-[-15deg] border-[6px] border-blue-400 px-4 py-1 rounded-lg select-none whitespace-nowrap" style="text-shadow: 2px 2px 0 rgba(0,0,0,0.4);">
           COMING SOON
+        </span>
+      </div>
+    ) : status === 'under-contract' ? (
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-orange-500 font-black text-2xl tracking-widest rotate-[-15deg] border-[6px] border-orange-500 px-4 py-1 rounded-lg select-none whitespace-nowrap" style="text-shadow: 2px 2px 0 rgba(0,0,0,0.4);">
+          UNDER CONTRACT
         </span>
       </div>
     ) : (

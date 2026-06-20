@@ -27,7 +27,7 @@ collections:
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Status", name: "status", widget: "select", options: ["available", "coming-soon", "sold"] }
+      - { label: "Status", name: "status", widget: "select", options: [{label: "Available", value: "available"}, {label: "Coming Soon", value: "coming-soon"}, {label: "Under Contract", value: "under-contract"}, {label: "Sold", value: "sold"}] }
       - { label: "Featured on Homepage", name: "featured", widget: "boolean", default: false }
       - { label: "State", name: "state", widget: "select", options: ["Arizona", "Tennessee"] }
       - { label: "County", name: "county", widget: "string" }

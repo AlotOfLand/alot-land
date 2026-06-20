@@ -4,7 +4,7 @@ const listings = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    status: z.enum(['available', 'sold', 'coming-soon']),
+    status: z.enum(['available', 'sold', 'coming-soon', 'under-contract']),
     featured: z.boolean().default(false),
     state: z.enum(['Arizona', 'Tennessee']),
     county: z.string(),
