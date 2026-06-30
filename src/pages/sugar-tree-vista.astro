@@ -94,7 +94,9 @@ const drives = [
 <!-- Leaflet (free OpenStreetMap maps — no API key, no billing) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-<style>
+<!-- is:global so styles also reach the map panel content injected at runtime by JS
+     (Astro scopes <style> to build-time elements only). Page is standalone, so global is page-local. -->
+<style is:global>
   :root{
     --pine:#0a1628; --pine-2:#13294d; --moss:#3b55a3; --meadow:#f5b800;
     --meadow-soft:#ffd76b; --gold-ink:#8f6e00; --river:#34508f;
@@ -248,7 +250,9 @@ const drives = [
   #areamap{width:100%;height:520px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;z-index:1}
   .area-listing{flex:0 0 36%;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
   .al-photo{width:100%;height:210px;background-size:cover;background-position:center;flex:none}
+  .al-photo-emoji{display:flex;align-items:center;justify-content:center;font-size:3.6rem}
   .al-body{padding:24px;display:flex;flex-direction:column}
+  .al-drive{align-self:flex-start;font-family:"DM Mono",monospace;font-size:.72rem;color:var(--river);background:var(--paper-2);border:1px solid var(--line);padding:5px 11px;border-radius:999px;margin-bottom:14px}
   .area-listing .al-cat{display:inline-block;align-self:flex-start;font-size:.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;color:#fff;margin-bottom:12px}
   .area-listing h3{font-size:1.3rem;line-height:1.22;margin:0 0 10px;color:var(--ink)}
   .area-listing .al-body p{color:var(--ink-soft);font-size:.93rem;line-height:1.55;margin:0 0 18px}
@@ -730,19 +734,19 @@ const drives = [
     var COL={water:'#3b55a3',park:'#2e6b34',golf:'#8f6e00',town:'#0a1628',day:'#c47f17',prop:'#f5b800'};
     var CATL={water:'Water & marinas',park:'State park',golf:'Golf',town:'Town',day:'Kentucky Lake day-trip',prop:'The property'};
     var PROP={n:'Sugar Tree Vista',c:'prop',lat:35.8067,lng:-88.0273,d:'The property — ten ridgeline view lots off Ray Miller Rd & Low Gap Rd, 5.4 to 11.4 acres, unrestricted, from $59,000.'};
-    // n=name c=category lat/lng d=blurb w=website img=photo (TODO: confirm image rights / self-host before publish)
+    // n=name c=category lat/lng mins=est. drive (PLACEHOLDER, David verifying) w=website img=photo (TODO: confirm rights / self-host)
     var PTS=[
-      {n:'The Ponderosa',c:'water',lat:35.7841,lng:-87.9910,w:'https://decaturcountytn.gov/attractions/',img:'',d:"A private-club boat launch on the Tennessee River near Sugar Tree — your closest water access for fishing, boating, and sunset cruising on Kentucky Lake."},
-      {n:'Cherokee Marina & Grill',c:'water',lat:35.7310,lng:-88.0314,w:'https://www.facebook.com/cherokeeboatdock/',img:'https://cdn.elebase.io/f73a5e12-7a94-4da0-96b6-40fd97435fd2/0b6abaa1-0287-4f5c-ac18-a623b03be939-ten2ca79618f066341e5.jpg?q=90',d:"Full-service Tennessee River marina just east of Parsons with a floating grill, easy-access boat ramp, gas dock, and riverside RV spots."},
-      {n:'Beech Bend Campground',c:'water',lat:35.6117,lng:-88.0399,w:'https://decaturcountytennessee.org/beech-bend-campground/',img:'https://cdn.elebase.io/f73a5e12-7a94-4da0-96b6-40fd97435fd2/8405eacc-f94b-40cf-8004-014da9fc72a9-ten7aae7f8bb5f4f0993.jpg?q=90',d:"A quiet 11-acre Tennessee River campground five miles east of Parsons with 76 sites, two boat ramps, a playground, and bank fishing."},
-      {n:'Mousetail Landing State Park',c:'park',lat:35.6686,lng:-88.0078,w:'https://tnstateparks.com/parks/mousetail-landing',img:'',d:"An 1,867-acre park on the Tennessee River with 11 miles of hiking trails, a swimming beach, boat landing, and lakeside campsites."},
-      {n:'Natchez Trace State Park',c:'park',lat:35.8011,lng:-88.2730,w:'https://tnstateparks.com/parks/natchez-trace',img:'',d:"A sprawling 48,000-acre wilderness with three lakes for fishing, boating, and swimming, plus miles of trails for hiking, biking, and horseback riding."},
-      {n:'Nathan Bedford Forrest State Park',c:'park',lat:36.0833,lng:-87.9855,w:'https://tnstateparks.com/parks/nathan-bedford-forrest',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Nathan-bedford-forrest-state-park-tn1.jpg/1280px-Nathan-bedford-forrest-state-park-tn1.jpg',d:"Perched above Kentucky Lake at Pilot Knob, with 20+ miles of trails, lakeside cabins, boat ramps, and the Tennessee River Folklife Center."},
-      {n:'Tennessee River Golf Club',c:'golf',lat:35.5636,lng:-88.0188,w:'https://www.tennesseerivergolfclub.com/',img:'https://lirp-cdn.multiscreensite.com/6dfda5be/dms3rep/multi/opt/G45+%281+of+1%29-b7a197bf-1920w.jpg',d:"A public 18-hole, par-71 course in the rolling hills beside the Tennessee River in Decaturville, with water in play on ten holes."},
-      {n:'Parsons, TN',c:'town',lat:35.6498,lng:-88.1267,w:'https://decaturcountytn.gov/city-of-parsons/',img:'',d:"The friendly seat of Decatur County on the Tennessee River — small-town shops, river access, groceries, pharmacy, and county events."},
-      {n:'TN River Freshwater Pearl Farm',c:'day',lat:35.9607,lng:-88.0373,w:'https://museum.tennesseeriverpearls.com/',img:'https://museum.tennesseeriverpearls.com/wp-content/uploads/2020/03/implanting.jpg',d:"North America's only freshwater pearl-culturing farm, near Camden — guided tours, a museum, and a showroom of Tennessee's state gem."},
-      {n:'Birdsong Resort & Marina',c:'day',lat:35.9678,lng:-88.0462,w:'https://resort.birdsong.com/',img:'https://resort.birdsong.com/wp-content/uploads/2020/02/sunset-2019.png',d:"A 58-acre Kentucky Lake resort near Camden with a 150-slip marina, cabins, lakeside RV and tent camping, a pool, and the pearl farm."},
-      {n:'Patsy Cline Memorial',c:'day',lat:36.0606,lng:-88.1612,w:'https://tennesseerivervalleygeotourism.org/entries/patsy-cline-memorial/341de19a-a0b1-4ed6-93eb-9c7ff1eb1406',img:'https://cdn.elebase.io/f73a5e12-7a94-4da0-96b6-40fd97435fd2/9ccedf52-d9c6-454d-8104-dca5affc8ae2-ten0d840b98526f3ad88.jpg?q=90',d:"A quiet wooded memorial off US-70 near Camden marking the 1963 plane crash that took country legend Patsy Cline."}
+      {n:'The Ponderosa',c:'water',mins:10,lat:35.7841,lng:-87.9910,w:'https://decaturcountytn.gov/attractions/',img:'',d:"A private-club boat launch on the Tennessee River near Sugar Tree — your closest water access for fishing, boating, and sunset cruising on Kentucky Lake."},
+      {n:'Cherokee Marina & Grill',c:'water',mins:20,lat:35.7310,lng:-88.0314,w:'https://www.facebook.com/cherokeeboatdock/',img:'https://cdn.elebase.io/f73a5e12-7a94-4da0-96b6-40fd97435fd2/0b6abaa1-0287-4f5c-ac18-a623b03be939-ten2ca79618f066341e5.jpg?q=90',d:"Full-service Tennessee River marina just east of Parsons with a floating grill, easy-access boat ramp, gas dock, and riverside RV spots."},
+      {n:'Beech Bend Campground',c:'water',mins:30,lat:35.6117,lng:-88.0399,w:'https://decaturcountytennessee.org/beech-bend-campground/',img:'https://cdn.elebase.io/f73a5e12-7a94-4da0-96b6-40fd97435fd2/8405eacc-f94b-40cf-8004-014da9fc72a9-ten7aae7f8bb5f4f0993.jpg?q=90',d:"A quiet 11-acre Tennessee River campground five miles east of Parsons with 76 sites, two boat ramps, a playground, and bank fishing."},
+      {n:'Mousetail Landing State Park',c:'park',mins:35,lat:35.6686,lng:-88.0078,w:'https://tnstateparks.com/parks/mousetail-landing',img:'',d:"An 1,867-acre park on the Tennessee River with 11 miles of hiking trails, a swimming beach, boat landing, and lakeside campsites."},
+      {n:'Natchez Trace State Park',c:'park',mins:25,lat:35.8011,lng:-88.2730,w:'https://tnstateparks.com/parks/natchez-trace',img:'',d:"A sprawling 48,000-acre wilderness with three lakes for fishing, boating, and swimming, plus miles of trails for hiking, biking, and horseback riding."},
+      {n:'Nathan Bedford Forrest State Park',c:'park',mins:50,lat:36.0833,lng:-87.9855,w:'https://tnstateparks.com/parks/nathan-bedford-forrest',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Nathan-bedford-forrest-state-park-tn1.jpg/1280px-Nathan-bedford-forrest-state-park-tn1.jpg',d:"Perched above Kentucky Lake at Pilot Knob, with 20+ miles of trails, lakeside cabins, boat ramps, and the Tennessee River Folklife Center."},
+      {n:'Tennessee River Golf Club',c:'golf',mins:40,lat:35.5636,lng:-88.0188,w:'https://www.tennesseerivergolfclub.com/',img:'https://lirp-cdn.multiscreensite.com/6dfda5be/dms3rep/multi/opt/G45+%281+of+1%29-b7a197bf-1920w.jpg',d:"A public 18-hole, par-71 course in the rolling hills beside the Tennessee River in Decaturville, with water in play on ten holes."},
+      {n:'Parsons, TN',c:'town',mins:22,lat:35.6498,lng:-88.1267,w:'https://decaturcountytn.gov/city-of-parsons/',img:'',d:"The friendly seat of Decatur County on the Tennessee River — small-town shops, river access, groceries, pharmacy, and county events."},
+      {n:'TN River Freshwater Pearl Farm',c:'day',mins:32,lat:35.9607,lng:-88.0373,w:'https://museum.tennesseeriverpearls.com/',img:'https://museum.tennesseeriverpearls.com/wp-content/uploads/2020/03/implanting.jpg',d:"North America's only freshwater pearl-culturing farm, near Camden — guided tours, a museum, and a showroom of Tennessee's state gem."},
+      {n:'Birdsong Resort & Marina',c:'day',mins:32,lat:35.9678,lng:-88.0462,w:'https://resort.birdsong.com/',img:'https://resort.birdsong.com/wp-content/uploads/2020/02/sunset-2019.png',d:"A 58-acre Kentucky Lake resort near Camden with a 150-slip marina, cabins, lakeside RV and tent camping, a pool, and the pearl farm."},
+      {n:'Patsy Cline Memorial',c:'day',mins:38,lat:36.0606,lng:-88.1612,w:'https://tennesseerivervalleygeotourism.org/entries/patsy-cline-memorial/341de19a-a0b1-4ed6-93eb-9c7ff1eb1406',img:'https://cdn.elebase.io/f73a5e12-7a94-4da0-96b6-40fd97435fd2/9ccedf52-d9c6-454d-8104-dca5affc8ae2-ten0d840b98526f3ad88.jpg?q=90',d:"A quiet wooded memorial off US-70 near Camden marking the 1963 plane crash that took country legend Patsy Cline."}
     ];
     var map=L.map(host,{scrollWheelZoom:false}).setView([PROP.lat,PROP.lng],11);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(map);
@@ -751,16 +755,18 @@ const drives = [
     function dir(p){ return 'https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng; }
     function sv(p){ return 'https://www.google.com/maps/@?api=1&map_action=pano&viewpoint='+p.lat+','+p.lng; }
     function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+    var EMOJI={water:'🌊',park:'🌲',golf:'⛳',town:'🏙️',day:'⛴️',prop:'📍'};
     function render(p){
       var col=COL[p.c];
       var photo = p.img
         ? '<div class="al-photo" style="background-image:url(\''+p.img+'\')"></div>'
-        : '<div class="al-photo" style="background:linear-gradient(135deg,'+col+',#0a1628)"></div>';
+        : '<div class="al-photo al-photo-emoji" style="background:linear-gradient(135deg,'+col+',#0a1628)">'+(EMOJI[p.c]||'📍')+'</div>';
       var pill = '<span class="al-cat" style="background:'+col+(p.c==='prop'?';color:#0a1628':'')+'">'+CATL[p.c]+'</span>';
+      var drive = p.mins ? '<span class="al-drive">📍 ~'+p.mins+' min from Sugar Tree Vista</span>' : '';
       var web = p.w ? '<a class="al-btn al-web" href="'+p.w+'" target="_blank" rel="noopener">Visit website ↗</a>' : '';
       panel.innerHTML = photo +
         '<div class="al-body">'+pill+
-        '<h3>'+esc(p.n)+'</h3><p>'+p.d+'</p>'+
+        '<h3>'+esc(p.n)+'</h3>'+drive+'<p>'+p.d+'</p>'+
         '<div class="al-btns">'+web+
         '<a class="al-btn al-dir" href="'+dir(p)+'" target="_blank" rel="noopener">Directions ↗</a>'+
         '<a class="al-btn al-sv" href="'+sv(p)+'" target="_blank" rel="noopener">Street View ↗</a></div></div>';
