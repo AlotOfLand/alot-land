@@ -42,6 +42,7 @@ collections:
       - { label: "Show Video on Listing Page", name: "showVideo", widget: "boolean", default: true, required: false, hint: "Toggle off to hide the video without deleting the URL" }
       - { label: "Zillow Listing URL", name: "zillowUrl", widget: "string", required: false, hint: "Paste the full Zillow listing URL — e.g. https://www.zillow.com/homedetails/..." }
       - { label: "Show Zillow Link on Listing Page", name: "showZillow", widget: "boolean", default: false, required: false, hint: "Toggle on to show a 'View on Zillow' button on the listing page" }
+      - { label: "Show Seller-Finance Calculator", name: "showSellerFinance", widget: "boolean", default: false, required: false, hint: "Toggle on to show the seller-finance payment calculator on this listing (pre-filled with this lot's price)" }
       - { label: "Photos", name: "photos", widget: "list", field: { label: "Photo", name: "photo", widget: "image" } }
       - { label: "Description", name: "body", widget: "markdown" }
       - { label: "Date Listed", name: "date", widget: "datetime" }
@@ -215,3 +216,9 @@ collections:
         fields:
           - { label: "YouTube Video ID", name: "homepageVideoId", widget: "string", required: false, hint: "The ID from your YouTube URL e.g. lR3ZteyGK14 from youtube.com/watch?v=lR3ZteyGK14" }
           - { label: "Hero Tagline", name: "heroTagline", widget: "string", required: false, hint: "e.g. Off-market deals in Arizona, Tennessee & Arkansas." }
+      - label: "Sugar Tree Vista"
+        name: "sugar-tree"
+        file: "src/content/settings/sugar-tree.json"
+        fields:
+          - { label: "One-Day Sale Date", name: "saleDate", widget: "datetime", hint: "The countdown on the Sugar Tree Vista page counts down to this date/time." }
+          - { label: "Hero Video URL (YouTube or Vimeo)", name: "heroVideoUrl", widget: "string", required: false, hint: "Paste a link to embed the walkthrough video in the hero. Leave blank to hide it." }

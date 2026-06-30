@@ -19,6 +19,7 @@ const listings = defineCollection({
     showVideo: z.boolean().default(true),
     zillowUrl: z.string().optional(),
     showZillow: z.boolean().default(false),
+    showSellerFinance: z.boolean().default(false),
     photos: z.array(z.string()).default([]),
     amenityPhotos: z.array(z.object({
       image: z.string(),
@@ -136,6 +137,9 @@ const settings = defineCollection({
     // homepage.json
     homepageVideoId: z.string().optional(),
     heroTagline: z.string().optional(),
+    // sugar-tree.json
+    saleDate: z.string().optional(),
+    heroVideoUrl: z.string().optional(),
   }),
 });
 
