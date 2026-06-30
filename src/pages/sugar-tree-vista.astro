@@ -505,7 +505,7 @@ const drives = [
     </div>
     <div class="lot-grid">
       {lots.map(lot => (
-        <a class={`lot ${lot.status === 'sold' ? 'sold' : ''}`} href={`/listings/${lot.slug}`}>
+        <a class={`lot ${lot.status === 'sold' ? 'sold' : ''}`} href={`/listings/${lot.slug}`} target="_blank" rel="noopener">
           <div class="img" style={lot.photo ? `background-image:url('${lot.photo}')` : ''}>
             <span class="num">{`LOT ${String(lot.num).padStart(2, '0')}`}</span>
             {lot.status !== 'available' && <span class={`statustag ${lot.status}`}>{statusPill[lot.status]}</span>}
@@ -804,7 +804,7 @@ const drives = [
     var grp=[];
     pins.forEach(function(p){
       var m=L.circleMarker([p.lat,p.lng],{radius:10,color:'#fff',weight:2,fillColor:SC[p.status]||'#3b55a3',fillOpacity:1}).addTo(map);
-      m.bindPopup('<b>'+p.name+'</b><br>'+p.acreage+' acres · '+(p.price||'')+'<br><a href="/listings/'+p.slug+'">View details →</a>');
+      m.bindPopup('<b>'+p.name+'</b><br>'+p.acreage+' acres · '+(p.price||'')+'<br><a href="/listings/'+p.slug+'" target="_blank" rel="noopener">View details →</a>');
       grp.push([p.lat,p.lng]);
     });
     map.fitBounds(grp,{padding:[40,40],maxZoom:15});
