@@ -45,7 +45,7 @@ const statusColor: Record<string, string> = {
 };
 ---
 
-<BaseLayout title="Communities" description="Browse land communities and subdivisions from Alot of Land LLC. Find your lot in one of our curated communities across Arizona and Tennessee.">
+<BaseLayout title="Communities" description="Browse land communities and subdivisions from Alot of Land LLC. Find your lot in one of our curated communities across Arizona and Tennessee." noindex={true}>
   {communitiesSchema && <script slot="head" type="application/ld+json" set:html={JSON.stringify(communitiesSchema)} />}
   <div class="bg-bg-dark text-white py-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
