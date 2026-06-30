@@ -1,0 +1,258 @@
+---
+/*  Seller-finance payment calculator (public).
+    Standalone page + embeddable on listing pages (showSellerFinance toggle).
+    Reads ?price= / ?lot= / ?community= to pre-fill. Lot dropdown + prices
+    pull from the Sugar Tree Vista listings backend. Rate grid visible by
+    design (David's call — can be hidden later). Amortization math verified. */
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site.js';
+
+const GA = siteConfig.analytics.gaMeasurementId;
+const phoneRaw = '6155386878';
+const phoneDisp = '(615) 538-6878';
+
+const lotNum = (l: any) => { const m = l.data.title.match(/Lot\s+(\d+)/i); return m ? +m[1] : 999; };
+const calcLots = (await getCollection('listings'))
+  .filter(l => l.data.community === 'sugar-tree-vista')
+  .sort((a, b) => lotNum(a) - lotNum(b))
+  .map(l => ({
+    label: `${l.data.title} · ${l.data.acreage} ac`,
+    price: Number((l.data.price || '').replace(/[^0-9.]/g, '')) || 0,
+    slug: l.slug,
+  }));
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seller-Finance Payment Calculator | Alot Of Land LLC</title>
+<meta name="description" content="Estimate your monthly seller-finance payment on a Sugar Tree Vista lot — pick a lot, down payment, and term. Cash buyers save 10%." />
+<meta name="robots" content="noindex" />
+<link rel="icon" type="image/png" href="/sugar-tree-logo.png" />
+<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA}`}></script>
+<script is:inline define:vars={{ GA }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date()); gtag('config', GA);
+  window.__gtag = gtag;
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{--navy:#0a1628;--navy-2:#13294d;--blue:#3b55a3;--blue-ink:#34508f;--gold:#f5b800;--gold-soft:#ffd76b;--gold-ink:#8f6e00;--paper:#f2f4f8;--paper-2:#e6ecf4;--ink:#0e1a2e;--ink-soft:#48566f;--line:rgba(10,22,40,.14);--r:14px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"DM Sans",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;letter-spacing:-.01em;line-height:1.08}
+  .mono{font-family:"DM Mono",monospace}
+  .wrap{max-width:880px;margin:0 auto;padding:30px 20px 60px}
+  header{background:linear-gradient(180deg,var(--navy),var(--navy-2));color:#fff;padding:30px 0 26px}
+  header .wrap{padding-bottom:0}
+  .eyebrow{font-family:"DM Mono",monospace;text-transform:uppercase;letter-spacing:.24em;font-size:.7rem;color:var(--gold-soft);margin-bottom:8px}
+  header h1{font-size:clamp(1.7rem,4.5vw,2.5rem);color:#fff}
+  header p{color:rgba(255,255,255,.8);margin-top:8px;font-size:.95rem}
+  header a.back{display:inline-block;margin-top:14px;font-family:"DM Mono";font-size:.74rem;color:var(--gold-soft)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-top:22px;box-shadow:0 10px 30px rgba(10,22,40,.05)}
+  .label{font-family:"DM Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;display:block}
+  select,input{font-family:"DM Sans",sans-serif;font-size:1rem;width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+  select:focus,input:focus{outline:2px solid var(--blue);border-color:var(--blue)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:620px){.row{grid-template-columns:1fr}}
+  .seg{display:flex;flex-wrap:wrap;gap:8px}
+  .seg button{flex:1;min-width:64px;font-family:"DM Mono",monospace;font-weight:500;font-size:.9rem;padding:12px 8px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;transition:all .15s}
+  .seg button:hover{border-color:var(--blue)}
+  .seg button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .result{background:linear-gradient(180deg,var(--navy),var(--navy-2));color:#fff;border-radius:var(--r);padding:26px;margin-top:22px}
+  .payment{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.16);padding-bottom:18px;margin-bottom:18px}
+  .payment .big{font-family:"DM Mono",monospace;font-weight:500;font-size:clamp(2.2rem,7vw,3.2rem);color:var(--gold-soft)}
+  .payment .per{color:rgba(255,255,255,.7);font-size:.95rem}
+  .breakdown{display:grid;grid-template-columns:1fr 1fr;gap:12px 26px}
+  @media(max-width:620px){.breakdown{grid-template-columns:1fr}}
+  .b{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed rgba(255,255,255,.14);padding:7px 0;font-size:.92rem}
+  .b span{color:rgba(255,255,255,.72)}
+  .b b{font-family:"DM Mono",monospace;font-weight:500;color:#fff}
+  .b b.rate{color:var(--gold-soft)}
+  .cash{background:var(--gold);color:var(--navy);border-radius:10px;padding:14px 16px;margin-top:16px;font-size:.95rem;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .cash b{font-family:"DM Mono"}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .btn{display:inline-flex;align-items:center;gap:.5em;font-family:"DM Mono",monospace;font-weight:500;letter-spacing:.04em;font-size:.8rem;text-transform:uppercase;padding:14px 22px;border-radius:999px;border:1.5px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--gold);color:var(--navy)}
+  .btn-primary:hover{background:var(--gold-soft)}
+  .btn-dark{background:var(--navy);color:var(--paper)}
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-family:"DM Mono",monospace;font-size:.85rem}
+  th,td{border:1px solid var(--line);padding:9px 6px;text-align:center}
+  th{background:var(--paper-2);color:var(--ink-soft);font-weight:600;font-size:.72rem;letter-spacing:.06em}
+  td.term{background:var(--paper-2);color:var(--ink);font-weight:600}
+  td.hit{background:var(--navy);color:var(--gold-soft);font-weight:600}
+  .note{font-size:.8rem;color:var(--ink-soft);margin-top:14px;line-height:1.6}
+  .disclaimer{font-size:.72rem;color:var(--ink-soft);margin-top:22px;line-height:1.7;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Alot Of Land LLC · Sugar Tree Vista</div>
+    <h1>Seller-Finance Payment Calculator</h1>
+    <p>Pick a lot, a down payment, and a term — your rate and monthly payment update instantly. Cash buyers save 10%.</p>
+    <a class="back" href="/sugar-tree-vista">← Back to Sugar Tree Vista</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <span class="label">1 · Lot or price</span>
+    <div class="row">
+      <select id="lot" aria-label="Lot"></select>
+      <input id="price" type="text" inputmode="numeric" aria-label="Purchase price" />
+    </div>
+    <div style="height:18px"></div>
+    <span class="label">2 · Down payment</span>
+    <div class="seg" id="downSeg">
+      <button data-down="25">25% down</button>
+      <button data-down="30">30% down</button>
+      <button data-down="40" class="active">40% down</button>
+      <button data-down="50">50% down</button>
+    </div>
+    <div style="height:18px"></div>
+    <span class="label">3 · Term</span>
+    <div class="seg" id="termSeg">
+      <button data-term="10">10 yrs</button>
+      <button data-term="12" class="active">12 yrs</button>
+      <button data-term="15">15 yrs</button>
+      <button data-term="18">18 yrs</button>
+    </div>
+  </div>
+
+  <div class="result">
+    <div class="payment">
+      <span class="big" id="moPay">$0</span>
+      <span class="per">/ month · principal &amp; interest</span>
+    </div>
+    <div class="breakdown">
+      <div class="b"><span>Purchase price</span><b id="rPrice">$0</b></div>
+      <div class="b"><span>Interest rate</span><b class="rate" id="rRate">0%</b></div>
+      <div class="b"><span>Down payment</span><b id="rDown">$0</b></div>
+      <div class="b"><span>Term</span><b id="rTerm">0 mo</b></div>
+      <div class="b"><span>Amount financed</span><b id="rFin">$0</b></div>
+      <div class="b"><span>Total of payments</span><b id="rTotal">$0</b></div>
+      <div class="b"><span>Total interest</span><b id="rInt">$0</b></div>
+      <div class="b"><span>Total cost (w/ down)</span><b id="rAll">$0</b></div>
+    </div>
+    <div class="cash">
+      <span>Pays cash instead? <b>10% off</b> the price.</span>
+      <b id="cashPrice">$0</b>
+    </div>
+    <div class="cta">
+      <a class="btn btn-primary" id="consultBtn" href={`tel:+1${phoneRaw}`}>Talk Through These Terms With David</a>
+      <a class="btn btn-dark" href="/sugar-tree-vista#lots">See the Lots</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="label">Rate schedule (rate by term × down)</span>
+    <table id="grid">
+      <thead><tr><th></th><th>25% dn</th><th>30% dn</th><th>40% dn</th><th>50% dn</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="note">Higher down payment and shorter term lower the rate. Your selection above highlights the matching cell.</p>
+  </div>
+
+  <p class="disclaimer">
+    Figures are estimates for discussion only and assume a fully amortizing loan with level monthly principal &amp; interest over the selected term, no balloon. Owner financing is offered at Alot Of Land LLC's discretion and subject to a signed agreement; terms, qualification, taxes, insurance, and any closing costs are not included. Cash discount applies to the purchase price only. Not a commitment to lend.
+  </p>
+</div>
+
+<script type="application/json" id="calc-lots" set:html={JSON.stringify(calcLots)}></script>
+<script is:inline>
+  // Seller-finance rate schedule: RATES[term][down] = annual %
+  var RATES={10:{25:12,30:10,40:8,50:7},12:{25:13,30:11,40:9,50:8},15:{25:14,30:12,40:10,50:9},18:{25:15,30:13,40:11,50:10}};
+  var TERMS=[10,12,15,18], DOWNS=[25,30,40,50];
+
+  var BACKEND = []; try{ BACKEND = JSON.parse(document.getElementById('calc-lots').textContent||'[]'); }catch(e){}
+  var LOTS = BACKEND.map(function(l){ return {n:l.label+' — $'+Math.round(l.price).toLocaleString('en-US'), p:l.price}; });
+  LOTS.push({n:'Custom price…', p:0});
+
+  var state={price:0, down:40, term:12};
+  var $=function(id){return document.getElementById(id);};
+  var usd=function(n){return '$'+Math.round(n).toLocaleString('en-US');};
+
+  // populate lot dropdown
+  var lotSel=$('lot');
+  LOTS.forEach(function(l,i){ var o=document.createElement('option'); o.value=i; o.textContent=l.n; lotSel.appendChild(o); });
+
+  // build grid
+  var tbody=$('grid').querySelector('tbody');
+  TERMS.forEach(function(t){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<td class="term">'+t+' yrs</td>'+DOWNS.map(function(d){return '<td data-t="'+t+'" data-d="'+d+'">'+RATES[t][d]+'%</td>';}).join('');
+    tbody.appendChild(tr);
+  });
+
+  function payment(P,annualPct,years){ var r=annualPct/100/12, n=years*12; if(r===0) return P/n; return P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1); }
+
+  function render(){
+    var price=Math.max(0,state.price||0);
+    var rate=RATES[state.term][state.down];
+    var downAmt=price*state.down/100, financed=price-downAmt, n=state.term*12;
+    var mo=payment(financed,rate,state.term), totalPay=mo*n, interest=totalPay-financed;
+    $('moPay').textContent=usd(mo);
+    $('rPrice').textContent=usd(price);
+    $('rRate').textContent=rate+'%';
+    $('rDown').textContent=usd(downAmt)+' ('+state.down+'%)';
+    $('rTerm').textContent=n+' mo ('+state.term+' yrs)';
+    $('rFin').textContent=usd(financed);
+    $('rTotal').textContent=usd(totalPay);
+    $('rInt').textContent=usd(interest);
+    $('rAll').textContent=usd(downAmt+totalPay);
+    $('cashPrice').textContent=usd(price*0.9);
+    document.querySelectorAll('#grid td.hit').forEach(function(td){td.classList.remove('hit');});
+    var cell=document.querySelector('#grid td[data-t="'+state.term+'"][data-d="'+state.down+'"]');
+    if(cell) cell.classList.add('hit');
+  }
+
+  // events
+  lotSel.addEventListener('change', function(e){
+    var l=LOTS[+e.target.value];
+    if(l.p>0){ state.price=l.p; $('price').value=usd(l.p); } else { $('price').value=''; $('price').focus(); }
+    render();
+  });
+  $('price').addEventListener('input', function(e){
+    state.price=parseInt(e.target.value.replace(/[^0-9]/g,''))||0;
+    lotSel.value=LOTS.length-1;
+    render();
+  });
+  $('price').addEventListener('blur', function(e){ if(state.price>0) e.target.value=usd(state.price); });
+  $('downSeg').addEventListener('click', function(e){
+    if(!e.target.dataset.down) return;
+    state.down=+e.target.dataset.down;
+    document.querySelectorAll('#downSeg button').forEach(function(b){b.classList.toggle('active',b===e.target);});
+    render();
+  });
+  $('termSeg').addEventListener('click', function(e){
+    if(!e.target.dataset.term) return;
+    state.term=+e.target.dataset.term;
+    document.querySelectorAll('#termSeg button').forEach(function(b){b.classList.toggle('active',b===e.target);});
+    render();
+  });
+  $('consultBtn').addEventListener('click', function(){ if(window.__gtag) window.__gtag('event','Lead',{source:'seller-finance-calc'}); });
+
+  // ---- prefill from URL (?price= / ?lot=) ----
+  (function init(){
+    var q=new URLSearchParams(location.search);
+    var priceParam=parseInt((q.get('price')||'').replace(/[^0-9]/g,''));
+    var lotParam=q.get('lot');
+    var idx=-1;
+    if(lotParam){ // match by slug
+      for(var i=0;i<BACKEND.length;i++){ if(BACKEND[i].slug===lotParam){ idx=i; break; } }
+    }
+    if(idx>=0){ lotSel.value=idx; state.price=LOTS[idx].p; $('price').value=usd(state.price); }
+    else if(priceParam){ state.price=priceParam; lotSel.value=LOTS.length-1; $('price').value=usd(priceParam); }
+    else if(LOTS.length>1){ lotSel.value=0; state.price=LOTS[0].p; $('price').value=usd(state.price); }
+    if(window.__gtag) window.__gtag('event','SellerFinanceCalcOpened');
+    render();
+  })();
+</script>
+</body>
+</html>

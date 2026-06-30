@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 
 const { listing } = Astro.props;
 const { Content } = await render(listing);
-const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, zillowUrl, showZillow, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
+const { title, status, acreage, county, state, price, zoning, roadAccess, water, power, gps, videoUrl, showVideo, zillowUrl, showZillow, showSellerFinance, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
 
 const loc = `${county} County, ${state}`;
 const pricePart = price ? ` — ${price}` : '';
@@ -168,10 +168,15 @@ const listingSchema = {
         <span class="text-2xl font-display font-black text-gold">{price || 'Contact for Price'}</span>
         <span class="text-text-muted text-sm">{acreage} acres · {county} County, {state}</span>
       </div>
-      <div class="flex gap-2 sm:ml-auto">
+      <div class="flex flex-wrap gap-2 sm:ml-auto">
         <a href="#inquire" class="bg-gold text-bg-dark text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-yellow-400 transition-colors">
           Request Info
         </a>
+        {showSellerFinance && (
+          <button id="sf-open" class="border border-bg-dark text-bg-dark text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-colors">
+            💵 Estimate Payment
+          </button>
+        )}
         <a href={`tel:${siteConfig.phoneRaw}`} class="border border-bg-dark text-bg-dark text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-gray-50 transition-colors">
           📞 Call
         </a>
@@ -303,5 +308,27 @@ const listingSchema = {
 
   <!-- Preferred Vendors for this property's state -->
   <VendorSection state={state} heading="Preferred Vendors for This Property" />
+
+  {showSellerFinance && (
+    <div id="sf-modal" class="hidden fixed inset-0 z-[60] items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden relative shadow-2xl">
+        <button id="sf-close" aria-label="Close calculator" class="absolute top-2 right-3 text-gray-400 hover:text-bg-dark text-2xl leading-none z-10">✕</button>
+        <iframe id="sf-frame" title="Seller-Finance Calculator" data-src={`/land-payment-calculator?price=${priceNumeric || ''}&lot=${listing.slug}`} style="width:100%;height:88vh;border:0"></iframe>
+      </div>
+    </div>
+    <script is:inline>
+      (function(){
+        var openBtn=document.getElementById('sf-open'), modal=document.getElementById('sf-modal'),
+            closeBtn=document.getElementById('sf-close'), frame=document.getElementById('sf-frame');
+        if(!openBtn||!modal) return;
+        function show(){ if(!frame.src) frame.src=frame.dataset.src; modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow='hidden'; }
+        function hide(){ modal.classList.add('hidden'); modal.classList.remove('flex'); document.body.style.overflow=''; }
+        openBtn.addEventListener('click', show);
+        closeBtn.addEventListener('click', hide);
+        modal.addEventListener('click', function(e){ if(e.target===modal) hide(); });
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape') hide(); });
+      })();
+    </script>
+  )}
 </BaseLayout>
 
