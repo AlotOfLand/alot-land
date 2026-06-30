@@ -1,4 +1,9 @@
 {
   "saleDate": "2026-08-01T09:00:00.000-05:00",
-  "heroVideoUrl": ""
+  "heroVideoUrl": "",
+  "heroImage": "",
+  "guidePhoto": "",
+  "developerPhoto": "",
+  "ogImage": "",
+  "galleryPhotos": []
 }

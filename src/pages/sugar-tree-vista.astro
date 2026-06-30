@@ -15,6 +15,14 @@ const phoneDisp = '(615) 538-6878';
 const st = await getEntry('settings', 'sugar-tree');
 const saleDate = st?.data.saleDate ?? '2026-08-01T09:00:00.000-05:00';
 const heroVideoUrl = st?.data.heroVideoUrl ?? '';
+const heroImage = st?.data.heroImage ?? '';
+const guidePhoto = st?.data.guidePhoto ?? '';
+const developerPhoto = st?.data.developerPhoto ?? '';
+const galleryPhotos = st?.data.galleryPhotos ?? [];
+const ogImageRaw = st?.data.ogImage ?? '';
+const ogImageUrl = ogImageRaw
+  ? (ogImageRaw.startsWith('http') ? ogImageRaw : `https://alot.land${ogImageRaw}`)
+  : 'https://alot.land/images/OG_Social_Image.jpg';
 
 // ── Lots (from the backend, filtered to this community) ──────────────────────
 const lotNum = (l: any) => { const m = l.data.title.match(/Lot\s+(\d+)/i); return m ? +m[1] : 999; };
@@ -71,8 +79,7 @@ const drives = [
 <meta property="og:title" content="Sugar Tree Vista — Ridgeline View Acreage near Kentucky Lake" />
 <meta property="og:description" content="Ten unrestricted ridgeline homesites, 5.4–11.4 acres, above Kentucky Lake in Decatur County, TN. From $59,000." />
 <meta property="og:url" content="https://alot.land/sugar-tree-vista" />
-<!-- TODO: og:image — 1200x630 hero/drone shot -->
-<meta property="og:image" content="https://alot.land/images/OG_Social_Image.jpg" />
+<meta property="og:image" content={ogImageUrl} />
 <meta name="twitter:card" content="summary_large_image" />
 
 <link rel="icon" type="image/png" href="/sugar-tree-logo.png" />
@@ -394,7 +401,7 @@ const drives = [
   </div>
 </div>
 
-<section class="hero" id="top">
+<section class="hero" id="top" style={heroImage ? `background-image:linear-gradient(180deg,rgba(10,22,40,.80),rgba(18,42,77,.74)),url('${heroImage}');background-size:cover;background-position:center` : ''}>
   <div class="topo" aria-hidden="true"><svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice"><path d="M-20,120 C200,60 380,180 620,120 S1000,40 1240,140"/><path d="M-20,200 C220,140 420,260 640,200 S1010,120 1240,220"/><path d="M-20,290 C240,230 440,350 660,290 S1020,210 1240,310"/><path d="M-20,390 C260,330 460,450 680,390 S1040,310 1240,410"/></svg></div>
   <div class="wrap">
     <span class="eyebrow">Decatur County, Tennessee &nbsp;·&nbsp; 10 View Lots</span>
@@ -426,7 +433,7 @@ const drives = [
   <div class="wrap">
     <span class="eyebrow">Your Land Guide</span>
     <div class="grid">
-      <div class="photo">TODO<br>Land&nbsp;Guide<br>Photo</div>
+      <div class="photo" style={guidePhoto ? `background-image:url('${guidePhoto}');background-size:cover;background-position:center` : ''}>{!guidePhoto && (<>Land&nbsp;Guide<br>Photo</>)}</div>
       <div>
         <h3>David A. Stone</h3>
         <p>I've spent my whole career around land &mdash; in the land and homebuilding business since my teens, building and selling for the better part of two decades, and now finding and improving the kind of acreage I'd want to own myself. Sugar Tree Vista is exactly that: high, private ground with views I couldn't walk away from.</p>
@@ -630,7 +637,7 @@ const drives = [
         <p>When you buy at Sugar Tree Vista, the hard parts are already handled: a fresh survey, clear title, and a clean, honest closing.</p>
         <div class="dev-pkg"><div>✓ New Survey</div><div>✓ Clear Title</div><div>✓ Warranty Deed</div><div>✓ Owner Financing</div></div>
       </div>
-      <div class="dev-img">TODO — developer or land photo</div>
+      <div class="dev-img" style={developerPhoto ? `background-image:url('${developerPhoto}');background-size:cover;background-position:center` : ''}>{!developerPhoto && 'Developer photo'}</div>
     </div>
     <blockquote class="eker">&ldquo;Don't wait to buy land. Buy land and wait.&rdquo;<cite>— A land investor's favorite rule</cite></blockquote>
   </div>
@@ -651,7 +658,11 @@ const drives = [
   <div class="wrap">
     <h2>Property Photos</h2>
     <p>Beauty comes first for us. See the ridgelines, the meadows, the road frontage, and the lake country just minutes away.</p>
-    <div class="g-grid"><div>TODO — photo</div><div>TODO — photo</div><div>TODO — photo</div><div>TODO — photo</div><div>TODO — photo</div><div>TODO — photo</div><div>TODO — photo</div><div>TODO — photo</div></div>
+    <div class="g-grid">
+      {galleryPhotos.length > 0
+        ? galleryPhotos.map(src => (<div style={`background-image:url('${src}');background-size:cover;background-position:center`}></div>))
+        : Array.from({ length: 8 }).map(() => (<div>Photo coming soon</div>))}
+    </div>
   </div>
 </section>
 

@@ -140,6 +140,11 @@ const settings = defineCollection({
     // sugar-tree.json
     saleDate: z.string().optional(),
     heroVideoUrl: z.string().optional(),
+    heroImage: z.string().optional(),
+    guidePhoto: z.string().optional(),
+    developerPhoto: z.string().optional(),
+    ogImage: z.string().optional(),
+    galleryPhotos: z.array(z.string()).optional().default([]),
   }),
 });
 
