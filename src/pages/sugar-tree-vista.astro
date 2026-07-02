@@ -431,21 +431,6 @@ const drives = [
   </div>
 </section>
 
-<section class="guide">
-  <div class="wrap">
-    <span class="eyebrow">Your Land Guide</span>
-    <div class="grid">
-      <div class="photo" style={guidePhoto ? `background-image:url('${guidePhoto}');background-size:cover;background-position:center` : ''}>{!guidePhoto && (<>Land&nbsp;Guide<br>Photo</>)}</div>
-      <div>
-        <h3>David A. Stone</h3>
-        <p>I've spent my whole career around land &mdash; in the land and homebuilding business since my teens, building and selling for the better part of two decades, and now finding and improving the kind of acreage I'd want to own myself. Sugar Tree Vista is exactly that: high, private ground with views I couldn't walk away from.</p>
-        <p>Whether you're looking for a weekend retreat, a place to build, a homestead, or a smart piece of land to hold, I'll walk every lot with you and tell you straight what each one is best for. No pressure &mdash; just an honest look at the property and your options.</p>
-        <a class="btn btn-dark" href={`tel:+1${phoneRaw}`} style="margin-top:8px">Call or Text Me &mdash; {phoneDisp}</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="options" id="contact">
   <div class="wrap">
     <span class="eyebrow">The Next Step</span>
@@ -677,6 +662,21 @@ const drives = [
     <div class="cta-row">
       <a class="btn btn-primary" href={`tel:+1${phoneRaw}`}>Call or Text {phoneDisp}</a>
       <a class="btn btn-ghost" href="#contact">Book a Showing Online</a>
+    </div>
+  </div>
+</section>
+
+<section class="guide">
+  <div class="wrap">
+    <span class="eyebrow">Your Land Guide</span>
+    <div class="grid">
+      <div class="photo" style={guidePhoto ? `background-image:url('${guidePhoto}');background-size:cover;background-position:center` : ''}>{!guidePhoto && (<>Land&nbsp;Guide<br>Photo</>)}</div>
+      <div>
+        <h3>David A. Stone</h3>
+        <p>I've spent my whole career around land &mdash; in the land and homebuilding business since my teens, building and selling for the better part of two decades, and now finding and improving the kind of acreage I'd want to own myself. Sugar Tree Vista is exactly that: high, private ground with views I couldn't walk away from.</p>
+        <p>Whether you're looking for a weekend retreat, a place to build, a homestead, or a smart piece of land to hold, I'll walk every lot with you and tell you straight what each one is best for. No pressure &mdash; just an honest look at the property and your options.</p>
+        <a class="btn btn-dark" href={`tel:+1${phoneRaw}`} style="margin-top:8px">Call or Text Me &mdash; {phoneDisp}</a>
+      </div>
     </div>
   </div>
 </section>
