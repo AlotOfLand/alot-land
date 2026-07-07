@@ -5,7 +5,7 @@ featured: true
 state: Tennessee
 county: Marshall
 acreage: "5.5"
-price: "$189,900"
+price: $159,900
 zoning: Residential
 roadAccess: 457 ft
 water: Available
