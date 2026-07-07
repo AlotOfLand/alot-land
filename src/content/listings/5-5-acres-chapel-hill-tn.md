@@ -29,4 +29,4 @@ With new construction homes in the area ranging up to $2.5M, the setting support
 
 With nearly 5.5 acres, there is ample space to explore multiple layout options and maximize the usability of the land. No survey or soil mapping has been completed, and buyer will be responsible for all independent inspections and verification. A TDEC permit has already been paid, and while a conventional septic system may be possible, buyers should plan for the likelihood of an engineered (non-conventional) system. 
 
-A soil scientist and engineer are available as references to assist with the due diligence process and help determine the most suitable system and placement. At $189,900, this is an exceptional value in a rapidly growing area with high-end surrounding development. Motivated seller—bring your vision and make it a reality.
+A soil scientist and engineer are available as references to assist with the due diligence process and help determine the most suitable system and placement. At $159,900, this is an exceptional value in a rapidly growing area with high-end surrounding development. Motivated seller—bring your vision and make it a reality.
