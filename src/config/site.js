@@ -5,7 +5,7 @@ export const siteConfig = {
   phoneRaw: "6155386878",
   email: "David@alot.land",
   tagline: "Buy Land, Sell Land & Build Wealth With Land.",
-  description: "Alot of Land LLC buys and sells land across Middle Tennessee and Arizona. Browse available properties or get a fast cash offer on your land.",
+  description: "Alot of Land LLC buys and sells land across Middle Tennessee. Browse available properties or get a fast cash offer on your land.",
   address: {
     street: "4539 N 22nd St Ste R",
     city: "Phoenix",

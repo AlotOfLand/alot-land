@@ -33,8 +33,8 @@ const featuredListings = allListings
 ---
 
 <BaseLayout
-  title="Buy & Sell Land in Arizona & Tennessee"
-  description="Alot of Land LLC — great land at great prices in Arizona & Tennessee. Browse available properties, request a custom land search, or get a fast cash offer on land you want to sell."
+  title="Buy & Sell Land in Middle Tennessee"
+  description="Alot of Land LLC — great land at great prices in Middle Tennessee. Browse available properties, request a custom land search, or get a fast cash offer on land you want to sell."
 >
   <!-- Hero -->
   <section class="relative min-h-[50vh] flex items-center justify-center text-white overflow-hidden py-20 sm:py-28">
@@ -46,7 +46,7 @@ const featuredListings = allListings
     <div class="absolute inset-0 bg-black/60"></div>
     <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
       <h1 class="font-display font-black text-3xl sm:text-4xl lg:text-5xl mb-6 leading-tight">
-        Buy Great Land at Great Prices in Middle Tennessee &amp; Arizona
+        Buy Great Land at Great Prices in Middle Tennessee
       </h1>
       <p class="text-xl sm:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto leading-relaxed">
         {heroTagline}
@@ -185,33 +185,10 @@ const featuredListings = allListings
     </div>
   </section>
 
-  <!-- Operating States -->
-  <section class="py-20 bg-bg-dark text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="font-display font-bold text-3xl sm:text-4xl mb-4">Where We Work</h2>
-      <p class="text-gray-400 mb-12 text-lg">Active markets — with more on the way.</p>
-
-      <div class="grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto mb-8">
-        {[
-          { state: 'Arizona', emoji: '🌵', desc: 'Desert land, off-grid parcels, rural homesteads' },
-          { state: 'Tennessee', emoji: '🏞️', desc: 'Wooded tracts, hunting land, mountain cabins' },
-        ].map(item => (
-          <div class="bg-border-dark rounded-2xl p-6 border border-[#333]">
-            <div class="text-5xl mb-4">{item.emoji}</div>
-            <h3 class="font-display font-bold text-xl mb-2">{item.state}</h3>
-            <p class="text-gray-400 text-sm">{item.desc}</p>
-          </div>
-        ))}
-      </div>
-
-      <p class="text-text-muted text-sm">Entering new markets — check back often.</p>
-    </div>
-  </section>
-
   <!-- How It Works: Buyer -->
-  <section class="py-20 bg-bg-light">
+  <section class="py-20 bg-bg-dark text-white">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="font-display font-bold text-3xl sm:text-4xl text-center text-bg-dark mb-12">
+      <h2 class="font-display font-bold text-3xl sm:text-4xl text-center text-white mb-12">
         How It Works — Buying Land
       </h2>
       <div class="grid sm:grid-cols-3 gap-8">
@@ -225,13 +202,13 @@ const featuredListings = allListings
               {item.icon}
             </div>
             <div class="text-gold font-bold text-sm mb-2">{item.step}</div>
-            <h3 class="font-display font-bold text-lg text-bg-dark mb-2">{item.title}</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+            <h3 class="font-display font-bold text-lg text-white mb-2">{item.title}</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
           </div>
         ))}
       </div>
       <div class="text-center mt-10">
-        <a href="/listings" class="bg-bg-dark text-white font-bold px-8 py-4 rounded-2xl hover:bg-gray-800 transition-colors inline-block">
+        <a href="/listings" class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors inline-block">
           Browse Available Land
         </a>
       </div>
