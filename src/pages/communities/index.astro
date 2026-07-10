@@ -33,6 +33,15 @@ function getStats(communitySlug: string) {
   };
 }
 
+// Thumbnail: community's own Image if set, else fall back to the first lot photo,
+// then the first amenity photo — so the card is never a blank placeholder.
+function getThumb(community: (typeof allCommunities)[number]): string | null {
+  if (community.data.image) return community.data.image;
+  const lots = allListings.filter(l => l.data.community === community.slug);
+  const firstLotPhoto = lots.map(l => l.data.photos?.[0]).find(Boolean);
+  return firstLotPhoto || community.data.amenityPhotos?.[0]?.image || null;
+}
+
 const statusLabel: Record<string, string> = {
   'coming-soon': 'Coming Soon',
   'lots-available': 'Lots Available',
@@ -69,6 +78,7 @@ const statusColor: Record<string, string> = {
         {sorted.map(community => {
           const stats = getStats(community.slug);
           const status = community.data.status;
+          const thumb = getThumb(community);
           return (
             <a
               href={`/communities/${community.slug}`}
@@ -76,9 +86,9 @@ const statusColor: Record<string, string> = {
             >
               <!-- Image -->
               <div class="sm:w-80 lg:w-96 flex-shrink-0 relative overflow-hidden">
-                {community.data.image ? (
+                {thumb ? (
                   <img
-                    src={community.data.image}
+                    src={thumb}
                     alt={community.data.title}
                     class="w-full h-56 sm:h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />

@@ -55,6 +55,8 @@ const communities = defineCollection({
     state: z.enum(['Arizona', 'Tennessee']).optional(),
     status: z.enum(['coming-soon', 'lots-available', 'sold-out']),
     image: z.string().optional(),
+    ctaLabel: z.string().optional(),
+    ctaUrl: z.string().optional(),
     videoUrl: z.string().optional(),
     showVideo: z.boolean().default(true),
     amenityPhotos: z.array(z.object({

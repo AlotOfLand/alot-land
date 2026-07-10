@@ -25,7 +25,7 @@ const statusOrder: Record<string, number> = {
   'sold': 3,
 };
 const featuredListings = allListings
-  .filter(l => l.data.featured)
+  .filter(l => l.data.featured && l.data.status !== 'sold')
   .sort((a, b) => {
     const byStatus = (statusOrder[a.data.status] ?? 9) - (statusOrder[b.data.status] ?? 9);
     return byStatus !== 0 ? byStatus : b.data.date.getTime() - a.data.date.getTime();
@@ -122,20 +122,26 @@ const featuredListings = allListings
       </div>
 
       {featuredListings.length > 0 ? (
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredListings.map(listing => (
-            <ListingCard
-              slug={listing.slug}
-              title={listing.data.title}
-              status={listing.data.status}
-              acreage={listing.data.acreage}
-              county={listing.data.county}
-              state={listing.data.state}
-              price={listing.data.price}
-              photos={listing.data.photos}
-              description={listing.body}
-            />
-          ))}
+        <!-- Horizontal scroller: cards scroll sideways instead of stacking, keeping the homepage short.
+             Negative margins let cards bleed to the screen edges while the first card stays aligned. -->
+        <div class="-mx-4 sm:-mx-6 lg:-mx-8">
+          <div class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 sm:px-6 lg:px-8 pb-4 home-scroller">
+            {featuredListings.map(listing => (
+              <div class="snap-start shrink-0 w-[280px] sm:w-[330px]">
+                <ListingCard
+                  slug={listing.slug}
+                  title={listing.data.title}
+                  status={listing.data.status}
+                  acreage={listing.data.acreage}
+                  county={listing.data.county}
+                  state={listing.data.state}
+                  price={listing.data.price}
+                  photos={listing.data.photos}
+                  description={listing.body}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
         <div class="text-center py-16 bg-white/40 rounded-2xl border border-bg-dark/20">
@@ -302,4 +308,13 @@ const featuredListings = allListings
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  /* Thin, subtle scrollbar so the Featured Listings row reads as scrollable */
+  .home-scroller { scrollbar-width: thin; scrollbar-color: rgba(10,10,10,.35) transparent; }
+  .home-scroller::-webkit-scrollbar { height: 8px; }
+  .home-scroller::-webkit-scrollbar-track { background: transparent; }
+  .home-scroller::-webkit-scrollbar-thumb { background: rgba(10,10,10,.30); border-radius: 999px; }
+  .home-scroller::-webkit-scrollbar-thumb:hover { background: rgba(10,10,10,.5); }
+</style>
 
