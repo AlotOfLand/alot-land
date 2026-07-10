@@ -42,6 +42,15 @@ function getThumb(community: (typeof allCommunities)[number]): string | null {
   return firstLotPhoto || community.data.amenityPhotos?.[0]?.image || null;
 }
 
+// Plain-text description excerpt (strip common markdown) for the community card.
+function getExcerpt(body: string | undefined): string {
+  return (body ?? '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // links -> text
+    .replace(/[#>*_`~]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 const statusLabel: Record<string, string> = {
   'coming-soon': 'Coming Soon',
   'lots-available': 'Lots Available',
@@ -79,6 +88,7 @@ const statusColor: Record<string, string> = {
           const stats = getStats(community.slug);
           const status = community.data.status;
           const thumb = getThumb(community);
+          const excerpt = getExcerpt(community.body);
           return (
             <a
               href={`/communities/${community.slug}`}
@@ -126,6 +136,9 @@ const statusColor: Record<string, string> = {
                     <p class="text-text-muted text-sm mb-3 flex items-center gap-1">
                       <span>📍</span> {community.data.location}
                     </p>
+                  )}
+                  {excerpt && (
+                    <p class="text-sm text-gray-600 leading-relaxed line-clamp-3">{excerpt}</p>
                   )}
                 </div>
 
