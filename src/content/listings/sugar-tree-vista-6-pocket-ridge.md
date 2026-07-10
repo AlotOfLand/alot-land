@@ -12,7 +12,9 @@ water: Drill your own well
 power: Power being run to the road
 gps: 35.804494, -88.029340
 showSellerFinance: false
-photos: []
+photos:
+  - https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783714975/_IMG_1212_w6bv4n.jpg
+  - https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783714975/_IMG_1201_svoezw.jpg
 date: 2026-06-20T09:55:00.000-05:00
 community: sugar-tree-vista
 ---
