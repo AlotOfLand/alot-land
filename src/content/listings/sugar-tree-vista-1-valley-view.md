@@ -1,7 +1,7 @@
 ---
 title: Lot 1 — Valley View
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "5.66"
