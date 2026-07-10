@@ -1,7 +1,7 @@
 ---
 title: Lot 2 — Hickory Ridge
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "6.22"
