@@ -41,6 +41,18 @@ const lots = lotEntries.map(l => ({
   desc: (l.body.split('\n').map(s => s.trim()).find(Boolean) || ''),
 }));
 
+// ── Shared images ────────────────────────────────────────────────────────────
+// The community entry supplies the "selected" community image; fall back so
+// nothing is ever a blank placeholder.
+const community = await getEntry('communities', 'sugar-tree-vista');
+const lotPhotoPool = lotEntries.flatMap(l => l.data.photos ?? []);
+const firstAmenity = community?.data.amenityPhotos?.[0]?.image ?? '';
+// "The property" pin panel in the Explore-the-Area map:
+const propImage = community?.data.image || heroImage || lotPhotoPool[0] || firstAmenity || '';
+// Property Photos gallery: use curated Gallery Photos from Settings if set,
+// otherwise fall back to the lot photos already uploaded on the listings.
+const gallery = (galleryPhotos.length > 0 ? galleryPhotos : lotPhotoPool).slice(0, 12);
+
 // Lot-map pins — only lots that already have GPS (David adds these in the CMS)
 function parseGps(g?: string) {
   if (!g) return null;
@@ -354,7 +366,7 @@ const drives = [
   .reveal.in{opacity:1;transform:none}
 </style>
 </head>
-<body data-sale-date={saleDate}>
+<body data-sale-date={saleDate} data-prop-image={propImage}>
 
 <div class="utility">
   <div class="wrap">
@@ -644,8 +656,8 @@ const drives = [
     <h2>Property Photos</h2>
     <p>Beauty comes first for us. See the ridgelines, the meadows, the road frontage, and the lake country just minutes away.</p>
     <div class="g-grid">
-      {galleryPhotos.length > 0
-        ? galleryPhotos.map(src => (<div style={`background-image:url('${src}');background-size:cover;background-position:center`}></div>))
+      {gallery.length > 0
+        ? gallery.map(src => (<div style={`background-image:url('${src}');background-size:cover;background-position:center`}></div>))
         : Array.from({ length: 8 }).map(() => (<div>Photo coming soon</div>))}
     </div>
   </div>
@@ -673,6 +685,7 @@ const drives = [
         <h3>David A. Stone</h3>
         <p>I've spent my whole career around land &mdash; in the land and homebuilding business since my teens, building and selling for the better part of two decades, and now finding and improving the kind of acreage I'd want to own myself. Sugar Tree Vista is exactly that: high, private ground with views I couldn't walk away from.</p>
         <p>Whether you're looking for a weekend retreat, a place to build, a homestead, or a smart piece of land to hold, I'll walk every lot with you and tell you straight what each one is best for. No pressure &mdash; just an honest look at the property and your options.</p>
+        <p><strong>Why I do this:</strong> I do it for my family &mdash; my two young sons. I want them to look up to me as a businessman and an entrepreneur, someone who does real things with his life. And I want to provide for my family while helping other families provide for theirs, through owning land.</p>
         <a class="btn btn-dark" href={`tel:+1${phoneRaw}`} style="margin-top:8px">Call or Text Me &mdash; {phoneDisp}</a>
       </div>
     </div>
@@ -744,7 +757,7 @@ const drives = [
     if(!host||!panel||typeof L==='undefined') return;
     var COL={water:'#3b55a3',park:'#2e6b34',golf:'#8f6e00',town:'#0a1628',day:'#c47f17',prop:'#f5b800'};
     var CATL={water:'Water & marinas',park:'State park',golf:'Golf',town:'Town',day:'Kentucky Lake day-trip',prop:'The property'};
-    var PROP={n:'Sugar Tree Vista',c:'prop',lat:35.8067,lng:-88.0273,d:'The property — ten ridgeline view lots off Ray Miller Rd & Low Gap Rd, 5.4 to 11.4 acres, unrestricted, from $59,000.'};
+    var PROP={n:'Sugar Tree Vista',c:'prop',lat:35.8067,lng:-88.0273,img:(document.body.dataset.propImage||''),d:'The property — ten ridgeline view lots off Ray Miller Rd & Low Gap Rd, 5.4 to 11.4 acres, unrestricted, from $59,000.'};
     // n=name c=category lat/lng mins=est. drive (PLACEHOLDER, David verifying) w=website img=photo (TODO: confirm rights / self-host)
     var PTS=[
       {n:'The Ponderosa',c:'water',mins:10,lat:35.7841,lng:-87.9910,w:'https://decaturcountytn.gov/attractions/',img:'',d:"A private-club boat launch on the Tennessee River near Sugar Tree — your closest water access for fishing, boating, and sunset cruising on Kentucky Lake."},
