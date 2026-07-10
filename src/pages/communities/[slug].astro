@@ -73,9 +73,11 @@ const statusColor: Record<string, string> = {
       {ctaUrl && (
         <a
           href={ctaUrl}
+          target="_blank"
+          rel="noopener"
           class="mt-5 inline-flex items-center gap-2 bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors shadow-lg"
         >
-          {ctaLabel ?? 'Get More Information'} <span aria-hidden="true">→</span>
+          {ctaLabel ?? 'Get More Information'} <span aria-hidden="true">↗</span>
         </a>
       )}
     </div>
