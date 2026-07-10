@@ -1,7 +1,7 @@
 ---
 title: Lot 5 — Eagle's Landing
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "6.36"
