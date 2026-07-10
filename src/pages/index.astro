@@ -15,10 +15,21 @@ const homepageVideoId = homepageSettings?.data.homepageVideoId ?? siteConfig.hom
 const heroTagline     = homepageSettings?.data.heroTagline     ?? siteConfig.tagline;
 
 const allListings = await getCollection('listings');
+// Homepage box = every listing with the "Show on home page" toggle (featured) on,
+// regardless of status. Ordered by status (Available first, then Coming Soon,
+// Under Contract, Sold), newest-first within each group. No cap — all toggled show.
+const statusOrder: Record<string, number> = {
+  'available': 0,
+  'coming-soon': 1,
+  'under-contract': 2,
+  'sold': 3,
+};
 const featuredListings = allListings
-  .filter(l => l.data.featured && l.data.status === 'available')
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3);
+  .filter(l => l.data.featured)
+  .sort((a, b) => {
+    const byStatus = (statusOrder[a.data.status] ?? 9) - (statusOrder[b.data.status] ?? 9);
+    return byStatus !== 0 ? byStatus : b.data.date.getTime() - a.data.date.getTime();
+  });
 ---
 
 <BaseLayout
@@ -106,7 +117,7 @@ const featuredListings = allListings
   <section class="py-20 bg-gold">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-end justify-between mb-10">
-        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bg-dark">Available Now</h2>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl text-bg-dark">Featured Listings</h2>
         <a href="/listings" class="text-sm font-semibold text-bg-dark font-bold hover:underline hidden sm:block">See All Listings →</a>
       </div>
 
