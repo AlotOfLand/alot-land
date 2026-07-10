@@ -1,7 +1,7 @@
 ---
 title: Lot 8 — Sugar Tree Summit
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "11.41"
