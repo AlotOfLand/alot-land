@@ -1,11 +1,11 @@
 ---
 title: 160 Acres - Seligman, AZ
 status: under-contract
-featured: true
+featured: false
 state: Arizona
 county: Yavapai
 acreage: "160"
-price: "$79,900"
+price: $79,900
 zoning: Rural Residential
 roadAccess: 2647ft of Dirt road access along the eastern property line
 water: No
