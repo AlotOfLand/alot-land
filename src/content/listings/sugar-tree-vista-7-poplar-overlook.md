@@ -1,7 +1,7 @@
 ---
 title: Lot 7 — Poplar Overlook
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "5.94"
