@@ -3,7 +3,7 @@ title: Sugar Tree Vista
 location: Decatur County, TN
 state: Tennessee
 status: coming-soon
-image: ""
+image: https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783715344/1_IMG_9152_rikuqt.jpg
 ctaLabel: Get More Information
 ctaUrl: /sugar-tree-vista
 showVideo: false
