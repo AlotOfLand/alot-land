@@ -13,13 +13,10 @@ export default defineConfig({
   integrations: [
     tailwind(),
     sitemap({
-      // Soft-launch / utility pages excluded from sitemap.
-      // Remove '/sugar-tree-vista' and '/communities' here when Sugar Tree goes live.
+      // Utility/private pages excluded from sitemap.
       filter: (page) =>
         !page.includes('/admin') &&
         !page.includes('/invest') &&
-        !page.includes('/sugar-tree-vista') &&
-        !page.includes('/communities') &&
         !page.includes('/land-payment-calculator'),
     }),
   ],
