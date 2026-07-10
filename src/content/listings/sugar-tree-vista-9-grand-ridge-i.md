@@ -1,7 +1,7 @@
 ---
 title: Lot 9 — Grand Ridge I
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "10.24"
