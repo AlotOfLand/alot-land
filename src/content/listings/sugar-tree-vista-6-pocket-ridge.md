@@ -1,7 +1,7 @@
 ---
 title: Lot 6 — Pocket Ridge
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "5.38"
