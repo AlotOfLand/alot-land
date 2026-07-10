@@ -1,7 +1,7 @@
 ---
 title: Lot 3 — Hidden Meadow
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "7.18"
