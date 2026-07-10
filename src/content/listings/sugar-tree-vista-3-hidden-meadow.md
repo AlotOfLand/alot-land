@@ -19,6 +19,8 @@ community: sugar-tree-vista
 ***Tucked away, up high, all yours.***
 
 **1716 Ray Miller Road, Sugar Tree, TN 38380**
+
+
 Some lots show everything from the road. This one keeps its best part hidden. A private ridge runs deep into the property to a meadow building site set up on the hill — elevated, secluded, and out of sight from everyone else. You walk to it, and the world drops away.
 For the buyer who wants privacy and beauty more than a roadside view, Hidden Meadow is the one. $89,000.
 ***At a glance:* 7.18 acres · elevated hilltop site · private hidden meadow · Decatur County, TN**
