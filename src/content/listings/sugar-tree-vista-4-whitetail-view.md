@@ -1,7 +1,7 @@
 ---
 title: Lot 4 — Whitetail Ridge
 status: coming-soon
-featured: false
+featured: true
 state: Tennessee
 county: Decatur
 acreage: "5.47"
