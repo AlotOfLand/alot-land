@@ -11,7 +11,7 @@ roadAccess: Graded driveway installed
 water: Drill your own well
 power: Power being run to the road
 gps: 35.805966, -88.026394
-showSellerFinance: true
+showSellerFinance: false
 photos: []
 date: 2026-06-20T09:58:00.000-05:00
 community: sugar-tree-vista
@@ -24,6 +24,4 @@ Some lots show everything from the road. This one keeps its best part hidden. A 
 For the buyer who wants privacy and beauty more than a roadside view, Hidden Meadow is the one. $89,000.
 ***At a glance:* 7.18 acres · elevated hilltop site · private hidden meadow · Decatur County, TN**
 
-
-
-Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts above the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit. 10% cash discount; owner financing available.
+Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts above the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.
