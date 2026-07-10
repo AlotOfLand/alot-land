@@ -11,7 +11,7 @@ roadAccess: Graded driveway installed
 water: Drill your own well
 power: Power being run to the road
 gps: 35.806230, -88.025481
-showSellerFinance: true
+showSellerFinance: false
 photos: []
 date: 2026-06-20T09:59:00.000-05:00
 community: sugar-tree-vista
@@ -24,6 +24,4 @@ This is the prime cut. A ridgeline meadow rolls back deep into the property — 
 Stand at the top and the meadow runs out ahead of you with woods closing in behind. It's the lot that makes people stop talking and start picturing the house. $83,000.
 ***At a glance:* 6.22 acres · open ridgeline meadow · hardwood borders · Decatur County, TN**
 
-
-
-Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts above the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit. 10% cash discount; owner financing available.
+Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts above the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.
