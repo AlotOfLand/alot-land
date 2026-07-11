@@ -2,8 +2,8 @@
   "saleDate": "2026-08-01T09:00:00.000-05:00",
   "heroVideoUrl": "",
   "heroImage": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783715067/_IMG_1025_kemiid.heic",
-  "guidePhoto": "",
-  "developerPhoto": "",
-  "ogImage": "",
+  "guidePhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783803732/Headshot1_hdsrm0.png",
+  "developerPhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783803846/Headshot2_i78gw2.png",
+  "ogImage": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783715072/_IMG_9131_2_k82iy4.jpg",
   "galleryPhotos": []
 }
