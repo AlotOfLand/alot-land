@@ -15,6 +15,7 @@ const phoneDisp = '(615) 538-6878';
 const st = await getEntry('settings', 'sugar-tree');
 const saleDate = st?.data.saleDate ?? '2026-08-01T09:00:00.000-05:00';
 const heroVideoUrl = st?.data.heroVideoUrl ?? '';
+const showHeroVideo = st?.data.showHeroVideo ?? true;
 const heroImage = st?.data.heroImage ?? '';
 const guidePhoto = st?.data.guidePhoto ?? '';
 const developerPhoto = st?.data.developerPhoto ?? '';
@@ -431,13 +432,11 @@ const drives = [
     </div>
     <div class="promo-pill">✈&nbsp; <span><b>$1,500 Fly &amp; Buy Credit</b> &mdash; we cover your flight and hotel, up to $1,500 off the price of the lot you buy.</span></div>
 
-    <div class="video-frame">
-      {heroVideoUrl ? (
+    {showHeroVideo && heroVideoUrl && (
+      <div class="video-frame">
         <iframe src={heroVideoUrl} title="Sugar Tree Vista walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
-      ) : (
-        <><div class="play">▶</div><div class="ph">TODO — add the walkthrough video in /admin → Sugar Tree Vista → Hero Video URL</div></>
-      )}
-    </div>
+      </div>
+    )}
   </div>
 </section>
 

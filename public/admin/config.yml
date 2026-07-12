@@ -224,6 +224,7 @@ collections:
         fields:
           - { label: "One-Day Sale Date", name: "saleDate", widget: "datetime", hint: "The countdown on the Sugar Tree Vista page counts down to this date/time." }
           - { label: "Hero Video URL (YouTube or Vimeo)", name: "heroVideoUrl", widget: "string", required: false, hint: "Paste a link to embed the walkthrough video in the hero. Leave blank to hide it." }
+          - { label: "Show Hero Video", name: "showHeroVideo", widget: "boolean", default: true, required: false, hint: "Toggle off to hide the hero video on the sales page without deleting the URL." }
           - { label: "Hero Background Photo", name: "heroImage", widget: "image", required: false, hint: "Optional drone/landscape photo behind the hero headline. Leave blank for the navy background." }
           - { label: "Land Guide Photo (David)", name: "guidePhoto", widget: "image", required: false, hint: "Headshot for the 'Your Land Guide' section." }
           - { label: "Developer Photo", name: "developerPhoto", widget: "image", required: false, hint: "Photo for the 'The Developer' section." }

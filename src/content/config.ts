@@ -142,6 +142,7 @@ const settings = defineCollection({
     // sugar-tree.json
     saleDate: z.string().optional(),
     heroVideoUrl: z.string().optional(),
+    showHeroVideo: z.boolean().optional().default(true),
     heroImage: z.string().optional(),
     guidePhoto: z.string().optional(),
     developerPhoto: z.string().optional(),
