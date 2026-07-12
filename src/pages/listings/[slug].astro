@@ -142,14 +142,16 @@ const listingSchema = {
   {communityBackUrl && (
     <a
       href={communityBackUrl}
-      class="group block bg-bg-dark text-white hover:bg-black transition-colors border-b border-gold/30"
+      target="_blank"
+      rel="noopener"
+      class="stv-banner group relative block overflow-hidden bg-gold text-bg-dark hover:bg-yellow-400 transition-colors border-b border-bg-dark/10"
     >
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-center gap-2 text-sm font-semibold text-center">
         <span aria-hidden="true">📍</span>
         <span>
-          Part of <span class="text-gold">{communityName}</span> — see all lots, the map &amp; financing
+          Part of <span class="font-bold underline decoration-bg-dark/40 underline-offset-2">{communityName}</span> — see all lots, the map &amp; financing
         </span>
-        <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5">→</span>
+        <span aria-hidden="true" class="stv-arrow inline-block">→</span>
       </div>
     </a>
   )}
@@ -354,4 +356,24 @@ const listingSchema = {
     </script>
   )}
 </BaseLayout>
+
+<style>
+  /* Micro-animation for the community banner: a slow shine sweep across the gold,
+     plus a gentle arrow nudge — both disabled for reduced-motion users. */
+  .stv-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 35%, rgba(255,255,255,.55) 50%, transparent 65%);
+    transform: translateX(-100%);
+    animation: stv-shine 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .stv-arrow { animation: stv-nudge 1.6s ease-in-out infinite; }
+  @keyframes stv-shine { 0%, 55% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+  @keyframes stv-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .stv-banner::after, .stv-arrow { animation: none; }
+  }
+</style>
 
