@@ -144,7 +144,7 @@ const listingSchema = {
       href={communityBackUrl}
       target="_blank"
       rel="noopener"
-      class="stv-banner group relative block overflow-hidden bg-gold text-bg-dark hover:bg-yellow-400 transition-colors border-b border-bg-dark/10"
+      class="stv-banner group sticky top-16 z-40 block overflow-hidden bg-gold text-bg-dark hover:bg-yellow-400 transition-colors border-b border-bg-dark/10"
     >
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-center gap-2 text-sm font-semibold text-center">
         <span aria-hidden="true">📍</span>
@@ -364,13 +364,13 @@ const listingSchema = {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(100deg, transparent 35%, rgba(255,255,255,.55) 50%, transparent 65%);
+    background: linear-gradient(100deg, transparent 42%, rgba(255,255,255,.28) 50%, transparent 58%);
     transform: translateX(-100%);
-    animation: stv-shine 5s ease-in-out infinite;
+    animation: stv-shine 9s ease-in-out infinite;
     pointer-events: none;
   }
   .stv-arrow { animation: stv-nudge 1.6s ease-in-out infinite; }
-  @keyframes stv-shine { 0%, 55% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+  @keyframes stv-shine { 0%, 72% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
   @keyframes stv-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
   @media (prefers-reduced-motion: reduce) {
     .stv-banner::after, .stv-arrow { animation: none; }
