@@ -5,7 +5,7 @@ import VideoEmbed from '../../components/VideoEmbed.astro';
 import ShareButtons from '../../components/ShareButtons.astro';
 import AmenitySlideshow from '../../components/AmenitySlideshow.astro';
 import VendorSection from '../../components/VendorSection.astro';
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, getEntry } from 'astro:content';
 import { siteConfig } from '../../config/site.js';
 
 export async function getStaticPaths() {
@@ -22,6 +22,14 @@ const { title, status, acreage, county, state, price, zoning, roadAccess, water,
 
 const loc = `${county} County, ${state}`;
 const pricePart = price ? ` — ${price}` : '';
+
+// If this lot belongs to a community that has a sales page (Button Link set),
+// show a banner linking back to it — so QR visitors can reach the full pitch.
+const community = listing.data.community
+  ? await getEntry('communities', listing.data.community)
+  : null;
+const communityBackUrl = community?.data.ctaUrl ?? '';
+const communityName = community?.data.title ?? '';
 
 // Status-aware title (matches the share-image stamp). "for Sale" only when truly
 // available (best for SEO); sold drops the price.
@@ -130,6 +138,21 @@ const listingSchema = {
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(listingSchema)} />
+
+  {communityBackUrl && (
+    <a
+      href={communityBackUrl}
+      class="group block bg-bg-dark text-white hover:bg-black transition-colors border-b border-gold/30"
+    >
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-center gap-2 text-sm font-semibold text-center">
+        <span aria-hidden="true">📍</span>
+        <span>
+          Part of <span class="text-gold">{communityName}</span> — see all lots, the map &amp; financing
+        </span>
+        <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5">→</span>
+      </div>
+    </a>
+  )}
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <!-- Back link -->
