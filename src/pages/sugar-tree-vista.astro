@@ -16,6 +16,10 @@ const st = await getEntry('settings', 'sugar-tree');
 const saleDate = st?.data.saleDate ?? '2026-08-01T09:00:00.000-05:00';
 const heroVideoUrl = st?.data.heroVideoUrl ?? '';
 const showHeroVideo = st?.data.showHeroVideo ?? true;
+// GHL embeds (paste booking/form URLs in the CMS). Empty = graceful fallback.
+const showingCalendarUrl = st?.data.showingCalendarUrl ?? '';
+const consultCalendarUrl = st?.data.consultCalendarUrl ?? '';
+const areaGuideFormUrl = st?.data.areaGuideFormUrl ?? '';
 const heroImage = st?.data.heroImage ?? '';
 const guidePhoto = st?.data.guidePhoto ?? '';
 const developerPhoto = st?.data.developerPhoto ?? '';
@@ -365,6 +369,15 @@ const drives = [
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
   .reveal.in{opacity:1;transform:none}
+  /* GHL embed modal (calendars + area-guide form) */
+  .stv-ov{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(10,22,40,.62)}
+  .stv-ov[hidden]{display:none}
+  .stv-ov-box{background:#fff;border-radius:var(--r);width:100%;max-width:560px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+  .stv-ov-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;background:#0a1628;color:#fff}
+  .stv-ov-head span{font-family:"Fraunces",serif;font-size:1.12rem}
+  .stv-ov-x{background:none;border:0;color:#fff;font-size:1.7rem;line-height:1;cursor:pointer;padding:0 4px;opacity:.85}
+  .stv-ov-x:hover{opacity:1}
+  #stv-ov-frame{width:100%;height:72vh;border:0;background:#fff}
 </style>
 </head>
 <body data-sale-date={saleDate} data-prop-image={propImage}>
@@ -450,8 +463,9 @@ const drives = [
         <div class="body">
           <h4>Book a Private Showing</h4>
           <p>Showings are held on our one-day sale Saturdays. Lots go first come, first served &mdash; the earliest slots get the best pick.</p>
-          <!-- INTERIM: call/text to book. Swap href for the GHL "Sugar Tree Vista — Showing" calendar URL when ready. -->
-          <a class="btn btn-primary" href={`tel:+1${phoneRaw}`} data-ghl="showing">Check Available Showing Times</a>
+          {showingCalendarUrl
+            ? <button type="button" class="btn btn-primary" data-modal-src={showingCalendarUrl} data-modal-title="Book a Private Showing">Check Available Showing Times</button>
+            : <a class="btn btn-primary" href={`tel:+1${phoneRaw}`}>Check Available Showing Times</a>}
         </div>
       </div>
       <div class="opt">
@@ -459,8 +473,9 @@ const drives = [
         <div class="body">
           <h4>Book a 20-Minute Land Call</h4>
           <p>Prefer to talk first? Get pricing, lot details, maps, and financing options &mdash; including the $1,500 Fly &amp; Buy Credit &mdash; over the phone or a quick Zoom.</p>
-          <!-- INTERIM: call/text to book. Swap href for the GHL "Sugar Tree Vista — Land Consult" calendar URL when ready. -->
-          <a class="btn btn-dark" href={`tel:+1${phoneRaw}`} data-ghl="consult">Schedule a Land Consult</a>
+          {consultCalendarUrl
+            ? <button type="button" class="btn btn-dark" data-modal-src={consultCalendarUrl} data-modal-title="Book a 20-Minute Land Call">Schedule a Land Consult</button>
+            : <a class="btn btn-dark" href={`tel:+1${phoneRaw}`}>Schedule a Land Consult</a>}
         </div>
       </div>
     </div>
@@ -645,8 +660,9 @@ const drives = [
       <h3>Get the Sugar Tree Vista Area Guide</h3>
       <p>Drive times, things to do, the lake, and what makes this corner of Tennessee special &mdash; in one PDF.</p>
     </div>
-    <!-- TODO: gate behind a GHL email-capture form (fires AreaGuideDownload + Lead). Direct link for now. -->
-    <a class="btn btn-primary" href="/guides/sugar-tree-vista-area-guide.pdf" target="_blank" rel="noopener" id="guideDownload">Download the Area Guide</a>
+    {areaGuideFormUrl
+      ? <button type="button" class="btn btn-primary" data-modal-src={areaGuideFormUrl} data-modal-title="Get the Free Area Guide" id="guideDownload">Download the Area Guide</button>
+      : <a class="btn btn-primary" href="/guides/sugar-tree-vista-area-guide.pdf" target="_blank" rel="noopener" id="guideDownload">Download the Area Guide</a>}
   </div>
 </section>
 
@@ -690,6 +706,18 @@ const drives = [
     </div>
   </div>
 </section>
+
+{(showingCalendarUrl || consultCalendarUrl || areaGuideFormUrl) && (
+  <div class="stv-ov" id="stv-ov" hidden>
+    <div class="stv-ov-box">
+      <div class="stv-ov-head">
+        <span id="stv-ov-title">Book</span>
+        <button type="button" class="stv-ov-x" id="stv-ov-x" aria-label="Close">&times;</button>
+      </div>
+      <iframe id="stv-ov-frame" title="Booking" src="about:blank" loading="lazy"></iframe>
+    </div>
+  </div>
+)}
 
 <footer>
   <div class="wrap">
@@ -820,6 +848,23 @@ const drives = [
       grp.push([p.lat,p.lng]);
     });
     map.fitBounds(grp,{padding:[40,40],maxZoom:15});
+  })();
+
+  // ===== GHL embed modal (Showing / Consult calendars + area-guide form) =====
+  (function(){
+    var ov=document.getElementById('stv-ov');
+    var frame=document.getElementById('stv-ov-frame');
+    var title=document.getElementById('stv-ov-title');
+    var xBtn=document.getElementById('stv-ov-x');
+    if(!ov||!frame) return;
+    function openModal(src,label){ frame.src=src; if(title) title.textContent=label||'Book'; ov.hidden=false; document.body.style.overflow='hidden'; }
+    function closeModal(){ ov.hidden=true; frame.src='about:blank'; document.body.style.overflow=''; }
+    document.querySelectorAll('[data-modal-src]').forEach(function(b){
+      b.addEventListener('click', function(){ openModal(b.getAttribute('data-modal-src'), b.getAttribute('data-modal-title')); });
+    });
+    if(xBtn) xBtn.addEventListener('click', closeModal);
+    ov.addEventListener('click', function(e){ if(e.target===ov) closeModal(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !ov.hidden) closeModal(); });
   })();
 </script>
 </body>
