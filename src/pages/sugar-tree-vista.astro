@@ -512,7 +512,7 @@ const drives = [
         <span class="eyebrow">Only Ten Tracts to Choose From</span>
         <h2>Pick Your View</h2>
       </div>
-      <p class="note">Live names, acreage, pricing &amp; status pull from the listings backend. Click a lot for full details.</p>
+      <p class="note">Tap any lot for photos, acreage, price, and full details.</p>
     </div>
     <div class="lot-grid">
       {lots.map(lot => (
@@ -586,7 +586,7 @@ const drives = [
       <span><i style="background:#0a1628"></i> Town</span>
       <span><i style="background:#c47f17"></i> Kentucky Lake day-trips</span>
     </div>
-    <p style="font-size:.72rem;margin-top:10px">Drive times are estimates pending verification.</p>
+    <p style="font-size:.72rem;margin-top:10px">Drive times are approximate.</p>
   </div>
 </section>
 
@@ -597,7 +597,7 @@ const drives = [
     <p>Each pin is a homesite &mdash; click one for acreage, price, and current availability.</p>
     {lotPins.length > 0
       ? <div id="lotmap"></div>
-      : <div class="map-ph">Lot map coming soon<br><small>add each lot's GPS in the CMS and pins appear here automatically</small></div>}
+      : <div class="map-ph">Lot map coming soon<br><small>Call or text for exact lot locations and directions.</small></div>}
   </div>
 </section>
 
