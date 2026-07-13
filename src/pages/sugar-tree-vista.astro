@@ -20,6 +20,7 @@ const showHeroVideo = st?.data.showHeroVideo ?? true;
 const showingCalendarUrl = st?.data.showingCalendarUrl ?? '';
 const consultCalendarUrl = st?.data.consultCalendarUrl ?? '';
 const areaGuideFormUrl = st?.data.areaGuideFormUrl ?? '';
+const showFinancing = st?.data.showFinancing ?? true;
 const heroImage = st?.data.heroImage ?? '';
 const guidePhoto = st?.data.guidePhoto ?? '';
 const developerPhoto = st?.data.developerPhoto ?? '';
@@ -403,7 +404,7 @@ const drives = [
         <li><a href="#location">Location</a></li>
         <li><a href="#explore">Explore</a></li>
         <li><a href="#purchase">How to Buy</a></li>
-        <li><a href="#financing">Financing</a></li>
+        {showFinancing && <li><a href="#financing">Financing</a></li>}
         <li><a href={`tel:+1${phoneRaw}`} style="color:var(--meadow);font-weight:600">Call / Text</a></li>
       </ul>
     </nav>
@@ -615,6 +616,7 @@ const drives = [
   </div>
 </section>
 
+{showFinancing && (
 <section class="financing" id="financing">
   <div class="wrap">
     <div class="grid">
@@ -636,6 +638,7 @@ const drives = [
     </div>
   </div>
 </section>
+)}
 
 <section class="developer" id="developer">
   <div class="wrap">

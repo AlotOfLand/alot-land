@@ -5,6 +5,7 @@
   "showingCalendarUrl": "",
   "consultCalendarUrl": "",
   "areaGuideFormUrl": "",
+  "showFinancing": false,
   "heroImage": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783715067/_IMG_1025_kemiid.heic",
   "guidePhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783804800/DASFamilyHeadshot1_rtx7kx.png",
   "developerPhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783803846/Headshot2_i78gw2.png",
