@@ -29,4 +29,4 @@ This is the flagship — over eleven acres of high ridgeline meadow, open and ro
 There is exactly one lot like this in the community, and this is it — the biggest, the highest, the most complete. $129,000.
 ***At a glance:* 11.41 acres · expansive ridgeline meadow · full hardwood perimeter · family-compound scale · Decatur County, TN**
 
-Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts above the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.
+Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts near the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.

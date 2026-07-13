@@ -27,4 +27,4 @@ Build up front and look down into your own private meadow — the kind of bottom
 A genuine wildlife lot at an entry price. $62,000 — and it won't feel like an entry lot once you're standing on it.
 ***At a glance:* 5.47 acres · front building pad · private meadow & valley view · resident wildlife · Decatur County, TN**
 
-Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts above the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.
+Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts near the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.

@@ -27,4 +27,4 @@ Grande Ridge I is half of the most dramatic ridgeline in Sugar Tree Vista — a 
 A premium ridge homesite at $99,000 — one of only two seats on the finest ridge on the property.
 ***At a glance:* 10.24 acres · high ridgeline homesite · pairs with Grande Ridge II · Decatur County, TN**
 
-Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts above the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.
+Part of **Sugar Tree Vista** — ten unrestricted ridgeline view tracts near the Tennessee River at Kentucky Lake in Decatur County, TN. Every lot includes a graded driveway, a soil map marking approved septic locations, wide road frontage, a new survey, and a warranty deed. Power is being run to the road. Unrestricted — no HOA, no build time-limit.
