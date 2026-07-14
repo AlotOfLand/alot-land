@@ -1,14 +1,14 @@
 {
-  "saleDate": "2026-09-05T07:00:00.000-07:00",
-  "heroVideoUrl": "",
-  "showHeroVideo": true,
-  "showingCalendarUrl": "",
-  "consultCalendarUrl": "",
-  "areaGuideFormUrl": "",
-  "showFinancing": false,
   "heroImage": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783715067/_IMG_1025_kemiid.heic",
-  "guidePhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783804800/DASFamilyHeadshot1_rtx7kx.png",
-  "developerPhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783803846/Headshot2_i78gw2.png",
   "ogImage": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783715072/_IMG_9131_2_k82iy4.jpg",
-  "galleryPhotos": []
+  "showHeroVideo": true,
+  "consultCalendarUrl": "https://brand.alot.land/widget/booking/5Za8uXuhrvp3ZrqCeVFt",
+  "developerPhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783803846/Headshot2_i78gw2.png",
+  "showingCalendarUrl": "",
+  "heroVideoUrl": "",
+  "galleryPhotos": [],
+  "saleDate": "2026-09-05T07:00:00.000-07:00",
+  "guidePhoto": "https://res.cloudinary.com/doex0egtl/image/upload/f_auto,q_auto/v1783804800/DASFamilyHeadshot1_rtx7kx.png",
+  "showFinancing": false,
+  "areaGuideFormUrl": ""
 }
