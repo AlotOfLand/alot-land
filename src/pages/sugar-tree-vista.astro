@@ -466,7 +466,7 @@ const drives = [
           <h4>Book a Private Showing</h4>
           <p>Showings are held on our one-day sale Saturdays. Lots go first come, first served &mdash; the earliest slots get the best pick.</p>
           {showingCalendarUrl
-            ? <button type="button" class="btn btn-primary" data-modal-src={showingCalendarUrl} data-modal-title="Book a Private Showing">Check Available Showing Times</button>
+            ? <a class="btn btn-primary" href={showingCalendarUrl} target="_blank" rel="noopener">Check Available Showing Times</a>
             : <a class="btn btn-primary" href={`tel:+1${phoneRaw}`}>Check Available Showing Times</a>}
         </div>
       </div>
@@ -476,7 +476,7 @@ const drives = [
           <h4>Book a 20-Minute Land Call</h4>
           <p>Prefer to talk first? Get pricing, lot details, maps, and financing options &mdash; including the $1,500 Fly &amp; Buy Credit &mdash; over the phone or a quick Zoom.</p>
           {consultCalendarUrl
-            ? <button type="button" class="btn btn-dark" data-modal-src={consultCalendarUrl} data-modal-title="Book a 20-Minute Land Call">Schedule a Land Consult</button>
+            ? <a class="btn btn-dark" href={consultCalendarUrl} target="_blank" rel="noopener">Schedule a Land Consult</a>
             : <a class="btn btn-dark" href={`tel:+1${phoneRaw}`}>Schedule a Land Consult</a>}
         </div>
       </div>
