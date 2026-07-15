@@ -157,9 +157,9 @@ const listingSchema = {
   )}
 
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <!-- Back link -->
-    <a href="/listings" class="inline-flex items-center gap-2 text-sm text-text-muted hover:text-bg-dark transition-colors mb-6">
-      ← All Listings
+    <!-- Back link: community lots return to their community page; everything else to all listings -->
+    <a href={community ? `/communities/${listing.data.community}` : "/listings"} class="inline-flex items-center gap-2 text-sm text-text-muted hover:text-bg-dark transition-colors mb-6">
+      ← {community ? `Back to ${communityName}` : "All Listings"}
     </a>
 
     <!-- Status badge + Title + Heart -->
