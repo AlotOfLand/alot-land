@@ -147,6 +147,7 @@ const settings = defineCollection({
     consultCalendarUrl: z.string().optional(),
     areaGuideFormUrl: z.string().optional(),
     showFinancing: z.boolean().optional().default(true),
+    showFlyBuy: z.boolean().optional().default(true),
     heroImage: z.string().optional(),
     guidePhoto: z.string().optional(),
     developerPhoto: z.string().optional(),

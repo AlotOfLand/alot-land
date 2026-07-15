@@ -21,6 +21,7 @@ const showingCalendarUrl = st?.data.showingCalendarUrl ?? '';
 const consultCalendarUrl = st?.data.consultCalendarUrl ?? '';
 const areaGuideFormUrl = st?.data.areaGuideFormUrl ?? '';
 const showFinancing = st?.data.showFinancing ?? true;
+const showFlyBuy = st?.data.showFlyBuy ?? true;
 const heroImage = st?.data.heroImage ?? '';
 const guidePhoto = st?.data.guidePhoto ?? '';
 const developerPhoto = st?.data.developerPhoto ?? '';
@@ -445,7 +446,7 @@ const drives = [
       <a class="btn btn-primary" href="#contact">Book a Private Showing</a>
       <a class="btn btn-ghost" href={`tel:+1${phoneRaw}`}>Call or Text {phoneDisp}</a>
     </div>
-    <div class="promo-pill">✈&nbsp; <span><b>$1,500 Fly &amp; Buy Credit</b> &mdash; we cover your flight and hotel, up to $1,500 off the price of the lot you buy.</span></div>
+    {showFlyBuy && <div class="promo-pill">✈&nbsp; <span><b>$1,500 Fly &amp; Buy Credit</b> &mdash; we cover your flight and hotel, up to $1,500 off the price of the lot you buy.</span></div>}
 
     {showHeroVideo && heroVideoUrl && (
       <div class="video-frame">
@@ -474,7 +475,9 @@ const drives = [
         <div class="body">
           <div class="opt-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
           <h4>Book a 20-Minute Land Call</h4>
-          <p>Prefer to talk first? Get pricing, lot details, maps, and financing options &mdash; including the $1,500 Fly &amp; Buy Credit &mdash; over the phone or a quick Zoom.</p>
+          {showFlyBuy
+            ? <p>Prefer to talk first? Get pricing, lot details, and maps &mdash; including the $1,500 Fly &amp; Buy Credit &mdash; over the phone or a quick Zoom.</p>
+            : <p>Prefer to talk first? Get pricing, lot details, and maps over the phone or a quick Zoom.</p>}
           {consultCalendarUrl
             ? <a class="btn btn-dark" href={consultCalendarUrl} target="_blank" rel="noopener">Schedule a Land Consult</a>
             : <a class="btn btn-dark" href={`tel:+1${phoneRaw}`}>Schedule a Land Consult</a>}
@@ -484,6 +487,7 @@ const drives = [
   </div>
 </section>
 
+{showFlyBuy && (
 <section class="flybuy">
   <div class="wrap">
     <div class="ico">✈</div>
@@ -495,6 +499,7 @@ const drives = [
     <a class="btn btn-dark" href="#contact">Book a Showing &amp; Claim It</a>
   </div>
 </section>
+)}
 
 <section class="pitch">
   <div class="topo" aria-hidden="true"><svg viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice"><path d="M-20,90 C240,30 440,150 700,90 S1080,10 1240,110"/><path d="M-20,190 C260,130 460,250 720,190 S1100,110 1240,210"/><path d="M-20,300 C280,240 480,360 740,300 S1120,220 1240,320"/></svg></div>
@@ -550,7 +555,7 @@ const drives = [
       <div class="pk"><b>✓</b><span>Fully buildable &mdash; unrestricted, no HOA</span></div>
       <div class="pk"><b>✓</b><span>New survey on every lot</span></div>
       <div class="pk"><b>✓</b><span>Warranty Deed &amp; clear title</span></div>
-      <div class="pk"><b>✓</b><span>$1,500 Fly &amp; Buy travel credit (with purchase)</span></div>
+      {showFlyBuy && <div class="pk"><b>✓</b><span>$1,500 Fly &amp; Buy travel credit (with purchase)</span></div>}
       <div class="pk"><b>✓</b><span>No time limit to build</span></div>
       <div class="pk"><b>✓</b><span>Perfect for cabins, homes, RVs &amp; travel trailers</span></div>
     </div>
@@ -735,7 +740,7 @@ const drives = [
     </div>
     <p class="disclosure">
       <b>Developer:</b> Alot Of Land LLC is the owner and developer of Sugar Tree Vista and sells its own property directly; it is not a licensed real estate brokerage and David A. Stone is not a real estate agent. Certain lots may be listed by a licensed Tennessee real estate agent, in which case those lots are offered through that agent's brokerage. &nbsp;
-      <b>Fly &amp; Buy Credit:</b> Up to $1,500 in travel is credited toward the lot purchase price only upon purchase; not redeemable for cash; one per transaction; proof of travel required. &nbsp;
+      {showFlyBuy && <><b>Fly &amp; Buy Credit:</b> Up to $1,500 in travel is credited toward the lot purchase price only upon purchase; not redeemable for cash; one per transaction; proof of travel required. &nbsp;</>}
       <b>Fair Housing:</b> Alot Of Land LLC supports equal housing opportunity. &nbsp;
       <b>SMS consent:</b> By providing your number you agree to be contacted by phone and text about Sugar Tree Vista; message/data rates may apply; reply STOP to opt out. &nbsp;
       Offer prices are subject to change without notice. Maps, drive times, and lot details are approximate. &nbsp;
