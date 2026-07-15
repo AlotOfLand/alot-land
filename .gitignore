@@ -3,3 +3,15 @@ dist/
 .env
 .DS_Store
 *.log
+
+# Astro build cache + Claude Code tooling (generated — never commit)
+.astro/
+.claude/
+
+# Local working files, not part of the website
+/Images/
+/logos/
+/qr-codes/
+
+# Original screenshot uploads (the optimized .jpg versions are what the site uses)
+public/images/screenshot-*.png
