@@ -136,6 +136,7 @@ const settings = defineCollection({
     phone: z.string().optional(),
     phoneRaw: z.string().optional(),
     email: z.string().optional(),
+    showInvestCta: z.boolean().optional().default(true),
     // homepage.json
     homepageVideoId: z.string().optional(),
     heroTagline: z.string().optional(),

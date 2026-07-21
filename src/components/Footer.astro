@@ -6,6 +6,8 @@ const contactSettings = await getEntry('settings', 'contact');
 const phone    = contactSettings?.data.phone    ?? siteConfig.phone;
 const phoneRaw = contactSettings?.data.phoneRaw ?? siteConfig.phoneRaw;
 const email    = contactSettings?.data.email    ?? siteConfig.email;
+// Hidden until alot.capital launches — flip on in Settings → Contact.
+const showInvestCta = contactSettings?.data.showInvestCta ?? true;
 const { name, social, address } = siteConfig;
 
 const navLinks = [
@@ -89,14 +91,16 @@ const socialLinks = [
     </div>
 
     <!-- Investment CTA -->
-    <div class="mt-10 pt-6 border-t border-border-dark text-center">
-      <p class="text-sm text-gray-400">
-        Want to invest in future real estate deals?
-        <a href="https://alot.capital" target="_blank" rel="noopener noreferrer" class="text-gold font-semibold hover:text-yellow-400 transition-colors ml-1">
-          Request an invitation at alot.capital →
-        </a>
-      </p>
-    </div>
+    {showInvestCta && (
+      <div class="mt-10 pt-6 border-t border-border-dark text-center">
+        <p class="text-sm text-gray-400">
+          Want to invest in future real estate deals?
+          <a href="https://alot.capital" target="_blank" rel="noopener noreferrer" class="text-gold font-semibold hover:text-yellow-400 transition-colors ml-1">
+            Request an invitation at alot.capital →
+          </a>
+        </p>
+      </div>
+    )}
 
     <div class="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
       <p>© {new Date().getFullYear()} {name}. All rights reserved.</p>

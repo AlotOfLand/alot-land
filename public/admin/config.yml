@@ -212,6 +212,7 @@ collections:
           - { label: "Phone Number (display)", name: "phone", widget: "string" }
           - { label: "Phone Number (digits only)", name: "phoneRaw", widget: "string" }
           - { label: "Email", name: "email", widget: "string" }
+          - { label: "Show alot.capital Invite in Footer", name: "showInvestCta", widget: "boolean", default: false, required: false, hint: "Toggle on once alot.capital is live. Off hides the 'Request an invitation' line site-wide." }
       - label: "Homepage Settings"
         name: "homepage"
         file: "src/content/settings/homepage.json"
