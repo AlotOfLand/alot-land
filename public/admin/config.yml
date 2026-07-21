@@ -213,6 +213,12 @@ collections:
           - { label: "Phone Number (digits only)", name: "phoneRaw", widget: "string" }
           - { label: "Email", name: "email", widget: "string" }
           - { label: "Show alot.capital Invite in Footer", name: "showInvestCta", widget: "boolean", default: false, required: false, hint: "Toggle on once alot.capital is live. Off hides the 'Request an invitation' line site-wide." }
+      - label: "Videos Page"
+        name: "videos"
+        file: "src/content/settings/videos.json"
+        fields:
+          - { label: "Featured Video URL (optional)", name: "featuredVideoUrl", widget: "string", required: false, hint: "Paste a YouTube link to pin it as the big video at the top of /videos. Leave blank to feature your newest upload automatically." }
+          - { label: "Featured Video Caption (optional)", name: "featuredVideoNote", widget: "string", required: false, hint: "A short line shown under the featured video. Leave blank to use the video's own title." }
       - label: "Homepage Settings"
         name: "homepage"
         file: "src/content/settings/homepage.json"

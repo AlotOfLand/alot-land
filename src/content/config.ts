@@ -140,6 +140,9 @@ const settings = defineCollection({
     // homepage.json
     homepageVideoId: z.string().optional(),
     heroTagline: z.string().optional(),
+    // videos.json
+    featuredVideoUrl: z.string().optional(),
+    featuredVideoNote: z.string().optional(),
     // sugar-tree.json
     saleDate: z.string().optional(),
     heroVideoUrl: z.string().optional(),

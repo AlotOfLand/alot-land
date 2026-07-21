@@ -1,0 +1,191 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getEntry } from 'astro:content';
+import { siteConfig } from '../config/site.js';
+import { getChannelVideos, ytIdFromUrl, thumbFor, CHANNEL_URL } from '../lib/youtube.js';
+
+// Latest uploads, pulled from the channel feed at build time (auto-updates on rebuild).
+const videos = await getChannelVideos();
+
+// Optional manual override: pin one video as the hero (Settings → Videos Page).
+const vs = await getEntry('settings', 'videos');
+const featuredUrl = vs?.data.featuredVideoUrl ?? '';
+const featuredNote = vs?.data.featuredVideoNote ?? '';
+const pinnedId = ytIdFromUrl(featuredUrl);
+
+const featured = pinnedId
+  ? videos.find(v => v.id === pinnedId) ?? {
+      id: pinnedId,
+      title: featuredNote || 'Featured video',
+      thumb: thumbFor(pinnedId),
+      sugarTree: false,
+    }
+  : videos[0];
+
+const rest = featured ? videos.filter(v => v.id !== featured.id) : videos;
+const stvCount = rest.filter(v => v.sugarTree).length;
+const otherCount = rest.length - stvCount;
+const { social } = siteConfig;
+---
+
+<BaseLayout
+  title="Videos — Land Tours, Tips & Sugar Tree Vista"
+  description="Watch land tours, buying tips, and Sugar Tree Vista updates from David the Land Guy — Alot of Land LLC."
+>
+  <!-- Header -->
+  <div class="bg-bg-dark text-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="font-display font-black text-4xl sm:text-5xl mb-3">Videos</h1>
+      <p class="text-gray-400 text-lg max-w-2xl">Land tours, buying tips, and updates from the field — including everything happening at Sugar Tree Vista.</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    {featured ? (
+      <>
+        <!-- Featured -->
+        <section class="mb-14">
+          <h2 class="font-display font-bold text-2xl text-bg-dark mb-4">Featured</h2>
+          <div class="max-w-4xl">
+            <button
+              type="button"
+              class="vplay group relative block w-full overflow-hidden rounded-2xl bg-bg-dark aspect-video"
+              data-id={featured.id}
+              aria-label={`Play: ${featured.title}`}
+            >
+              <img src={featured.thumb} alt="" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition duration-300" />
+              <span class="absolute inset-0 flex items-center justify-center">
+                <span class="w-20 h-20 rounded-full bg-gold text-bg-dark flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <svg viewBox="0 0 24 24" class="w-8 h-8 ml-1" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+              </span>
+            </button>
+            <p class="mt-4 font-display font-bold text-xl text-bg-dark">{featuredNote || featured.title}</p>
+          </div>
+        </section>
+
+        <!-- Filters -->
+        {stvCount > 0 && otherCount > 0 && (
+          <div class="flex flex-wrap gap-2 mb-6" id="vfilters">
+            <button type="button" data-filter="all" class="vfilter is-on text-sm font-bold px-4 py-2 rounded-xl border border-bg-dark/15 transition-colors">All Videos</button>
+            <button type="button" data-filter="stv" class="vfilter text-sm font-bold px-4 py-2 rounded-xl border border-bg-dark/15 transition-colors">Sugar Tree Vista</button>
+            <button type="button" data-filter="other" class="vfilter text-sm font-bold px-4 py-2 rounded-xl border border-bg-dark/15 transition-colors">More Videos</button>
+          </div>
+        )}
+
+        <!-- Wall -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="vgrid">
+          {rest.map(v => (
+            <button
+              type="button"
+              class="vplay vcard group text-left"
+              data-id={v.id}
+              data-cat={v.sugarTree ? 'stv' : 'other'}
+              aria-label={`Play: ${v.title}`}
+            >
+              <span class="relative block overflow-hidden rounded-xl bg-bg-dark aspect-video">
+                <img src={v.thumb} alt="" loading="lazy" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition duration-300" />
+                <span class="absolute inset-0 flex items-center justify-center">
+                  <span class="w-12 h-12 rounded-full bg-gold/95 text-bg-dark flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5 ml-0.5" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                  </span>
+                </span>
+              </span>
+              <span class="block mt-3 text-sm font-semibold text-bg-dark leading-snug group-hover:text-gold transition-colors">{v.title}</span>
+            </button>
+          ))}
+        </div>
+      </>
+    ) : (
+      <div class="text-center py-20 bg-white rounded-2xl border border-gray-100">
+        <p class="text-3xl mb-3">📺</p>
+        <h2 class="font-display font-bold text-2xl text-bg-dark mb-2">Videos coming soon</h2>
+        <p class="text-gray-500 mb-6">New land tours and updates are posted regularly.</p>
+        <a href={CHANNEL_URL} target="_blank" rel="noopener" class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors">Visit the channel →</a>
+      </div>
+    )}
+
+    <!-- Follow -->
+    <section class="mt-16 bg-bg-dark text-white rounded-2xl px-6 sm:px-10 py-10 text-center">
+      <h2 class="font-display font-bold text-2xl sm:text-3xl mb-2">Follow along</h2>
+      <p class="text-gray-400 mb-7 max-w-xl mx-auto">New land, new deals, and behind-the-scenes from the field — posted first on social.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href={CHANNEL_URL} target="_blank" rel="noopener" class="bg-gold text-bg-dark font-bold px-6 py-3 rounded-xl hover:bg-yellow-400 transition-colors">YouTube</a>
+        {social.instagram && <a href={social.instagram} target="_blank" rel="noopener" class="border border-white/40 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors">Instagram</a>}
+        {social.tiktok && <a href={social.tiktok} target="_blank" rel="noopener" class="border border-white/40 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors">TikTok</a>}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="mt-12 text-center">
+      <h2 class="font-display font-bold text-2xl text-bg-dark mb-4">Ready to find your land?</h2>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/listings" class="bg-gold text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-colors">Browse Listings</a>
+        <a href="/sugar-tree-vista" class="border-2 border-bg-dark text-bg-dark font-bold px-8 py-4 rounded-2xl hover:bg-bg-dark hover:text-white transition-colors">See Sugar Tree Vista</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="vbox" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="w-full max-w-4xl">
+      <div class="flex justify-end mb-2">
+        <button type="button" id="vbox-x" class="text-white/80 hover:text-white text-3xl leading-none px-2" aria-label="Close video">&times;</button>
+      </div>
+      <div class="aspect-video w-full overflow-hidden rounded-2xl bg-black">
+        <iframe id="vbox-frame" class="w-full h-full" src="about:blank" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .vfilter{background:#fff;color:#0A0A0A}
+  .vfilter.is-on{background:#0A0A0A;color:#fff;border-color:#0A0A0A}
+</style>
+
+<script is:inline>
+  (function () {
+    var box = document.getElementById('vbox');
+    var frame = document.getElementById('vbox-frame');
+    var x = document.getElementById('vbox-x');
+
+    function open(id) {
+      if (!box || !frame) return;
+      frame.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+      box.classList.remove('hidden');
+      box.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      if (!box || !frame) return;
+      frame.src = 'about:blank';
+      box.classList.add('hidden');
+      box.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.vplay').forEach(function (b) {
+      b.addEventListener('click', function () { open(b.getAttribute('data-id')); });
+    });
+    if (x) x.addEventListener('click', close);
+    if (box) box.addEventListener('click', function (e) { if (e.target === box) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && box && !box.classList.contains('hidden')) close();
+    });
+
+    // Category filter
+    var filters = document.querySelectorAll('.vfilter');
+    filters.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var want = btn.getAttribute('data-filter');
+        filters.forEach(function (f) { f.classList.toggle('is-on', f === btn); });
+        document.querySelectorAll('#vgrid .vcard').forEach(function (card) {
+          var cat = card.getAttribute('data-cat');
+          card.style.display = (want === 'all' || cat === want) ? '' : 'none';
+        });
+      });
+    });
+  })();
+</script>

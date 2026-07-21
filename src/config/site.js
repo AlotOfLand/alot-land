@@ -16,7 +16,7 @@ export const siteConfig = {
     facebook: "https://www.facebook.com/share/189qLCsxS8/?mibextid=wwXIfr",
     instagram: "https://www.instagram.com/davidthelandguy/",
     youtube: "https://www.youtube.com/@davidthelandguy",
-    linkedin: "https://www.linkedin.com/in/davidbuysland/",
+    linkedin: "https://www.linkedin.com/in/davidthelandguy/",
     tiktok: "https://www.tiktok.com/@davidthelandguy",
   },
   analytics: {
