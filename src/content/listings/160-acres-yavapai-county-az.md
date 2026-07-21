@@ -19,6 +19,7 @@ photos:
   - /images/screenshot-2026-05-07-at-17.22.33.jpg
   - /images/screenshot-2026-05-07-at-17.32.10.jpg
 date: 2026-05-15T18:00:00.000-07:00
+buyerTestimonial: Best price ever for 160 acres!
 ---
 If you’ve been waiting for the right Arizona land deal, this is it.
 
