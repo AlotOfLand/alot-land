@@ -1,0 +1,23 @@
+name: Daily site refresh
+
+# Rebuilds the site once a day so new YouTube uploads show up on /videos
+# (and the Sugar Tree strip) without anyone touching the CMS.
+# The Netlify build hook lives in the NETLIFY_BUILD_HOOK repo secret — never in this file.
+
+on:
+  schedule:
+    - cron: '0 11 * * *' # 11:00 UTC ≈ 6:00 AM Central
+  workflow_dispatch: # lets you run it on demand from the Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify rebuild
+        run: |
+          if [ -z "${{ secrets.NETLIFY_BUILD_HOOK }}" ]; then
+            echo "NETLIFY_BUILD_HOOK secret is not set — skipping."
+            exit 1
+          fi
+          curl -fsSL -X POST -d '{}' "${{ secrets.NETLIFY_BUILD_HOOK }}" > /dev/null
+          echo "Netlify rebuild triggered."
