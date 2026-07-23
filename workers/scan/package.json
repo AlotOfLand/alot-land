@@ -1,0 +1,17 @@
+{
+  "name": "@alot/mfda-scan",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "MFDA on-market scanner: Redfin lane. Runs on operator laptop or droplet cron - never in the browser app.",
+  "scripts": {
+    "scan": "node bin/scan.mjs",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  }
+}

@@ -13,12 +13,45 @@ export function dedupeKey({ apn, county_fips, address, city, state, zip }) {
 }
 
 // ---- Deals ----------------------------------------------------------------
+// The pipeline view: everything EXCEPT untouched scraped leads (those live on
+// the On-Market page until the operator hits Analyze).
 export async function listDeals(orgId) {
   const { data, error } = await supabase
     .from('deals')
     .select('*')
     .eq('org_id', orgId)
+    .neq('status', 'lead')
     .order('updated_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+// The scraped lead queue (On-Market page).
+export async function listOnMarket(orgId) {
+  const { data, error } = await supabase
+    .from('deals')
+    .select('*')
+    .eq('org_id', orgId)
+    .eq('status', 'lead')
+    .order('scanned_at', { ascending: false })
+    .limit(500);
+  if (error) throw error;
+  return data;
+}
+
+export async function setDealStatus(id, status) {
+  const { error } = await supabase.from('deals').update({ status }).eq('id', id);
+  if (error) throw error;
+}
+
+export async function latestScanRun(orgId) {
+  const { data, error } = await supabase
+    .from('scan_runs')
+    .select('*')
+    .eq('org_id', orgId)
+    .order('started_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
   if (error) throw error;
   return data;
 }

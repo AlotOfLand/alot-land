@@ -4,6 +4,7 @@ import { useOrg } from './lib/org';
 import { supabaseConfigured } from './lib/supabase';
 import SignIn from './pages/SignIn';
 import Deals from './pages/Deals';
+import OnMarket from './pages/OnMarket';
 import DealNew from './pages/DealNew';
 import DealResults from './pages/DealResults';
 import Settings from './pages/Settings';
@@ -23,6 +24,7 @@ function TopBar() {
   const { org, orgs, setOrg, role } = useOrg();
   const loc = useLocation();
   const nav = [
+    ['/on-market', 'On-Market'],
     ['/deals', 'Deals'],
     ['/settings', 'Settings'],
   ];
@@ -94,6 +96,16 @@ export default function App() {
   return (
     <Routes>
       <Route path="/signin" element={session ? <Navigate to="/deals" replace /> : <SignIn />} />
+      <Route
+        path="/on-market"
+        element={
+          <Protected>
+            <Shell>
+              <OnMarket />
+            </Shell>
+          </Protected>
+        }
+      />
       <Route
         path="/deals"
         element={
