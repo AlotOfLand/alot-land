@@ -10,6 +10,7 @@ const listings = defineCollection({
     county: z.string(),
     acreage: z.string(),
     price: z.string().optional(),
+    address: z.string().optional(),
     zoning: z.string().optional(),
     roadAccess: z.string().optional(),
     water: z.string().optional(),
