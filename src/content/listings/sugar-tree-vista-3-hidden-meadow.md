@@ -6,6 +6,7 @@ state: Tennessee
 county: Decatur
 acreage: "7.18"
 price: $89,000
+address: 1716 Ray Miller Road, Sugar Tree, TN 38380
 zoning: Unrestricted / No HOA
 roadAccess: Graded driveway installed
 water: Drill your own well
@@ -19,8 +20,6 @@ date: 2026-06-20T09:58:00.000-05:00
 community: sugar-tree-vista
 ---
 ***Tucked away, up high, all yours.***
-
-**1716 Ray Miller Road, Sugar Tree, TN 38380**
 
 Some lots show everything from the road. This one keeps its best part hidden. A private ridge runs deep into the property to a meadow building site set up on the hill — elevated, secluded, and out of sight from everyone else. You walk to it, and the world drops away.
 For the buyer who wants privacy and beauty more than a roadside view, Hidden Meadow is the one. $89,000.
