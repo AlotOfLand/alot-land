@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { usd, pct, ratio } from '../lib/format';
 
 const C = { ink: '#1A1A1A', ink2: '#4A4A4A', muted: '#8A8272', gold: '#F5B800', green: '#2E8C43', border: '#E4DDD0', bg: '#F9F6F0', danger: '#C0392B' };
@@ -47,11 +47,16 @@ export default function ReportDocument({ deal, scenario }) {
     <Document>
       <Page size="A4" style={s.page}>
         {/* Header */}
-        <View>
-          <Text style={s.h1}>{deal.address || 'Multifamily Deal'}</Text>
-          <Text style={s.sub}>
-            {[deal.city, deal.state, deal.zip].filter(Boolean).join(', ')} · {d.units_total} units · MFDA · Alot Of Land
-          </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ flex: 1, paddingRight: 12 }}>
+            <Text style={s.h1}>{deal.address || 'Multifamily Deal'}</Text>
+            <Text style={s.sub}>
+              {[deal.city, deal.state, deal.zip].filter(Boolean).join(', ')} · {d.units_total} units · MFDA · Alot Of Land
+            </Text>
+          </View>
+          {deal.photo_url ? (
+            <Image src={deal.photo_url} style={{ width: 140, height: 92, borderRadius: 6, objectFit: 'cover' }} />
+          ) : null}
         </View>
 
         {/* Verdict */}

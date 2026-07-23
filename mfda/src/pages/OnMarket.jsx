@@ -121,6 +121,7 @@ export default function OnMarket() {
           <table className="w-full text-sm min-w-[760px]">
             <thead className="bg-surface-2">
               <tr>
+                <th className="th w-16"></th>
                 <th className="th">Property</th>
                 <th className="th">Size</th>
                 <th className="th text-right">Price</th>
@@ -134,6 +135,13 @@ export default function OnMarket() {
             <tbody>
               {rows.map((d) => (
                 <tr key={d.id} className="hover:bg-surface-2/60">
+                  <td className="td w-16">
+                    {d.photo_url ? (
+                      <img src={d.photo_url} alt="" loading="lazy" className="w-14 h-11 object-cover rounded-lg border border-border" />
+                    ) : (
+                      <div className="w-14 h-11 rounded-lg bg-surface-2 border border-border flex items-center justify-center text-muted text-xs">—</div>
+                    )}
+                  </td>
                   <td className="td">
                     <div className="font-medium">{d.address}</div>
                     <div className="text-xs text-muted">

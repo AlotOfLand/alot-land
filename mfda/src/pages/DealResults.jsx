@@ -52,6 +52,14 @@ export default function DealResults() {
         </div>
       </div>
 
+      {deal.data.photos && deal.data.photos.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto">
+          {deal.data.photos.map((u, i) => (
+            <img key={i} src={u} alt="" className={`rounded-xl border border-border object-cover ${i === 0 ? 'h-44' : 'h-44 w-40'} `} />
+          ))}
+        </div>
+      )}
+
       {!out ? (
         <div className="card p-10 text-center">
           <p className="font-medium">No underwrite yet</p>
