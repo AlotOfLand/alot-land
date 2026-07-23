@@ -7,6 +7,7 @@ county: Decatur
 acreage: "5.66"
 price: $59,000
 address: 1783 Ray Miller Road, Sugar Tree, TN 38380
+showAddress: true
 zoning: Unrestricted / No HOA
 roadAccess: Graded driveway installed
 water: Drill your own well
