@@ -7,7 +7,9 @@
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <!-- Pinned to 3.14.1: the floating ^3.0.0 range auto-served 3.15.0 (2026-07-23),
+         which crashes the editor with React #130. Bump this deliberately after testing. -->
+    <script src="https://unpkg.com/decap-cms@3.14.1/dist/decap-cms.js"></script>
     <script>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", user => {
