@@ -18,7 +18,7 @@ export async function getStaticPaths() {
 
 const { listing } = Astro.props;
 const { Content } = await render(listing);
-const { title, status, acreage, county, state, price, address, zoning, roadAccess, water, power, gps, videoUrl, showVideo, zillowUrl, showZillow, showSellerFinance, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
+const { title, status, acreage, county, state, price, address, showAddress, zoning, roadAccess, water, power, gps, videoUrl, showVideo, zillowUrl, showZillow, showSellerFinance, photos, amenityPhotos, date, dateSold, showDaysOnMarket, buyerTestimonial, buyerName } = listing.data;
 
 const loc = `${county} County, ${state}`;
 const pricePart = price ? ` — ${price}` : '';
@@ -63,7 +63,7 @@ if (showDaysOnMarket && date) {
 }
 
 const details = [
-  { label: 'Address', value: address },
+  { label: 'Address', value: (showAddress ? address : undefined) },
   { label: 'Acreage', value: `${acreage} acres` },
   { label: 'Price', value: price || 'Contact for Price' },
   { label: 'Days on Market', value: daysOnMarket !== undefined ? `${daysOnMarket} days` : undefined },

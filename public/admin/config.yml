@@ -34,6 +34,7 @@ collections:
       - { label: "Acreage", name: "acreage", widget: "string" }
       - { label: "Price", name: "price", widget: "string", required: false, hint: "e.g. $45,000 or leave blank for 'Contact for Price'" }
       - { label: "Address (optional)", name: "address", widget: "string", required: false, hint: "Street address or 911 address if the parcel has one. Shows at the top of Property Details. Leave blank if there's no address." }
+      - { label: "Show Address on Listing", name: "showAddress", widget: "boolean", default: true, required: false, hint: "Toggle off to keep the address saved here but hide it from the public listing page." }
       - { label: "Zoning", name: "zoning", widget: "string", required: false }
       - { label: "Road Access", name: "roadAccess", widget: "string", required: false }
       - { label: "Water", name: "water", widget: "string", required: false }

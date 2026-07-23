@@ -11,6 +11,7 @@ const listings = defineCollection({
     acreage: z.string(),
     price: z.string().optional(),
     address: z.string().optional(),
+    showAddress: z.boolean().optional().default(true),
     zoning: z.string().optional(),
     roadAccess: z.string().optional(),
     water: z.string().optional(),
