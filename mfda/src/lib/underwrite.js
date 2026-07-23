@@ -139,10 +139,12 @@ export function underwrite(dealInput) {
   const valuation = mf.valuationPanel({
     units: unitsTotal,
     salesComps:
-      vc.price_per_unit != null || vc.price_per_sqft != null
+      vc.price_per_unit != null || vc.price_per_sqft != null || vc.price_per_bed != null
         ? {
             price_per_unit: vc.price_per_unit,
             price_per_sqft: vc.price_per_sqft,
+            price_per_bed: vc.price_per_bed,
+            beds_total: d.beds_total ?? undefined,
             units: unitsTotal,
             total_sqft: sqftTotal,
           }

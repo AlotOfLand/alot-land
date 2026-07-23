@@ -24,6 +24,7 @@ const s = StyleSheet.create({
 
 const METHOD_LABELS = {
   'sales-comps-per-unit': 'Sales comps ($/unit)', 'sales-comps-per-sqft': 'Sales comps ($/sqft)',
+  'sales-comps-per-bed': 'Sales comps ($/bed)',
   grm: 'GRM', 'direct-cap': 'Direct cap', 'dscr-constrained': 'DSCR-constrained max', 'replacement-cost': 'Replacement cost',
 };
 const FIN = [['all_cash', 'All-cash'], ['dscr', 'DSCR'], ['agency', 'Agency'], ['seller_forward', 'Seller fin.']];

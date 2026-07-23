@@ -9,12 +9,14 @@ import {
 } from '../lib/queries';
 import { Field, TextInput, NumberInput, PercentInput, Section, Grid } from '../components/fields';
 import UnitMixEditor from '../components/UnitMixEditor';
+import CompsAssist from '../components/CompsAssist';
 
 function blankForm() {
   return {
     // property
     address: '', city: '', state: 'AZ', zip: '', apn: '', county_fips: '', year_built: null,
     price: null, status: 'analyzing',
+    lat: null, lng: null, beds_total: null, unit_bucket: null,
     market_id: '',
     units: [{ type: '2BR/1BA', count: 4, sqft: 850, actual_rent: 1200, market_rent: 1400 }],
     // income
@@ -34,7 +36,7 @@ function blankForm() {
     // tax
     tax: { cost_seg_pct: 0.3, bonus_rate: 1.0, marginal_rate: 0.37, recapture_rate: 0.25, ltcg_rate: 0.2 },
     // valuation comps
-    valuation_comps: { price_per_unit: null, price_per_sqft: null, market_grm: null, market_cap_rate: 0.08, replacement_cost_per_unit: null },
+    valuation_comps: { price_per_unit: null, price_per_sqft: null, price_per_bed: null, market_grm: null, market_cap_rate: 0.08, replacement_cost_per_unit: null },
     // prescreen
     prescreen: { zoning_legal_nonconforming: false, master_metered: false, septic_or_well: false, rent_control_state: false, roof_age_years: null, hvac_age_years: null, str_permit_status: 'open' },
   };
@@ -65,6 +67,7 @@ export default function DealNew() {
         zip: deal.zip || '', apn: deal.apn || '', county_fips: deal.county_fips || '',
         year_built: deal.year_built, price: deal.price != null ? Number(deal.price) : null,
         status: deal.status,
+        lat: deal.lat, lng: deal.lng, beds_total: deal.beds_total, unit_bucket: deal.unit_bucket,
         units: units.length ? units.map((u) => ({ type: u.type, count: u.count, sqft: u.sqft, actual_rent: Number(u.actual_rent), market_rent: Number(u.market_rent) })) : prev.units,
       }));
     })().catch((e) => setErr(e.message));
@@ -110,7 +113,7 @@ export default function DealNew() {
         id: editing ? id : undefined,
         apn: f.apn, county_fips: f.county_fips, address: f.address, city: f.city, state: f.state, zip: f.zip,
         status: f.status, units_count: f.units.reduce((a, u) => a + (Number(u.count) || 0), 0),
-        year_built: f.year_built, price: f.price, source: 'manual',
+        year_built: f.year_built, price: f.price, source: editing ? undefined : 'manual',
       });
       await replaceUnits(org.id, deal.id, f.units);
       const market = (markets.data || []).find((x) => x.id === f.market_id);
@@ -206,10 +209,21 @@ export default function DealNew() {
         </Grid>
       </Section>
 
-      <Section title="Valuation comps" subtitle="Feed the 5-method panel" defaultOpen={false}>
+      <Section title="Valuation comps" subtitle="Feed the valuation panel" defaultOpen={false}>
+        <div className="mb-4">
+          <CompsAssist
+            orgId={org?.id}
+            state={f.state}
+            lat={f.lat}
+            lng={f.lng}
+            unitBucket={f.unit_bucket}
+            onUse={(patch) => setNested('valuation_comps', patch)}
+          />
+        </div>
         <Grid cols={3}>
           <Field label="Comp $/unit"><NumberInput value={f.valuation_comps.price_per_unit} onChange={(v) => setNested('valuation_comps', { price_per_unit: v })} suffix="$" /></Field>
           <Field label="Comp $/sqft"><NumberInput value={f.valuation_comps.price_per_sqft} onChange={(v) => setNested('valuation_comps', { price_per_sqft: v })} suffix="$" /></Field>
+          <Field label="Comp $/bed" hint={f.beds_total ? `subject has ${f.beds_total} beds total` : 'needs subject total beds (scraped deals have it)'}><NumberInput value={f.valuation_comps.price_per_bed} onChange={(v) => setNested('valuation_comps', { price_per_bed: v })} suffix="$" /></Field>
           <Field label="Market GRM"><NumberInput value={f.valuation_comps.market_grm} onChange={(v) => setNested('valuation_comps', { market_grm: v })} step="0.1" /></Field>
           <Field label="Market cap rate"><PercentInput value={f.valuation_comps.market_cap_rate} onChange={(v) => setNested('valuation_comps', { market_cap_rate: v })} /></Field>
           <Field label="Replacement $/unit"><NumberInput value={f.valuation_comps.replacement_cost_per_unit} onChange={(v) => setNested('valuation_comps', { replacement_cost_per_unit: v })} suffix="$" /></Field>

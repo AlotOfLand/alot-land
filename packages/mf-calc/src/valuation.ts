@@ -8,6 +8,7 @@ import { capRate, grossRentMultiplier, annualDebtService } from './finance.js';
 export type ValuationMethod =
   | 'sales-comps-per-unit'
   | 'sales-comps-per-sqft'
+  | 'sales-comps-per-bed'
   | 'grm'
   | 'direct-cap'
   | 'dscr-constrained'
@@ -26,8 +27,13 @@ export interface SalesCompsInput {
   price_per_unit?: number;
   /** Median/avg sold $ per sqft from comps. */
   price_per_sqft?: number;
+  /** Median sold $ per bed from comps (v1.1.0: the honestly computable axis
+   * when unit counts are unavailable, e.g. the Redfin lane). */
+  price_per_bed?: number;
   units: number;
   total_sqft: number;
+  /** Subject building-total beds — required for the per-bed method. */
+  beds_total?: number;
 }
 
 export interface GrmInput {
@@ -66,6 +72,11 @@ export function salesCompsPerUnit(inp: SalesCompsInput): number | null {
 export function salesCompsPerSqft(inp: SalesCompsInput): number | null {
   if (inp.price_per_sqft == null) return null;
   return inp.price_per_sqft * inp.total_sqft;
+}
+
+export function salesCompsPerBedValue(inp: SalesCompsInput): number | null {
+  if (inp.price_per_bed == null || !inp.beds_total) return null;
+  return inp.price_per_bed * inp.beds_total;
 }
 
 export function grmValue(inp: GrmInput): number {
@@ -145,6 +156,14 @@ export function valuationPanel(inp: ValuationPanelInput): ValuationPanel {
     const perSqft = salesCompsPerSqft(inp.salesComps);
     if (perSqft != null)
       results.push({ method: 'sales-comps-per-sqft', value: perSqft, primary: false });
+    const perBed = salesCompsPerBedValue(inp.salesComps);
+    if (perBed != null)
+      results.push({
+        method: 'sales-comps-per-bed',
+        value: perBed,
+        primary: false,
+        note: 'from sold comps (no unit counts in source)',
+      });
   }
   if (inp.grm) {
     results.push({

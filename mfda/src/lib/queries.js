@@ -44,6 +44,18 @@ export async function setDealStatus(id, status) {
   if (error) throw error;
 }
 
+// Sold comps for a state (bucket/radius filtering happens client-side via mf-calc).
+export async function listCompsForState(orgId, state) {
+  const { data, error } = await supabase
+    .from('comps')
+    .select('price, lat, lng, beds_total, sqft, unit_bucket, sold_date, address, city, url')
+    .eq('org_id', orgId)
+    .eq('state', state)
+    .limit(2000);
+  if (error) throw error;
+  return data;
+}
+
 export async function latestScanRun(orgId) {
   const { data, error } = await supabase
     .from('scan_runs')
@@ -80,6 +92,9 @@ export async function upsertDeal(orgId, userId, deal) {
     notes: deal.notes || null,
   };
   if (deal.id) {
+    // On edit, an unspecified source means "keep what's there" (protects the
+    // redfin provenance on scraped deals).
+    if (deal.source === undefined) delete row.source;
     const { data, error } = await supabase.from('deals').update(row).eq('id', deal.id).select().single();
     if (error) throw error;
     return data;

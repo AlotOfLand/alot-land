@@ -3,6 +3,7 @@ import { usd, pct, ratio, num } from '../lib/format';
 const METHOD_LABELS = {
   'sales-comps-per-unit': 'Sales comps ($/unit)',
   'sales-comps-per-sqft': 'Sales comps ($/sqft)',
+  'sales-comps-per-bed': 'Sales comps ($/bed)',
   grm: 'GRM',
   'direct-cap': 'Direct cap',
   'dscr-constrained': 'DSCR-constrained max',
