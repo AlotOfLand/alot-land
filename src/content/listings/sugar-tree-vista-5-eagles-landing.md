@@ -6,6 +6,7 @@ state: Tennessee
 county: Decatur
 acreage: "6.36"
 price: $89,000
+address: 2238 Low Gap Road, Sugar Tree, TN 38380
 zoning: Unrestricted / No HOA
 roadAccess: Graded driveway installed
 water: Drill your own well
@@ -21,8 +22,6 @@ date: 2026-06-20T09:56:00.000-05:00
 community: sugar-tree-vista
 ---
 ***Wide, level, and room to spread out.***
-
-**2238 Low Gap Road, Sugar Tree, TN 38380**
 
 Most ridge lots make you carve out a building site. Not this one. The front is wide and genuinely flat — easy to build on, easy to use — and it runs a long way back before opening to a valley view behind. Space for the house, the shop, the garden, and still land to spare.
 If you've been waiting for flat ground with a big view, this is it. $89,000.
