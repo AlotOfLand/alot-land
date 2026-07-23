@@ -14,8 +14,9 @@ import {
 } from '../src/index.js';
 
 describe('CALC_VERSION', () => {
-  it('bumped to 1.1.0 for the comps additions', () => {
-    expect(CALC_VERSION).toBe('1.1.0');
+  it('is at least 1.1.0 (the comps additions)', () => {
+    const [maj, min] = CALC_VERSION.split('.').map(Number);
+    expect(maj * 100 + min).toBeGreaterThanOrEqual(101);
   });
 });
 

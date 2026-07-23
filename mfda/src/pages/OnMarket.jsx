@@ -1,9 +1,12 @@
-import { useMemo, useState } from 'react';
+import { Suspense, lazy, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useOrg } from '../lib/org';
 import { listOnMarket, setDealStatus, latestScanRun } from '../lib/queries';
 import { usd } from '../lib/format';
+
+// maplibre is heavy — load it only when the map view is opened.
+const ListingsMap = lazy(() => import('../components/ListingsMap'));
 
 const LSTATUS = {
   active: 'bg-green/15 text-green-deep',
@@ -19,6 +22,7 @@ export default function OnMarket() {
   const [bucket, setBucket] = useState('all');
   const [maxPrice, setMaxPrice] = useState('');
   const [sort, setSort] = useState('newest');
+  const [view, setView] = useState('list'); // 'list' | 'map'
 
   const leads = useQuery({
     queryKey: ['onmarket', org?.id],
@@ -93,7 +97,19 @@ export default function OnMarket() {
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
         />
-        <select className="input w-auto ml-auto" value={sort} onChange={(e) => setSort(e.target.value)}>
+        <div className="ml-auto flex rounded-lg border border-border overflow-hidden">
+          {['list', 'map'].map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setView(v)}
+              className={`px-3 py-2 text-sm capitalize ${view === v ? 'bg-ink text-white' : 'bg-surface text-ink-2 hover:bg-surface-2'}`}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+        <select className="input w-auto" value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="newest">Newest scan</option>
           <option value="price_asc">Price ↑</option>
           <option value="price_desc">Price ↓</option>
@@ -116,7 +132,13 @@ export default function OnMarket() {
         </div>
       )}
 
-      {rows.length > 0 && (
+      {rows.length > 0 && view === 'map' && (
+        <Suspense fallback={<div className="card p-10 text-center text-muted">Loading map…</div>}>
+          <ListingsMap rows={rows} onAnalyze={analyze} />
+        </Suspense>
+      )}
+
+      {rows.length > 0 && view === 'list' && (
         <div className="card overflow-x-auto">
           <table className="w-full text-sm min-w-[760px]">
             <thead className="bg-surface-2">

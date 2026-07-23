@@ -300,6 +300,22 @@ export function underwrite(dealInput) {
     d.buy_box,
   );
 
+  // --- Investor proforma (mf-calc): year-by-year on the DSCR-loan structure ---
+  const proforma = mf.buildProforma({
+    gross_potential_rent: gpr,
+    other_income: otherIncome,
+    vacancy_rate: d.vacancy_rate,
+    operating_expenses: opex,
+    growth_rate: d.noi_growth_rate,
+    loan_amount: d.price * fin.dscr.ltv,
+    annual_rate: fin.dscr.rate,
+    amort_years: fin.dscr.amort_years,
+    hold_years: d.hold_years,
+    exit_cap_rate: d.exit_cap_rate,
+    selling_cost_rate: d.selling_cost_rate,
+    cash_invested: d.price * (1 - fin.dscr.ltv) + otherCash,
+  });
+
   return {
     calc_version: mf.CALC_VERSION,
     basis,
@@ -327,6 +343,7 @@ export function underwrite(dealInput) {
     },
     solvers: { min_down: minDown, max_offer: maxOffer },
     stress,
+    proforma,
     tax: { depreciation: dep, year1, exit, accumulated_depreciation: accumDep, str_eligible: strEligible },
     prescreen: prescreenFlags,
     score,

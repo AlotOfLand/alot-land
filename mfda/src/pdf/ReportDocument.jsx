@@ -96,6 +96,27 @@ export default function ReportDocument({ deal, scenario }) {
           ))}
         </View>
 
+        {/* Proforma */}
+        {out.proforma && (
+          <View style={s.section}>
+            <Text style={s.h2}>Investor proforma</Text>
+            <TableRow header cols={['', ...out.proforma.years.map((y) => `Yr ${y.year}`)]} />
+            {[
+              ['EGI', (y) => usd(y.egi)],
+              ['OpEx', (y) => usd(y.operating_expenses)],
+              ['NOI', (y) => usd(y.noi)],
+              ['Debt svc', (y) => usd(y.debt_service)],
+              ['CFBT', (y) => usd(y.cfbt)],
+              ['CoC', (y) => pct(y.cash_on_cash)],
+            ].map(([label, fn]) => (
+              <TableRow key={label} cols={[label, ...out.proforma.years.map((y) => fn(y))]} />
+            ))}
+            <Text style={[s.td, { marginTop: 4 }]}>
+              Exit: value {usd(out.proforma.exit.exit_value)} − selling {usd(out.proforma.exit.selling_costs)} − payoff {usd(out.proforma.exit.loan_payoff)} = net {usd(out.proforma.exit.net_sale_proceeds)} · total profit {usd(out.proforma.exit.total_profit)} · {ratio(out.proforma.exit.equity_multiple)}x equity
+            </Text>
+          </View>
+        )}
+
         {/* Tax */}
         <View style={s.section}>
           <Text style={s.h2}>Tax layer (estimate — verify with CPA)</Text>

@@ -4,12 +4,16 @@
  * store them in Supabase Storage, save URLs on the deal row.
  *
  * Usage:
- *   node bin/photos.mjs                # backfill up to 100 deals
- *   node bin/photos.mjs --limit 250
+ *   node bin/photos.mjs                          # up to 25 deals, gentle pace
+ *   node bin/photos.mjs --limit 25 --gap 10000   # slower still
+ *   node bin/photos.mjs --photos-per 1           # fewest requests per deal
  *
- * Same politeness rules as the scanner (1.5s global gap, browser UA, stop on
- * challenge). Photos are fetched ONCE per deal, ever — re-runs only process
- * deals with no stored photo.
+ * Listing PAGES are more aggressively protected than the CSV endpoint
+ * (learned live: a burst of ~30 page+image requests drew a challenge). So on
+ * top of the global 1.5s politeFetch gap, this waits `--gap` ms (±30% spread,
+ * default 8s) between DEALS, defaults to small batches, and fetches only
+ * `--photos-per` images (default 2). On a challenge: stop, wait an hour+,
+ * re-run — already-photographed deals are never re-fetched.
  */
 import { politeFetch } from '../lib/redfin.js';
 import { extractPhotoUrls, looksLikeChallenge } from '../lib/photos.js';
@@ -22,9 +26,18 @@ function arg(name, dflt) {
   return v && !v.startsWith('--') ? v : true;
 }
 
-const LIMIT = Number(arg('limit', 100));
+const LIMIT = Number(arg('limit', 25));
+const GAP_MS = Number(arg('gap', 8000));
+const PHOTOS_PER = Number(arg('photos-per', 2));
 const MAX_CONSECUTIVE_MISSES = 5;
 const BUCKET = 'photos';
+
+// Gentle spacing between deals: GAP_MS ±30%. This is politeness (avoid
+// bursts), not evasion — headers/identity are unchanged.
+function pause() {
+  const jitter = GAP_MS * 0.3 * (Math.random() * 2 - 1);
+  return new Promise((r) => setTimeout(r, Math.max(0, GAP_MS + jitter)));
+}
 
 const db = makeDb();
 const orgId = await db.resolveOrgId();
@@ -46,6 +59,7 @@ let misses = 0;
 let consecutiveMisses = 0;
 
 for (const deal of deals) {
+  await pause();
   let pageRes;
   try {
     pageRes = await politeFetch(deal.listing_url);
@@ -62,12 +76,13 @@ for (const deal of deals) {
     consecutiveMisses++;
     if (consecutiveMisses >= MAX_CONSECUTIVE_MISSES) {
       console.error(`\n✗ ${MAX_CONSECUTIVE_MISSES} consecutive misses — assuming a block. Stopping (no retries).`);
+      console.error('  Wait at least an hour, then re-run — finished deals are never re-fetched.');
       process.exit(2);
     }
     continue;
   }
 
-  const urls = extractPhotoUrls(html);
+  const urls = extractPhotoUrls(html, PHOTOS_PER);
   if (!urls.length) {
     console.warn(`  – ${deal.address}: no photos found on page`);
     misses++;

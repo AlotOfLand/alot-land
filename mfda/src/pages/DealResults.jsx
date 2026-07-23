@@ -5,6 +5,7 @@ import { Suspense, lazy, useState } from 'react';
 import {
   SummaryVerdict, ValuationPanel, FinancingComparator, InverseSolvers,
   StressPanel, TaxPanel, PrescreenFlags, ScoreBreakdown, ProvenanceTable,
+  ProformaPanel,
 } from '../components/results';
 
 // @react-pdf is heavy — keep it out of the initial bundle.
@@ -73,6 +74,7 @@ export default function DealResults() {
             <ScoreBreakdown out={out} />
           </div>
           <FinancingComparator out={out} />
+          <ProformaPanel out={out} />
           <InverseSolvers out={out} />
           <div className="grid lg:grid-cols-2 gap-5">
             <StressPanel out={out} />

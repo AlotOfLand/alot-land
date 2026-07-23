@@ -319,3 +319,55 @@ export function ProvenanceTable({ inputs }) {
     </Panel>
   );
 }
+
+/** Investor proforma — year-by-year over the hold, plus the exit waterfall.
+ * Older scenario snapshots (calc < 1.2.0) have no proforma; render nothing. */
+export function ProformaPanel({ out }) {
+  const pf = out.proforma;
+  if (!pf) return null;
+  const ROWS = [
+    ['Gross potential rent', (y) => usd(y.gpr)],
+    ['Vacancy loss', (y) => `(${usd(y.vacancy_loss)})`],
+    ['Other income', (y) => usd(y.other_income)],
+    ['Effective gross income', (y) => usd(y.egi), true],
+    ['Operating expenses', (y) => `(${usd(y.operating_expenses)})`],
+    ['Net operating income', (y) => usd(y.noi), true],
+    ['Debt service', (y) => `(${usd(y.debt_service)})`],
+    ['— interest', (y) => usd(y.interest)],
+    ['— principal paydown', (y) => usd(y.principal)],
+    ['Cash flow before tax', (y) => usd(y.cfbt), true],
+    ['Cash-on-cash', (y) => pct(y.cash_on_cash)],
+    ['Cumulative cash flow', (y) => usd(y.cumulative_cfbt)],
+    ['Loan balance (end)', (y) => usd(y.loan_balance_end)],
+  ];
+  return (
+    <Panel title="Investor proforma" subtitle="Year-by-year projection on the DSCR-loan structure — same growth engine as the IRR">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[640px]">
+          <thead>
+            <tr>
+              <th className="th"></th>
+              {pf.years.map((y) => <th key={y.year} className="th text-right">Year {y.year}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {ROWS.map(([label, fn, strong]) => (
+              <tr key={label} className={strong ? 'font-medium' : ''}>
+                <td className="td text-ink-2">{label}</td>
+                {pf.years.map((y) => <td key={y.year} className="td text-right">{fn(y)}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4 bg-surface-2 rounded-xl p-4 text-sm grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div><div className="label">Exit value</div><div className="font-medium tabular-nums">{usd(pf.exit.exit_value)}</div></div>
+        <div><div className="label">Selling costs</div><div className="font-medium tabular-nums">({usd(pf.exit.selling_costs)})</div></div>
+        <div><div className="label">Loan payoff</div><div className="font-medium tabular-nums">({usd(pf.exit.loan_payoff)})</div></div>
+        <div><div className="label">Net proceeds</div><div className="font-medium tabular-nums text-green-deep">{usd(pf.exit.net_sale_proceeds)}</div></div>
+        <div><div className="label">Total profit</div><div className="font-medium tabular-nums">{usd(pf.exit.total_profit)}</div></div>
+        <div><div className="label">Equity multiple</div><div className="font-medium tabular-nums">{ratio(pf.exit.equity_multiple)}×</div></div>
+      </div>
+    </Panel>
+  );
+}
