@@ -6,6 +6,7 @@ state: Tennessee
 county: Decatur
 acreage: "5.66"
 price: $59,000
+address: 1783 Ray Miller Road, Sugar Tree, TN 38380
 zoning: Unrestricted / No HOA
 roadAccess: Graded driveway installed
 water: Drill your own well
@@ -21,8 +22,6 @@ date: 2026-06-20T10:00:00.000-05:00
 community: sugar-tree-vista
 ---
 ***First look over the valley.***
-
-**1783 Ray Miller Road, Sugar Tree, TN 38380**
 
 There's a building pad already sitting near the front of this lot — ready, and pointed straight at the view. No guessing where the house goes; the best spot is obvious the moment you stand on it. Below, the land falls away into a long, open valley that runs to the back of the lot.
 At $59,000, this is the easiest way into Sugar Tree Vista — a real view, a ready homesite, and the lowest price on the ridge. The kind of lot that doesn't sit long.
