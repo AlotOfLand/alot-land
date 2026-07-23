@@ -6,6 +6,7 @@ state: Tennessee
 county: Decatur
 acreage: "7.55"
 price: $89,000
+address: 1808 Low Gap Road, Sugar Tree, TN 38380
 zoning: Unrestricted / No HOA
 roadAccess: Graded driveway installed
 water: Drill your own well
@@ -19,8 +20,6 @@ date: 2026-06-20T09:51:00.000-05:00
 community: sugar-tree-vista
 ---
 ***The grandest ridge, second seat.***
-
-**1808 Low Gap Road, Sugar Tree, TN 38380**
 
 The companion to Grande Ridge I and the other half of that same commanding spine — high, open, and framed in the same mature hardwoods. Every bit the ridge, a little easier on the price. Build up top and settle into long views across your own stretch of the grandest ridgeline in the community.
 Claim your seat on Grande Ridge for $89,000.
