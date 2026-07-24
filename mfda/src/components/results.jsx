@@ -1,4 +1,5 @@
 import { usd, pct, ratio, num } from '../lib/format';
+import { Tip } from './fields';
 
 const METHOD_LABELS = {
   'sales-comps-per-unit': 'Sales comps ($/unit)',
@@ -17,7 +18,7 @@ export function SummaryVerdict({ out, price }) {
     <div className={`card p-6 ${pursue ? 'ring-1 ring-green/40' : ''}`}>
       <div className="flex flex-wrap items-center gap-6">
         <div>
-          <div className="label">Verdict</div>
+          <div className="label">Verdict<Tip text="One-glance answer: the composite score vs your buy-box, plus the headline numbers. PURSUE means it cleared your threshold — worth real diligence and a call to the agent. Max offer (green) is the highest price that still hits your targets." /></div>
           <div className="flex items-center gap-2">
             <span className={`pill ${pursue ? 'bg-green/15 text-green-deep' : 'bg-surface-2 text-muted'}`}>
               {pursue ? 'PURSUE' : 'below threshold'}
@@ -50,12 +51,12 @@ function Divider() {
   return <div className="h-10 w-px bg-border hidden sm:block" />;
 }
 
-export function Panel({ title, subtitle, children, right }) {
+export function Panel({ title, subtitle, tip, children, right }) {
   return (
     <section className="card p-5">
       <div className="flex items-start justify-between mb-3">
         <div>
-          <h2 className="font-medium">{title}</h2>
+          <h2 className="font-medium">{title}{tip && <Tip text={tip} />}</h2>
           {subtitle && <p className="text-xs text-muted">{subtitle}</p>}
         </div>
         {right}
@@ -71,6 +72,7 @@ export function ValuationPanel({ out, price }) {
     <Panel
       title="Valuation"
       subtitle="Every applicable method, side by side"
+      tip="What the building is WORTH, estimated several independent ways: sold comps ($/unit, $/sqft, $/bed), GRM, direct cap (NOI ÷ market cap — primary for 5+ units), the max price a lender's DSCR floor supports, and replacement cost as a ceiling. When methods agree, trust the number; when they diverge >15%, find out why — usually under-market rents (value-add) or an inflated ask."
       right={
         <span className={`pill ${v.diverges ? 'bg-warn/15 text-warn' : 'bg-surface-2 text-muted'}`}>
           spread {pct(v.spread, 1)}
@@ -121,7 +123,7 @@ const FIN_ROWS = [
 export function FinancingComparator({ out }) {
   const f = out.financing;
   return (
-    <Panel title="Financing comparison" subtitle="Four structures, forward returns">
+    <Panel title="Financing comparison" subtitle="Four structures, forward returns" tip="The same deal financed four ways, side by side. All-cash shows the unlevered truth. DSCR loans qualify on the building's income; agency on yours (2–4 units, cheapest). Seller finance can beat both when the seller wants income — the 3-option letter below is your opener.">
       <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[520px]">
           <thead>
@@ -160,7 +162,7 @@ export function InverseSolvers({ out }) {
   const md = out.solvers.min_down;
   const mo = out.solvers.max_offer;
   return (
-    <Panel title="Solvers" subtitle="Work backward from your goals">
+    <Panel title="Solvers" subtitle="Work backward from your goals" tip="Instead of testing a price, these answer the real questions: what's the LEAST cash down that still meets your DSCR and return floors, and what's the MOST you can pay and still hit your targets. Max Offer is your negotiation anchor — above it, the deal stops working for you.">
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="bg-surface-2 rounded-xl p-4">
           <div className="label">Minimum down payment</div>
@@ -189,7 +191,7 @@ export function InverseSolvers({ out }) {
 
 export function StressPanel({ out }) {
   return (
-    <Panel title="Stress test" subtitle="Every deal, shocked">
+    <Panel title="Stress test" subtitle="Every deal, shocked" tip="The bad-day panel: rents down 10%, vacancy up 5 points, rates up 1.5%, insurance up 30% — each alone, then all at once. Watch DSCR: below 1.0 means the building can't pay its own mortgage in that scenario. A deal that survives the combined row is genuinely durable.">
       <table className="w-full text-sm">
         <thead><tr><th className="th">Scenario</th><th className="th text-right">NOI</th><th className="th text-right">DSCR</th><th className="th text-right">CoC</th><th className="th text-right">Break-even occ.</th></tr></thead>
         <tbody>
@@ -214,7 +216,7 @@ export function StressPanel({ out }) {
 export function TaxPanel({ out }) {
   const t = out.tax;
   return (
-    <Panel title="Tax layer" subtitle="Estimates — verify with CPA" right={<span className="pill bg-surface-2 text-muted">estimate</span>}>
+    <Panel title="Tax layer" subtitle="Estimates — verify with CPA" tip="The paper-loss machine. Cost segregation + bonus depreciation front-loads a large year-1 write-off. REP ON assumes Real Estate Professional status (losses offset your ACTIVE income); REP OFF shows losses suspended without it. Both shown always, because the status decision is yours and your CPA's. Exit tax shows depreciation recapture (25%) plus capital gains due at sale." right={<span className="pill bg-surface-2 text-muted">estimate</span>}>
       <div className="grid sm:grid-cols-2 gap-4 text-sm">
         <div className="bg-surface-2 rounded-xl p-4">
           <div className="label">Year-1 depreciation (cost seg + bonus)</div>
@@ -246,7 +248,7 @@ const SEV = { killer: 'bg-danger/15 text-danger', caution: 'bg-warn/15 text-warn
 export function PrescreenFlags({ out }) {
   const flags = out.prescreen;
   return (
-    <Panel title="Prescreen" subtitle="Deal-killers & red flags">
+    <Panel title="Prescreen" subtitle="Deal-killers & red flags" tip="Cheap checks surfaced before you spend real diligence money. 'Killer' = walk away or verify hard (zoning). 'Caution' = budget for it (roof, meters). 'Info' includes the pre-1980 asbestos flag — a risk to most buyers, possibly an edge for you.">
       {flags.length === 0 ? (
         <p className="text-sm text-green-deep">No flags — clean on the cheap checks.</p>
       ) : (
@@ -272,7 +274,7 @@ export function ScoreBreakdown({ out }) {
     ['Bottom line', s.bottom_line_score],
   ];
   return (
-    <Panel title="Score breakdown" subtitle="Composite vs your buy-box">
+    <Panel title="Score breakdown" subtitle="Composite vs your buy-box" tip="The 0–100 composite behind the verdict, weighted by your goals: cash flow (CoC + DSCR safety), appreciation outlook, cost-seg tax power, and bottom line (buying below value). Score ≥ 70 flags the deal PURSUE.">
       <div className="space-y-2">
         {dims.map(([label, val]) => (
           <div key={label} className="flex items-center gap-3 text-sm">
@@ -303,7 +305,7 @@ export function ProvenanceTable({ inputs }) {
   ];
   const CONF = { high: 'bg-green/15 text-green-deep', med: 'bg-gold/20 text-warn', low: 'bg-surface-2 text-muted' };
   return (
-    <Panel title="Assumptions & provenance" subtitle="Every input, sourced (Rule #3: no naked numbers)">
+    <Panel title="Assumptions & provenance" subtitle="Every input, sourced (Rule #3: no naked numbers)" tip="Where every number came from and how much to trust it. Any output is only as good as these inputs — challenge the low-confidence rows first when a deal looks too good.">
       <table className="w-full text-sm">
         <thead><tr><th className="th">Assumption</th><th className="th text-right">Value</th><th className="th">Source</th><th className="th">Confidence</th></tr></thead>
         <tbody>
@@ -341,7 +343,7 @@ export function ProformaPanel({ out }) {
     ['Loan balance (end)', (y) => usd(y.loan_balance_end)],
   ];
   return (
-    <Panel title="Investor proforma" subtitle="Year-by-year projection on the DSCR-loan structure — same growth engine as the IRR">
+    <Panel title="Investor proforma" subtitle="Year-by-year projection on the DSCR-loan structure — same growth engine as the IRR" tip="The full cash story, year by year: income up top, expenses, NOI, the mortgage split into interest vs principal paydown (that paydown is equity you keep), cash flow, and running totals — ending with the exit waterfall. This table and the IRR above use the same growth engine, so they never disagree. This is the page a lender or partner reads first.">
       <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[640px]">
           <thead>

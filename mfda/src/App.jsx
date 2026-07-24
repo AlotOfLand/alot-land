@@ -8,6 +8,7 @@ import OnMarket from './pages/OnMarket';
 import DealNew from './pages/DealNew';
 import DealResults from './pages/DealResults';
 import Compare from './pages/Compare';
+import Guide from './pages/Guide';
 import Settings from './pages/Settings';
 
 function ConfigBanner() {
@@ -27,6 +28,7 @@ function TopBar() {
   const nav = [
     ['/on-market', 'On-Market'],
     ['/deals', 'Deals'],
+    ['/guide', 'Guide'],
     ['/settings', 'Settings'],
   ];
   return (
@@ -153,6 +155,16 @@ export default function App() {
           <Protected>
             <Shell>
               <DealNew />
+            </Shell>
+          </Protected>
+        }
+      />
+      <Route
+        path="/guide"
+        element={
+          <Protected>
+            <Shell>
+              <Guide />
             </Shell>
           </Protected>
         }

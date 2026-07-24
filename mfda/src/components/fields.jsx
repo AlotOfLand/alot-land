@@ -1,9 +1,28 @@
 import { useState } from 'react';
 
-export function Field({ label, hint, children }) {
+/** Hover/tap info bubble. Keyboard-focusable; resets the label's uppercase. */
+export function Tip({ text }) {
+  if (!text) return null;
+  return (
+    <span className="relative inline-block group align-middle ml-1">
+      <span
+        tabIndex={0}
+        className="cursor-help select-none text-muted border border-border-hi rounded-full w-4 h-4 inline-flex items-center justify-center text-[10px] leading-none bg-surface"
+        aria-label="What is this?"
+      >
+        i
+      </span>
+      <span className="invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition-opacity absolute z-30 left-0 bottom-full mb-1.5 w-64 bg-ink text-white text-xs font-normal normal-case tracking-normal rounded-lg px-3 py-2 shadow-xl pointer-events-none">
+        {text}
+      </span>
+    </span>
+  );
+}
+
+export function Field({ label, hint, tip, children }) {
   return (
     <label className="block">
-      <span className="label">{label}</span>
+      <span className="label">{label}{tip && <Tip text={tip} />}</span>
       {children}
       {hint && <span className="block text-xs text-muted mt-1">{hint}</span>}
     </label>
@@ -40,7 +59,7 @@ export function PercentInput({ value, onChange, ...rest }) {
   return <NumberInput value={value} onChange={onChange} scale={0.01} suffix="%" step="0.01" {...rest} />;
 }
 
-export function Section({ title, subtitle, defaultOpen = true, children }) {
+export function Section({ title, subtitle, tip, defaultOpen = true, children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <section className="card">
@@ -50,7 +69,7 @@ export function Section({ title, subtitle, defaultOpen = true, children }) {
         className="w-full flex items-center justify-between px-5 py-3 text-left"
       >
         <span>
-          <span className="font-medium">{title}</span>
+          <span className="font-medium">{title}{tip && <Tip text={tip} />}</span>
           {subtitle && <span className="block text-xs text-muted">{subtitle}</span>}
         </span>
         <span className="text-muted">{open ? '−' : '+'}</span>

@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useOrg } from '../lib/org';
@@ -15,6 +16,17 @@ const STATUS_STYLES = {
 export default function Deals() {
   const { org } = useOrg();
   const deals = useQuery({ queryKey: ['deals', org?.id], queryFn: () => listDeals(org.id), enabled: !!org });
+  const [search, setSearch] = useState('');
+  const rows = useMemo(() => {
+    let r = deals.data || [];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      r = r.filter((d) =>
+        [d.address, d.city, d.zip, d.state].filter(Boolean).some((v) => String(v).toLowerCase().includes(q)),
+      );
+    }
+    return r;
+  }, [deals.data, search]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -25,6 +37,14 @@ export default function Deals() {
         </div>
         <Link to="/deals/new" className="btn-gold">+ New deal</Link>
       </div>
+
+      <input
+        className="input w-64 mb-4"
+        type="search"
+        placeholder="Search address, city, ZIP…"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
 
       {deals.isLoading && <div className="text-muted">Loading…</div>}
       {deals.error && <div className="text-danger text-sm">{String(deals.error.message)}</div>}
@@ -37,7 +57,7 @@ export default function Deals() {
         </div>
       )}
 
-      {deals.data && deals.data.length > 0 && (
+      {rows.length > 0 && (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-surface-2">
@@ -51,7 +71,7 @@ export default function Deals() {
               </tr>
             </thead>
             <tbody>
-              {deals.data.map((d) => (
+              {rows.map((d) => (
                 <tr key={d.id} className="hover:bg-surface-2/60">
                   <td className="td">
                     <Link to={`/deals/${d.id}`} className="font-medium hover:underline">

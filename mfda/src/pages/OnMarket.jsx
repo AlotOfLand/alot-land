@@ -21,6 +21,7 @@ export default function OnMarket() {
   const [state, setState] = useState('all');
   const [bucket, setBucket] = useState('all');
   const [maxPrice, setMaxPrice] = useState('');
+  const [search, setSearch] = useState('');
   const [sort, setSort] = useState('newest');
   const [view, setView] = useState('list'); // 'list' | 'map'
 
@@ -37,6 +38,12 @@ export default function OnMarket() {
 
   const rows = useMemo(() => {
     let r = leads.data || [];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      r = r.filter((d) =>
+        [d.address, d.city, d.zip, d.mls_number].filter(Boolean).some((v) => String(v).toLowerCase().includes(q)),
+      );
+    }
     if (state !== 'all') r = r.filter((d) => d.state === state);
     if (bucket !== 'all') r = r.filter((d) => d.unit_bucket === bucket);
     if (maxPrice) r = r.filter((d) => Number(d.price) <= Number(maxPrice));
@@ -48,7 +55,7 @@ export default function OnMarket() {
       year: (a, b) => (b.year_built ?? 0) - (a.year_built ?? 0),
     };
     return [...r].sort(by[sort] || by.newest);
-  }, [leads.data, state, bucket, maxPrice, sort]);
+  }, [leads.data, search, state, bucket, maxPrice, sort]);
 
   const states = useMemo(
     () => [...new Set((leads.data || []).map((d) => d.state).filter(Boolean))].sort(),
@@ -81,6 +88,13 @@ export default function OnMarket() {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
+        <input
+          className="input w-64"
+          type="search"
+          placeholder="Search address, city, ZIP, MLS#…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <select className="input w-auto" value={state} onChange={(e) => setState(e.target.value)}>
           <option value="all">All states</option>
           {states.map((s) => <option key={s} value={s}>{s}</option>)}
