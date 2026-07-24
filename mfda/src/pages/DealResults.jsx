@@ -1,7 +1,8 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getDeal, listScenarios, getListingContact } from '../lib/queries';
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, useState } from 'react';
+import { lazyReload } from '../lib/lazyReload';
 import {
   SummaryVerdict, ValuationPanel, FinancingComparator, InverseSolvers,
   StressPanel, TaxPanel, PrescreenFlags, ScoreBreakdown, ProvenanceTable,
@@ -9,7 +10,7 @@ import {
 } from '../components/results';
 
 // @react-pdf is heavy — keep it out of the initial bundle.
-const ReportButton = lazy(() => import('../pdf/ReportButton'));
+const ReportButton = lazyReload(() => import('../pdf/ReportButton'));
 
 export default function DealResults() {
   const { id } = useParams();

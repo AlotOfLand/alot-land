@@ -1,12 +1,14 @@
-import { Suspense, lazy, useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useOrg } from '../lib/org';
 import { listOnMarket, setDealStatus, latestScanRun } from '../lib/queries';
 import { usd } from '../lib/format';
 
+import { lazyReload } from '../lib/lazyReload';
+
 // maplibre is heavy — load it only when the map view is opened.
-const ListingsMap = lazy(() => import('../components/ListingsMap'));
+const ListingsMap = lazyReload(() => import('../components/ListingsMap'));
 
 const LSTATUS = {
   active: 'bg-green/15 text-green-deep',
