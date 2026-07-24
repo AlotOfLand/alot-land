@@ -49,6 +49,9 @@ export default function DealResults() {
         </div>
         <div className="flex items-center gap-2">
           {list.length > 1 && (
+            <Link to={`/deals/${id}/compare`} className="btn-ghost">Compare</Link>
+          )}
+          {list.length > 1 && (
             <select className="input w-auto" value={selected} onChange={(e) => setSelected(Number(e.target.value))}>
               {list.map((s, i) => (
                 <option key={s.id} value={i}>

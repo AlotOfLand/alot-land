@@ -7,6 +7,7 @@ import Deals from './pages/Deals';
 import OnMarket from './pages/OnMarket';
 import DealNew from './pages/DealNew';
 import DealResults from './pages/DealResults';
+import Compare from './pages/Compare';
 import Settings from './pages/Settings';
 
 function ConfigBanner() {
@@ -132,6 +133,16 @@ export default function App() {
           <Protected>
             <Shell>
               <DealResults />
+            </Shell>
+          </Protected>
+        }
+      />
+      <Route
+        path="/deals/:id/compare"
+        element={
+          <Protected>
+            <Shell>
+              <Compare />
             </Shell>
           </Protected>
         }
