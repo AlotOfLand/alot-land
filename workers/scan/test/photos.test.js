@@ -32,21 +32,44 @@ describe('looksLikeChallenge', () => {
   });
 });
 
-describe('extractListingAgent', () => {
-  const JSON_PAGE = `<html>${'x'.repeat(2500)}
-    "agentName":"Jane Smith","brokerName":"Desert Realty Group",
-    "agentPhoneNumber":{"phoneNumber":"602-555-0123","extension":""}
-  </html>`;
-  it('extracts name/brokerage/phone from embedded JSON', () => {
-    const a = extractListingAgent(JSON_PAGE);
-    expect(a).toEqual({ name: 'Jane Smith', brokerage: 'Desert Realty Group', phone: '602-555-0123' });
+describe('extractListingAgent — fixtures from a real 2026-07 page', () => {
+  const ESCAPED = String.raw`,"logoImageFileName\":\"armls.png\",\"listingBrokerNumber\":\"602-230-7600\",\"listingAgentName\":\"Omar Saint Louis\",\"listingAgentNumber\":\"480-406-1727\"},` +
+    String.raw`\"listingBrokerName\":\"HomeSmart\",` +
+    String.raw`\"listingAgent\":{\"name\":\"Scott Dempsey\",\"redfinAgentId\":4137}` + 'x'.repeat(2500);
+
+  it('reads escaped-JSON page state: name, direct phone, brokerage', () => {
+    expect(extractListingAgent(ESCAPED)).toEqual({
+      name: 'Omar Saint Louis',
+      brokerage: 'HomeSmart',
+      phone: '480-406-1727',
+    });
   });
-  it('falls back to visible "Listed by" text', () => {
-    const a = extractListingAgent(`<div>Listed by Bob Jones • Phoenix Homes LLC</div>${'x'.repeat(2500)}`);
-    expect(a.name).toBe('Bob Jones');
-    expect(a.brokerage).toBe('Phoenix Homes LLC');
-    expect(a.phone).toBeNull();
+
+  it('never captures carousel agents (listingAgent:{name:...})', () => {
+    const carouselOnly = String.raw`\"listingAgent\":{\"name\":\"Scott Dempsey\"}` + 'x'.repeat(2500);
+    const a = extractListingAgent(carouselOnly);
+    expect(a?.name).not.toBe('Scott Dempsey');
   });
+
+  it('falls back to the visible "Listed by <span>" DOM', () => {
+    const dom = `<span class="agent-basic-details--heading">Listed by <span>Omar Saint Louis</span> </span><span class="agent-basic-details--broker"><span> <span class="font-dot">•</span> <!-- -->HomeSmart<!-- --> </span></span>` + 'x'.repeat(2500);
+    const a = extractListingAgent(dom);
+    expect(a.name).toBe('Omar Saint Louis');
+    expect(a.brokerage).toBe('HomeSmart');
+  });
+
+  it('still reads unescaped JSON keys', () => {
+    const plain = `"agentName":"Jane Smith","brokerName":"Desert Realty Group"` + 'x'.repeat(2500);
+    const a = extractListingAgent(plain);
+    expect(a.name).toBe('Jane Smith');
+    expect(a.brokerage).toBe('Desert Realty Group');
+  });
+
+  it('falls back to the broker office number when no agent line exists', () => {
+    const officeOnly = String.raw`\"listingBrokerNumber\":\"602-230-7600\",\"listingAgentName\":\"A B\"` + 'x'.repeat(2500);
+    expect(extractListingAgent(officeOnly).phone).toBe('602-230-7600');
+  });
+
   it('returns null when nothing agent-like exists', () => {
     expect(extractListingAgent('<html>' + 'x'.repeat(2500) + '</html>')).toBeNull();
   });

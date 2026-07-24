@@ -35,33 +35,56 @@ export function looksLikeChallenge(html) {
 }
 
 /**
- * Extract the listing agent from a Redfin listing page. The CSV never has
- * this, but the page HTML usually does — embedded JSON state first (most
- * reliable), visible "Listed by" text as fallback. Best-effort: any field may
- * come back null. These are LISTING agents on active deals — per spec they're
- * stored dnc_exempt (they want the call).
+ * Extract the listing agent from a Redfin listing page.
+ *
+ * Verified against a real page (2026-07): the data lives in ESCAPED JSON
+ * embedded in the page state — \"listingAgentName\":\"Omar Saint Louis\",
+ * \"listingAgentNumber\":\"480-406-1727\" (agent direct line),
+ * \"listingBrokerName\":\"HomeSmart\", \"listingBrokerNumber\":\"602-230-7600\".
+ * Quotes may or may not be backslash-escaped depending on nesting depth, so
+ * every pattern tolerates both. The visible DOM fallback is
+ * "Listed by <span>Name</span>".
+ *
+ * IMPORTANT: pages also embed OTHER listings' agents (nearby-homes carousel,
+ * key shape listingAgent:{name:...}) — we deliberately read only the
+ * subject-listing keys above to avoid capturing a neighbor's agent.
  */
 export function extractListingAgent(html) {
   if (!html) return null;
-  const out = { name: null, brokerage: null, phone: null };
 
-  const jstr = (key) => {
-    const m = html.match(new RegExp(`"${key}"\\s*:\\s*"([^"]{2,80})"`));
+  // Match "key":"value" whether quotes are raw or backslash-escaped.
+  const esKey = (key) => {
+    const m = html.match(new RegExp(`\\\\?"${key}\\\\?"\\s*:\\s*\\\\?"([^"\\\\]{1,100})`));
     return m ? m[1].replace(/\\u0026/g, '&').trim() : null;
   };
-  out.name = jstr('agentName');
-  out.brokerage = jstr('brokerName') || jstr('brokerageName');
-  // Phone may appear flat or nested: "agentPhoneNumber":{"phoneNumber":"602-555-0123"}
-  const phoneNested = html.match(/"agentPhoneNumber"\s*:\s*\{[^}]*"phoneNumber"\s*:\s*"([^"]{7,20})"/);
-  out.phone = phoneNested ? phoneNested[1].trim() : jstr('agentPhoneNumber');
+
+  const out = {
+    name: esKey('listingAgentName') || esKey('agentName'),
+    brokerage: esKey('listingBrokerName') || esKey('brokerName') || esKey('brokerageName'),
+    // Prefer the agent's direct line; office number as fallback.
+    phone: esKey('listingAgentNumber') || esKey('listingBrokerNumber'),
+  };
 
   if (!out.name) {
-    // Visible-text fallback: "Listed by Jane Smith • Great Brokerage LLC"
-    const vis = html.match(/Listed by\s+([A-Z][^•<|]{1,60}?)\s*[•|]\s*([^<]{2,60})/);
-    if (vis) {
-      out.name = vis[1].trim();
-      out.brokerage = out.brokerage || vis[2].trim();
+    // Visible DOM fallback: Listed by <span>Jane Smith</span>
+    const span = html.match(/Listed by\s*<span>([^<]{2,60})<\/span>/);
+    if (span) out.name = span[1].trim();
+    else {
+      const plain = html.match(/Listed by\s+([A-Z][^•<|]{1,60}?)\s*[•|]\s*([^<]{2,60})/);
+      if (plain) {
+        out.name = plain[1].trim();
+        out.brokerage = out.brokerage || plain[2].trim();
+      }
     }
   }
+  if (!out.brokerage) {
+    // agent-basic-details--broker span: "• <!-- -->HomeSmart<!-- -->"
+    const b = html.match(/agent-basic-details--broker[\s\S]{0,120}?•<\/span>\s*(?:<!--[\s\S]*?-->)?\s*([^<]{2,60}?)\s*(?:<!--)/);
+    if (b) out.brokerage = b[1].trim();
+  }
+
+  // Sanity: drop junk phone-shaped values.
+  if (out.phone && !/[\d]{3}.*[\d]{4}/.test(out.phone)) out.phone = null;
+
   return out.name || out.brokerage || out.phone ? out : null;
 }
