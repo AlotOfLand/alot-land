@@ -39,7 +39,7 @@ function TableRow({ cols, header }) {
   );
 }
 
-export default function ReportDocument({ deal, scenario }) {
+export default function ReportDocument({ deal, scenario, agent }) {
   const out = scenario.outputs;
   const price = Number(deal.price);
   const d = out.derived;
@@ -53,6 +53,11 @@ export default function ReportDocument({ deal, scenario }) {
             <Text style={s.sub}>
               {[deal.city, deal.state, deal.zip].filter(Boolean).join(', ')} · {d.units_total} units · MFDA · Alot Of Land
             </Text>
+            {agent ? (
+              <Text style={[s.sub, { marginTop: 4 }]}>
+                Listed by {agent.owner_name || '—'}{agent.brokerage ? ` · ${agent.brokerage}` : ''}{agent.phone ? ` · ${agent.phone}` : ''}
+              </Text>
+            ) : null}
           </View>
           {deal.photo_url ? (
             <Image src={deal.photo_url} style={{ width: 140, height: 92, borderRadius: 6, objectFit: 'cover' }} />

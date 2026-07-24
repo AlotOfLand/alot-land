@@ -8,15 +8,15 @@
  *   node bin/photos.mjs --limit 25 --gap 10000   # slower still
  *   node bin/photos.mjs --photos-per 1           # fewest requests per deal
  *
- * Listing PAGES are more aggressively protected than the CSV endpoint
- * (learned live: a burst of ~30 page+image requests drew a challenge). So on
- * top of the global 1.5s politeFetch gap, this waits `--gap` ms (±30% spread,
- * default 8s) between DEALS, defaults to small batches, and fetches only
- * `--photos-per` images (default 2). On a challenge: stop, wait an hour+,
- * re-run — already-photographed deals are never re-fetched.
+ * Listing PAGES are more aggressively protected than the CSV endpoint.
+ * Observed live TWICE: challenges start after ~6 listing pages in one window,
+ * independent of pacing — a count-per-window limit. Hence the default batch of
+ * 5 (just under the threshold) and an early stop after 2 consecutive misses.
+ * Run hourly (cron) until the backlog drains. On a challenge: stop, wait an
+ * hour+, re-run — already-photographed deals are never re-fetched.
  */
 import { politeFetch } from '../lib/redfin.js';
-import { extractPhotoUrls, looksLikeChallenge } from '../lib/photos.js';
+import { extractPhotoUrls, looksLikeChallenge, extractListingAgent } from '../lib/photos.js';
 import { makeDb } from '../lib/db.js';
 
 function arg(name, dflt) {
@@ -26,10 +26,10 @@ function arg(name, dflt) {
   return v && !v.startsWith('--') ? v : true;
 }
 
-const LIMIT = Number(arg('limit', 25));
+const LIMIT = Number(arg('limit', 5));
 const GAP_MS = Number(arg('gap', 8000));
 const PHOTOS_PER = Number(arg('photos-per', 2));
-const MAX_CONSECUTIVE_MISSES = 5;
+const MAX_CONSECUTIVE_MISSES = 2;
 const BUCKET = 'photos';
 
 // Gentle spacing between deals: GAP_MS ±30%. This is politeness (avoid
@@ -39,20 +39,31 @@ function pause() {
   return new Promise((r) => setTimeout(r, Math.max(0, GAP_MS + jitter)));
 }
 
+const REDO_AGENTS = Boolean(arg('redo-agents', false));
+
 const db = makeDb();
 const orgId = await db.resolveOrgId();
 
-const { data: deals, error } = await db.supabase
+// Which deals already have a listing-agent contact?
+const { data: existingContacts } = await db.supabase
+  .from('contacts')
+  .select('deal_id')
+  .eq('org_id', orgId)
+  .eq('source', 'listing');
+const hasAgent = new Set((existingContacts || []).map((c) => c.deal_id));
+
+let q = db.supabase
   .from('deals')
-  .select('id, address, listing_url')
+  .select('id, address, listing_url, photo_url')
   .eq('org_id', orgId)
   .eq('source', 'redfin')
-  .is('photo_url', null)
-  .not('listing_url', 'is', null)
-  .limit(LIMIT);
+  .not('listing_url', 'is', null);
+q = REDO_AGENTS ? q.not('photo_url', 'is', null) : q.is('photo_url', null);
+const { data: dealsRaw, error } = await q.limit(REDO_AGENTS ? 500 : LIMIT * 3);
 if (error) throw error;
+const deals = (REDO_AGENTS ? dealsRaw.filter((d) => !hasAgent.has(d.id)) : dealsRaw).slice(0, LIMIT);
 
-console.log(`Photo backfill: ${deals.length} deals need photos (limit ${LIMIT})`);
+console.log(`${REDO_AGENTS ? 'Agent re-scan' : 'Photo backfill'}: ${deals.length} deals to process (limit ${LIMIT})`);
 
 let done = 0;
 let misses = 0;
@@ -79,6 +90,33 @@ for (const deal of deals) {
       console.error('  Wait at least an hour, then re-run — finished deals are never re-fetched.');
       process.exit(2);
     }
+    continue;
+  }
+
+  // Agent capture — free ride on the same page fetch (spec: listing contacts
+  // are dnc_exempt; on-market deals get pursued by calling the listing agent).
+  const agent = extractListingAgent(html);
+  if (agent && !hasAgent.has(deal.id)) {
+    const { error: cErr } = await db.supabase.from('contacts').insert({
+      org_id: orgId,
+      deal_id: deal.id,
+      owner_name: agent.name,
+      brokerage: agent.brokerage,
+      phone: agent.phone,
+      source: 'listing',
+      confidence: 'med',
+      dnc_exempt: true,
+      lead_state: null,
+    });
+    if (!cErr) {
+      hasAgent.add(deal.id);
+      console.log(`  ☎ ${deal.address}: ${agent.name || '?'}${agent.brokerage ? ` (${agent.brokerage})` : ''}${agent.phone ? ` ${agent.phone}` : ''}`);
+    }
+  }
+
+  if (REDO_AGENTS) {
+    consecutiveMisses = 0;
+    done++;
     continue;
   }
 

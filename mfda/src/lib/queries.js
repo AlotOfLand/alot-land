@@ -66,6 +66,18 @@ export async function getRentBands(orgId, zip) {
   return data;
 }
 
+export async function getListingContact(dealId) {
+  const { data, error } = await supabase
+    .from('contacts')
+    .select('owner_name, brokerage, phone, dnc_exempt, source')
+    .eq('deal_id', dealId)
+    .eq('source', 'listing')
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
 export async function latestScanRun(orgId) {
   const { data, error } = await supabase
     .from('scan_runs')
