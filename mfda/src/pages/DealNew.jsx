@@ -10,6 +10,7 @@ import {
 import { Field, TextInput, NumberInput, PercentInput, Section, Grid } from '../components/fields';
 import UnitMixEditor from '../components/UnitMixEditor';
 import CompsAssist from '../components/CompsAssist';
+import RentBandsCard from '../components/RentBandsCard';
 
 function blankForm() {
   return {
@@ -163,6 +164,9 @@ export default function DealNew() {
       </Section>
 
       <Section title="Unit mix & rents" subtitle="RentCast estimates are per-unit — model the mix">
+        <div className="mb-4">
+          <RentBandsCard orgId={org?.id} zip={f.zip} />
+        </div>
         <UnitMixEditor units={f.units} onChange={(u) => set({ units: u })} />
         <Grid cols={3}>
           <Field label="Underwrite on">

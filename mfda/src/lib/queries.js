@@ -56,6 +56,16 @@ export async function listCompsForState(orgId, state) {
   return data;
 }
 
+export async function getRentBands(orgId, zip) {
+  const { data, error } = await supabase
+    .from('rent_bands')
+    .select('source, zip, period, bedrooms, rent, confidence, retrieved_at')
+    .eq('org_id', orgId)
+    .eq('zip', zip);
+  if (error) throw error;
+  return data;
+}
+
 export async function latestScanRun(orgId) {
   const { data, error } = await supabase
     .from('scan_runs')
