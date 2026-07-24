@@ -28,17 +28,34 @@ export default function ListingsMap({ rows, onAnalyze }) {
   const mapRef = useRef(null);
   const markersRef = useRef([]);
   const [selected, setSelected] = useState(null);
+  const [mapError, setMapError] = useState(null);
 
-  // Init once.
+  // Init once. Failures here (usually WebGL unavailable) must be VISIBLE —
+  // a silent white box is undebuggable from a screenshot.
   useEffect(() => {
-    const map = new MlMap({
-      container: containerRef.current,
-      style: STYLE,
-      center: [-112.07, 33.45],
-      zoom: 10,
-      attributionControl: { compact: true },
-    });
+    let map;
+    try {
+      map = new MlMap({
+        container: containerRef.current,
+        style: STYLE,
+        center: [-112.07, 33.45],
+        zoom: 10,
+        attributionControl: { compact: true },
+      });
+    } catch (e) {
+      setMapError(String(e?.message || e));
+      return undefined;
+    }
     map.addControl(new NavigationControl({ showCompass: false }), 'top-right');
+    map.on('error', (e) => {
+      // Tile fetch errors are normal noise (adblockers etc.); only surface
+      // errors that prevent the map itself from working.
+      const msg = String(e?.error?.message || '');
+      if (/webgl|context/i.test(msg)) setMapError(msg);
+    });
+    // Belt & suspenders: if the container was mid-layout at init, a resize
+    // after first paint fixes a 0-height canvas.
+    requestAnimationFrame(() => map && map.resize());
     mapRef.current = map;
     return () => {
       markersRef.current.forEach((m) => m.remove());
@@ -81,6 +98,20 @@ export default function ListingsMap({ rows, onAnalyze }) {
   useEffect(() => {
     if (selected && !rows.some((r) => r.id === selected.id)) setSelected(null);
   }, [rows, selected]);
+
+  if (mapError) {
+    return (
+      <div className="card p-10 text-center" style={{ minHeight: '30vh' }}>
+        <p className="font-medium text-danger">Map couldn’t start</p>
+        <p className="text-sm text-muted mt-2 max-w-md mx-auto">
+          {/webgl|context/i.test(mapError)
+            ? 'Your browser blocked WebGL, which the map needs. Check Safari → Settings → Advanced (or your browser’s hardware-acceleration setting), or try Chrome.'
+            : mapError}
+        </p>
+        <p className="text-xs text-muted mt-2">The list view has everything the map does.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative card overflow-hidden" style={{ height: '70vh' }}>
