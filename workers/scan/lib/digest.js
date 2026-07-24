@@ -30,19 +30,30 @@ export function buildDigest({ deals, scanRuns, appUrl, windowHours }) {
     .map((d) => {
       const link = `${appUrl}/deals/${d.id}`;
       const photo = d.photo_url
-        ? `<img src="${esc(d.photo_url)}" width="72" height="54" style="object-fit:cover;border-radius:6px;" alt=""/>`
-        : `<div style="width:72px;height:54px;background:#F4EFE6;border-radius:6px;"></div>`;
+        ? `<img src="${esc(d.photo_url)}" width="96" height="72" style="display:block;object-fit:cover;border-radius:8px;" alt=""/>`
+        : `<table cellpadding="0" cellspacing="0" style="width:96px;height:72px;background:#F4EFE6;border-radius:8px;"><tr><td align="center" style="color:#B6AD9A;font-size:11px;font-family:Helvetica,Arial,sans-serif;">no photo</td></tr></table>`;
+      const meta = [
+        d.unit_bucket ? `${d.unit_bucket} units` : null,
+        d.year_built ? `built ${d.year_built}` : null,
+        d.beds_total ? `${d.beds_total} bd total` : null,
+        d.days_on_market != null ? `${d.days_on_market} DOM` : null,
+      ].filter(Boolean).join(' &nbsp;·&nbsp; ');
       const agent = d.agent
-        ? `<div style="font-size:12px;color:#2E8C43;">☎ ${esc(d.agent.owner_name || '')}${d.agent.phone ? ` · ${esc(d.agent.phone)}` : ''}</div>`
+        ? `<div style="font-size:12px;color:#2E8C43;margin-top:4px;font-family:Helvetica,Arial,sans-serif;">☎ ${esc(d.agent.owner_name || '')}${d.agent.brokerage ? ` · ${esc(d.agent.brokerage)}` : ''}${d.agent.phone ? ` · <a href="tel:${esc(d.agent.phone)}" style="color:#2E8C43;font-weight:bold;text-decoration:none;">${esc(d.agent.phone)}</a>` : ''}</div>`
         : '';
       return `<tr>
-        <td style="padding:8px 10px 8px 0;">${photo}</td>
-        <td style="padding:8px 0;">
-          <a href="${link}" style="font-weight:600;color:#1A1A1A;text-decoration:none;">${esc(d.address || 'Unknown address')}</a>
-          <div style="font-size:12px;color:#8A8272;">${esc([d.city, d.state].filter(Boolean).join(', '))} · ${esc(d.unit_bucket || '?')} units${d.year_built ? ` · ${d.year_built}` : ''}${d.beds_total ? ` · ${d.beds_total} bd` : ''}${d.days_on_market != null ? ` · ${d.days_on_market} DOM` : ''}</div>
-          ${agent}
+        <td style="padding:14px 20px;border-top:1px solid #EFE9DC;">
+          <table cellpadding="0" cellspacing="0" width="100%"><tr>
+            <td width="108" valign="top"><a href="${link}">${photo}</a></td>
+            <td valign="top" style="font-family:Helvetica,Arial,sans-serif;">
+              <a href="${link}" style="font-size:15px;font-weight:bold;color:#1A1A1A;text-decoration:none;">${esc(d.address || 'Unknown address')}</a>
+              <div style="font-size:12px;color:#8A8272;margin-top:2px;">${esc([d.city, d.state].filter(Boolean).join(', '))}</div>
+              <div style="font-size:12px;color:#4A4A4A;margin-top:4px;">${meta}</div>
+              ${agent}
+            </td>
+            <td width="90" valign="top" align="right" style="font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;color:#1A1A1A;white-space:nowrap;">${usd(d.price)}</td>
+          </tr></table>
         </td>
-        <td style="padding:8px 0 8px 10px;text-align:right;font-weight:600;white-space:nowrap;">${usd(d.price)}</td>
       </tr>`;
     })
     .join('\n');
@@ -51,17 +62,33 @@ export function buildDigest({ deals, scanRuns, appUrl, windowHours }) {
     .map((r) => `${r.market}: ${r.ok ? 'ok' : r.blocked ? 'BLOCKED' : 'failed'} · ${r.rows_active} active / ${r.rows_sold} sold · ${r.requests_made} req${r.capped_bands ? ` · ${r.capped_bands} capped bands` : ''}`)
     .join('<br/>') || 'no scans in window';
 
-  const html = `<div style="font-family:'DM Sans',Helvetica,Arial,sans-serif;max-width:640px;margin:0 auto;color:#1A1A1A;">
-  <div style="padding:16px 0;border-bottom:2px solid #F5B800;">
-    <span style="font-size:22px;font-weight:700;">MFDA<span style="color:#F5B800;">.</span></span>
-    <span style="font-size:13px;color:#8A8272;margin-left:8px;">morning deals · last ${windowHours}h</span>
-  </div>
-  ${count ? `<table style="width:100%;border-collapse:collapse;margin-top:8px;">${rowsHtml}</table>` : `<p style="color:#8A8272;">No new leads hit the queue. The pipeline still ran — health below.</p>`}
-  <div style="margin-top:16px;"><a href="${appUrl}/on-market" style="background:#F5B800;color:#1A1A1A;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;">Open the queue →</a></div>
-  <div style="margin-top:20px;padding-top:10px;border-top:1px solid #E4DDD0;font-size:11px;color:#8A8272;">
-    Scan health<br/>${health}<br/><br/>Estimates only — not an offer. MFDA · Alot Of Land
-  </div>
-</div>`;
+  const html = `<body style="margin:0;padding:0;background:#F9F6F0;">
+  <table cellpadding="0" cellspacing="0" width="100%" style="background:#F9F6F0;padding:24px 12px;"><tr><td align="center">
+    <table cellpadding="0" cellspacing="0" width="600" style="max-width:600px;width:100%;">
+      <tr><td style="padding:0 4px 14px;font-family:Georgia,'Times New Roman',serif;">
+        <span style="font-size:26px;font-weight:bold;color:#1A1A1A;">MFDA</span><span style="font-size:26px;font-weight:bold;color:#F5B800;">.</span>
+        <span style="font-family:Helvetica,Arial,sans-serif;font-size:12px;color:#8A8272;">&nbsp; morning deals · last ${windowHours}h</span>
+      </td></tr>
+      <tr><td style="background:#FFFFFF;border-radius:14px;border:1px solid #E4DDD0;overflow:hidden;">
+        <table cellpadding="0" cellspacing="0" width="100%">
+          <tr><td style="height:5px;background:#F5B800;font-size:0;line-height:0;">&nbsp;</td></tr>
+          <tr><td style="padding:18px 20px 6px;font-family:Helvetica,Arial,sans-serif;">
+            <div style="font-size:18px;font-weight:bold;color:#1A1A1A;">${count ? `${count} new lead${count === 1 ? '' : 's'} in your buy box` : 'No new leads today'}</div>
+            <div style="font-size:12px;color:#8A8272;margin-top:2px;">${count ? 'Sorted by price. Tap any property to underwrite it.' : 'The pipeline still ran — health report below.'}</div>
+          </td></tr>
+          ${rowsHtml}
+          <tr><td align="center" style="padding:20px;">
+            <a href="${appUrl}/on-market" style="display:inline-block;background:#F5B800;color:#1A1A1A;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;padding:12px 26px;border-radius:10px;text-decoration:none;">Open the full queue →</a>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:14px 8px;font-family:Helvetica,Arial,sans-serif;font-size:11px;color:#8A8272;line-height:1.5;">
+        <b>Scan health</b><br/>${health}<br/><br/>
+        Estimates only — not an offer. Verify tax positions with a CPA. &nbsp;MFDA · Alot Of Land
+      </td></tr>
+    </table>
+  </td></tr></table>
+</body>`;
 
   const text = [
     subject,
