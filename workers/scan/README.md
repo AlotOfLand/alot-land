@@ -51,12 +51,28 @@ and a $0 `cost_ledger` entry.
 once; if persistent we fall back to manual CSV download from redfin.com (same
 parser) — ask in the build chat.
 
+## Morning digest
+
+```bash
+node bin/digest.mjs                  # preview only: writes digest-preview.html
+node bin/digest.mjs --transport ghl  # send via GoHighLevel (env above)
+```
+
+New leads created in the last 26h (one line each: photo, address, bucket,
+price, agent when captured, link into the app) + scan-health footer.
+
 ## Droplet cron (later)
 
 ```cron
 # staggered per spec: one state per run
 15 5 * * *  cd /opt/alot/alot-land/workers/scan && /usr/bin/node bin/scan.mjs --market phoenix   --status both >> /var/log/mfda-scan.log 2>&1
 45 5 * * *  cd /opt/alot/alot-land/workers/scan && /usr/bin/node bin/scan.mjs --market nashville --status both >> /var/log/mfda-scan.log 2>&1
+# photos trickle (5/run under Redfin's observed ~6-page window limit)
+15 6-22/2 * * *  cd /opt/alot/alot-land/workers/scan && /usr/bin/node bin/photos.mjs >> /var/log/mfda-photos.log 2>&1
+# morning digest at 7:00 local
+0 7 * * *  cd /opt/alot/alot-land/workers/scan && /usr/bin/node bin/digest.mjs --transport ghl >> /var/log/mfda-digest.log 2>&1
+# rent bands monthly
+0 4 5 * *  cd /opt/alot/alot-land/workers/scan && /usr/bin/node bin/rents.mjs >> /var/log/mfda-rents.log 2>&1
 ```
 
 Env for cron: put the same two variables in `/etc/environment` or a systemd

@@ -40,6 +40,7 @@ function pause() {
 }
 
 const REDO_AGENTS = Boolean(arg('redo-agents', false));
+const DEBUG_AGENT = Boolean(arg('debug-agent', false));
 
 const db = makeDb();
 const orgId = await db.resolveOrgId();
@@ -62,6 +63,31 @@ q = REDO_AGENTS ? q.not('photo_url', 'is', null) : q.is('photo_url', null);
 const { data: dealsRaw, error } = await q.limit(REDO_AGENTS ? 500 : LIMIT * 3);
 if (error) throw error;
 const deals = (REDO_AGENTS ? dealsRaw.filter((d) => !hasAgent.has(d.id)) : dealsRaw).slice(0, LIMIT);
+
+if (DEBUG_AGENT) {
+  const target = deals[0] || dealsRaw?.[0];
+  if (!target) { console.error('No deal with a listing_url found.'); process.exit(1); }
+  console.log(`DEBUG: fetching one page: ${target.address}\n${target.listing_url}`);
+  const res = await politeFetch(target.listing_url);
+  const html = res.ok ? await res.text() : null;
+  if (!html) { console.error(`HTTP ${res.status} — no body.`); process.exit(1); }
+  console.log(`length=${html.length} challenge=${looksLikeChallenge(html)}`);
+  const { writeFile } = await import('node:fs/promises');
+  await writeFile('/tmp/redfin-listing-debug.html', html);
+  console.log('Full page saved to /tmp/redfin-listing-debug.html');
+  // Show every context where agent-ish tokens appear (bounded).
+  const patterns = [/agent/gi, /Listed by/gi, /broker/gi, /"listingAgent/gi];
+  const seen = new Set();
+  for (const re of patterns) {
+    let m, n = 0;
+    while ((m = re.exec(html)) && n < 12) {
+      const ctx = html.slice(Math.max(0, m.index - 80), m.index + 120).replace(/\s+/g, ' ');
+      if (!seen.has(ctx)) { console.log(`  …${ctx}…`); seen.add(ctx); n++; }
+    }
+  }
+  console.log('\nPaste this whole output into the build chat.');
+  process.exit(0);
+}
 
 console.log(`${REDO_AGENTS ? 'Agent re-scan' : 'Photo backfill'}: ${deals.length} deals to process (limit ${LIMIT})`);
 
@@ -167,4 +193,6 @@ for (const deal of deals) {
   }
 }
 
-console.log(`\n✓ Backfill complete: ${done} deals photographed, ${misses} without photos.`);
+console.log(REDO_AGENTS
+  ? `\n✓ Agent re-scan complete: ${done} pages checked (agents found are marked ☎ above; none printed = extraction found nothing — run --debug-agent).`
+  : `\n✓ Backfill complete: ${done} deals photographed, ${misses} without photos.`);
